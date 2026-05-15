@@ -1,0 +1,9 @@
+- Mobile-first always
+- No accounting software UX
+- No feature creep
+- Spendable amount is the hero
+- Quick-add is the core action
+- Clarity over analytics
+- Beauty-friendly visual language
+- One-handed usage
+- Fast over clever
