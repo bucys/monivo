@@ -3,5 +3,5 @@ export default function LandingLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <main className="min-h-dvh">{children}</main>;
+  return children;
 }
