@@ -1,0 +1,7 @@
+- touch targets >= 48px
+- visible focus states
+- semantic buttons/inputs
+- color contrast minimum AA
+- keyboard accessible modals
+- reduced motion support later
+- avoid gesture-only interactions

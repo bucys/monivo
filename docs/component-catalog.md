@@ -50,20 +50,16 @@ Each primitive below is a single file under `src/components/ui/`, named in kebab
 - Does **not** open sheets, navigate, or submit forms — its consumers do that.
 - Does **not** own any icon-only style; icon-only actions use `FloatingActionButton` or a `ListRow` action.
 
-**Allowed variants.** Exactly three intents and exactly two sizes:
+**Allowed variants.** Exactly four intents and one size in MVP:
 
 | Intent | Use |
 |---|---|
 | `primary` | The single dominant action on a screen. |
 | `secondary` | Alternative action paired with a primary. |
 | `ghost` | Tertiary action; appears as text only. |
+| `destructive` | Confirmation actions inside destructive flows (e.g. delete account). |
 
-| Size | Use |
-|---|---|
-| `md` (default, 52px tall) | Standard touch-friendly button. |
-| `sm` (40px tall) | Inside dense surfaces (settings rows, sheet headers). Used sparingly. |
-
-No `destructive` variant on the primitive. Destructive confirmation buttons use `primary` styled within a confirmation dialog scoped to that flow.
+Size: 52px tall by default. A smaller size is not introduced until a real screen needs it.
 
 **Interaction notes.**
 - Full width on mobile by default; opt out with a layout wrapper, not a prop.
@@ -107,7 +103,7 @@ No `outline`, `flat`, `elevated`, `gradient`, etc.
 
 **Responsibilities.**
 - Render `<input>` with the documented sizing and focus styles.
-- Pair with a floating label above the field. No placeholder-only labels.
+- Pair with a static label above the field. No floating labels, no placeholder-only labels.
 - Forward refs and `aria-*` attributes.
 
 **Non-responsibilities.**
@@ -181,7 +177,7 @@ No `outline`, `flat`, `elevated`, `gradient`, etc.
 
 **Allowed variants.** None. Height is content-driven, capped at ~85% viewport height.
 
-**Interaction notes.** Slide and backdrop fade implemented with Framer Motion (the only primitive that uses it — see `final-decisions.md` §4). Reduced-motion users get instant open/close.
+**Interaction notes.** Slide and backdrop fade implemented with CSS transitions on `transform` and `opacity`. No animation library. Reduced-motion users get instant open/close (handled via `prefers-reduced-motion` when added in Phase 13 polish).
 
 ---
 

@@ -51,6 +51,12 @@ const config: Config = {
         hero: "0 2px 4px rgba(26,26,26,0.05), 0 16px 40px rgba(26,26,26,0.06)",
         fab: "0 6px 20px rgba(46,93,74,0.25)",
       },
+      height: {
+        13: "52px",
+      },
+      minHeight: {
+        13: "52px",
+      },
     },
   },
   plugins: [],

@@ -48,10 +48,10 @@ Rationale: one rule, no case-sensitivity bugs across macOS/Linux, matches the Ne
 ## 4. Motion & Animation
 
 - **Framer Motion is approved but is not the default.**
-- Default to CSS transitions for hover, focus, button presses, and color changes.
-- Use Framer Motion **only** for: bottom sheet slide-in/out, number count-up on the spendable card, and reduced-motion handling for those two.
+- Default to CSS transitions for hover, focus, button presses, sheet slides, backdrop fades, and color changes.
+- Use Framer Motion **only** for: the spendable number count-up on the dashboard hero card.
 - No layout animations, no shared-element transitions, no scroll-linked effects in MVP.
-- The spendable count-up uses a small hand-rolled hook or Framer's `useMotionValue` — **no additional animation libraries.**
+- The bottom sheet (`ModalSheet`) uses CSS-only transitions; Framer Motion is not imported by primitives.
 
 ---
 
