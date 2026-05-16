@@ -18,7 +18,7 @@ export function LandingHero() {
       />
       <LandingContainer className="relative z-[1]">
         <div className="grid items-center gap-14 sm:grid-cols-[1.05fr_0.95fr] sm:gap-[60px]">
-          <div className="flex flex-col items-start">
+          <div className="flex flex-col items-center text-center sm:items-start sm:text-left">
             <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-accent/[0.08] px-3 py-1.5 text-eyebrow text-accent">
               <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-accent" />
               Grožio profesionalams · Lietuvoje
@@ -37,7 +37,7 @@ export function LandingHero() {
               tau — grožio profesionalui.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-2.5">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5 sm:justify-start">
               <Button
                 variant="primary"
                 className="!h-auto !w-auto !rounded-[14px] !px-[22px] !py-[13px] !text-[14px]"
@@ -57,7 +57,7 @@ export function LandingHero() {
               </Button>
             </div>
 
-            <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-[12px] font-medium text-ink-500">
+            <ul className="mt-7 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[12px] font-medium text-ink-500 sm:justify-start">
               {reassurances.map((item) => (
                 <li key={item} className="flex items-center gap-1.5">
                   <span
