@@ -140,14 +140,44 @@ This roadmap supersedes the simpler list in earlier drafts of `CLAUDE.md`.
 
 ---
 
+## Phase 6.5 — Billing (Stripe + trial gating)
+
+**Goal:** every account has a known subscription status, and write access depends on it. Implements the model defined in `docs/auth-billing.md`.
+
+**In scope:**
+- `profiles` table fields: `subscription_status`, `trial_started_at`, `trial_ends_at`, `stripe_customer_id`, `stripe_subscription_id`, `current_period_end`, `past_due_since`. Created by Supabase trigger on `auth.users` insert with `trial_ends_at = now() + interval '30 days'`.
+- SQL helper `can_write(profile)` returning true for `trialing` (within window), `active`, and `past_due` (within 7-day grace from `past_due_since`).
+- RLS on every mutating table (`income_entries`, `expense_entries`, `services`, …) gated by `can_write`. Selects always allowed for the owner.
+- `src/lib/billing/` — `requireWriteAccess()` helper for server actions, `getSubscriptionStatus()` for layouts, plan price constants.
+- `src/app/api/billing/checkout/route.ts` — create Stripe Checkout Session.
+- `src/app/api/billing/portal/route.ts` — open Stripe Customer Portal.
+- `src/app/api/billing/webhook/route.ts` — handle `customer.subscription.created/updated/deleted`, `invoice.paid`, `invoice.payment_failed`. Sole writer of `subscription_status` / `past_due_since` / `current_period_end`.
+- `src/app/(app)/settings/billing/page.tsx` — current status, plan price, "Atnaujinti planą" → Checkout, "Tvarkyti prenumeratą" → Portal.
+- Trial-reset rule: track `trial_started_at` against email even after profile delete so re-registrations from the same address start as `expired`.
+
+**Out of scope:**
+- App shell chrome (next phase).
+- In-app reminder banner UI (lives in Phase 7, reads from this phase's status).
+- Annual plan, promo codes, multi-tier, team plans.
+- Email reminders (in-app only at MVP).
+- Tax handling beyond Stripe defaults.
+
+**Output:** a new account starts as `trialing` for 30 days, can complete Stripe Checkout to become `active`, can cancel through the Portal, and falls to read-only when trial expires or `past_due` grace runs out. RLS confirmed by manual check: a flipped status row blocks inserts/updates at the DB level.
+
+**Commit:** `add stripe billing and trial gating`
+
+---
+
 ## Phase 7 — App Shell
 
-**Goal:** the authenticated container — bottom nav, FAB, header, safe-area handling — exists and renders empty pages for `/`, `/activity`, `/insights`.
+**Goal:** the authenticated container — bottom nav, FAB, header, safe-area handling — exists and renders empty pages for `/`, `/activity`, `/insights`. Subscription-aware UI states from Phase 6.5 are wired here.
 
 **In scope:**
 - `src/app/(app)/layout.tsx` — header, bottom nav, FAB, safe-area insets.
 - Route stubs: `/`, `/activity`, `/insights`, `/settings` (settings accessed via header avatar, not nav).
 - The FAB does not yet open a sheet; it logs to console.
+- Trial reminder banner reading `subscription_status` from Phase 6.5: calm from 7 days remaining, slightly more present at 3 days and on the final day, amber on day 0, dismissible per session, reappears next day.
+- FAB + edit/delete affordances disabled with a soft hint when `can_write` is false (status ∈ {`expired`, `canceled`, post-grace `past_due`}).
 
 **Out of scope:**
 - Onboarding logic.
@@ -287,7 +317,6 @@ This roadmap supersedes the simpler list in earlier drafts of `CLAUDE.md`.
 
 The phases below are explicitly **not part of MVP** and have no scheduled start. Do not pre-scaffold for them.
 
-- **Billing** — Stripe or Paddle, single paid tier.
 - **Recurring entries.**
 - **Accountant export (CSV/PDF).**
 - **Apple / Google sign-in.**

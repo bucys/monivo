@@ -42,7 +42,7 @@ export function LandingHero() {
                 variant="primary"
                 className="!h-auto !w-auto !rounded-[14px] !px-[22px] !py-[13px] !text-[14px]"
               >
-                Pradėti 7 d. nemokamai →
+                Pradėti 30 d. nemokamai →
               </Button>
               <Button
                 variant="secondary"

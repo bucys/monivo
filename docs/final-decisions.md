@@ -120,9 +120,30 @@ Multi-currency is post-MVP and not designed for.
 ## 11. Auth in MVP
 
 - Supabase **email + magic link**. No passwords, no social logins.
-- Auth UI lives at `app.monivo.lt/login`.
+- Auth UI lives at `app.monivo.lt/login` and `/register`.
 - Marketing (`monivo.lt`) never handles credentials.
 - Apple / Google sign-in are post-MVP.
+
+---
+
+## 11a. Billing in MVP (resolved 2026-05-17)
+
+- **Provider:** Stripe (Checkout + Customer Portal + webhooks). Paddle
+  is no longer in scope.
+- **Phase placement:** Phase 6.5, between Auth and App Shell.
+- **Trial:** 30 days, no card required at registration (updated
+  2026-05-17 from the original 7 days to match habit-based usage by
+  beauty professionals). Trial does **not** reset on account delete +
+  re-registration with the same email.
+- **`past_due` grace:** 7 days from `past_due_since`. Writes allowed
+  during grace; account flips to read-only after, independent of
+  Stripe's own retry window.
+- **Read-only states** (`expired`, `canceled`, post-grace `past_due`)
+  retain full view access and CSV export. No data is ever held hostage.
+- **One paid tier only at MVP launch.** Annual / promo codes / teams
+  are post-MVP.
+- Full operational model: `docs/auth-billing.md` (authoritative for
+  this topic).
 
 ---
 
@@ -193,6 +214,7 @@ To eliminate rule duplication going forward:
 | User flows | `docs/app-flow.md` |
 | Cross-doc resolutions (this file) | `docs/final-decisions.md` |
 | Phase-by-phase build plan | `docs/phase-roadmap.md` |
+| Auth, trial & billing model | `docs/auth-billing.md` |
 
 Rules should appear in **one** of these files. Cross-references are fine; restatements are not.
 
