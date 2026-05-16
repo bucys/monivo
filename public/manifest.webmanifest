@@ -1,14 +1,14 @@
 {
-  "name": "Monivo",
+  "name": "Monivo — aišku, kiek lieka",
   "short_name": "Monivo",
-  "description": "Pagaliau aišku kiek lieka.",
+  "description": "Monivo padeda individualiai dirbantiems grožio specialistams sekti pajamas, išlaidas ir mokesčių rezervą — kad būtų aiškiau, kiek lieka.",
   "lang": "lt",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#F7F4EF",
-  "theme_color": "#F7F4EF",
+  "background_color": "#FAF8F4",
+  "theme_color": "#FAF8F4",
   "icons": [
     {
       "src": "/icons/icon-192.png",
