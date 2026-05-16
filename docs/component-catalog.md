@@ -127,13 +127,12 @@ No `outline`, `flat`, `elevated`, `gradient`, etc.
 **Purpose.** Fixed mobile navigation bar.
 
 **Responsibilities.**
-- Render exactly three items: Home, Activity, Insights.
+- Render 3–4 items. Current set: Pagrindinis, Veikla, Įžvalgos, Nustatymai.
 - Respect bottom safe-area inset.
 - Highlight the active route.
 
 **Non-responsibilities.**
-- Does **not** host the FAB. The FAB is a sibling element positioned absolutely; the nav must not know it exists.
-- Does **not** render Settings — Settings is reached from the header avatar.
+- Does **not** host the FAB. The FAB is a sibling element positioned absolutely; the nav must not know it exists. With 4 tabs the FAB sits cleanly in the gap between tabs 2 and 3.
 
 **Allowed variants.** None. There is one bottom nav.
 

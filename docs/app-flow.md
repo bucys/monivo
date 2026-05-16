@@ -152,7 +152,7 @@ Rules:
 
 ## 7. Settings Flow
 
-Accessed via an avatar/icon in the header — **not** the bottom nav.
+Accessed via the **Nustatymai** tab in the bottom navigation (4-tab layout).
 
 Sections:
 1. **Profilis** — name (optional), profession chip, email.
