@@ -12,7 +12,7 @@ export function LandingContainer({
 }: LandingContainerProps) {
   return (
     <div
-      className={cn("mx-auto w-full max-w-screen-lg px-5 sm:px-8", className)}
+      className={cn("mx-auto w-full max-w-[1180px] px-5 sm:px-8", className)}
       {...rest}
     >
       {children}

@@ -20,7 +20,14 @@ export function LandingSection({
   ...rest
 }: LandingSectionProps) {
   return (
-    <section className={cn("py-20 sm:py-32", tones[tone], className)} {...rest}>
+    <section
+      className={cn(
+        "reveal-on-scroll py-20 sm:py-32",
+        tones[tone],
+        className,
+      )}
+      {...rest}
+    >
       {children}
     </section>
   );

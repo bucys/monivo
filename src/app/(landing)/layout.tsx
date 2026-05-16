@@ -3,5 +3,5 @@ export default function LandingLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return <div className="landing-scroll landing-bg">{children}</div>;
 }
