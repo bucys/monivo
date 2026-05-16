@@ -64,7 +64,7 @@ export function LandingPricing() {
               </span>
             </div>
             <p className="mt-2 text-[13px] text-ink-500">
-              30 dienų nemokamai · Be kortelės. Po to — 4.90 €/mėn.
+              30 dienų nemokamai · Be kortelės. 
             </p>
 
             <ul className="mt-7 flex flex-col gap-3">

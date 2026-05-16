@@ -23,7 +23,7 @@ export function LandingHeader() {
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent"
         />
         <div className="relative z-10 flex items-center justify-between gap-3 py-2 pl-3 pr-3 sm:gap-4 sm:py-2.5 sm:pl-[18px] sm:pr-3">
-        <Link href="#top" className="flex items-center gap-2.5" aria-label="Monivo">
+        <Link href="/" className="flex items-center gap-2.5" aria-label="Monivo">
           <span
             aria-hidden
             className="flex h-[30px] w-[30px] items-center justify-center rounded-[10px] bg-gradient-to-br from-accent to-accent-deep text-[16px] font-bold leading-none tracking-tight text-white"
