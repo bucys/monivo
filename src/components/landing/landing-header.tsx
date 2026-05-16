@@ -13,7 +13,16 @@ const navLinks: ReadonlyArray<NavLink> = [
 export function LandingHeader() {
   return (
     <header className="sticky top-4 z-50 mx-auto mt-4 w-full max-w-[1180px] px-5 sm:px-8">
-      <div className="flex items-center justify-between gap-4 rounded-[22px] border border-hair bg-white/85 py-2.5 pl-4 pr-3 shadow-nav backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-white/70 sm:pl-[18px] sm:pr-3">
+      <div className="relative overflow-hidden rounded-full border border-hair bg-white/45 shadow-nav ring-1 ring-inset ring-white/40 backdrop-blur-2xl backdrop-saturate-150 supports-[backdrop-filter]:bg-white/35">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/70 via-white/25 to-white/5"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent"
+        />
+        <div className="relative z-10 flex items-center justify-between gap-4 py-2.5 pl-4 pr-3 sm:pl-[18px] sm:pr-3">
         <Link href="#top" className="flex items-center gap-2.5" aria-label="Monivo">
           <span
             aria-hidden
@@ -51,6 +60,7 @@ export function LandingHeader() {
           >
             Pradėti nemokamai →
           </Button>
+        </div>
         </div>
       </div>
     </header>

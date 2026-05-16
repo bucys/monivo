@@ -21,12 +21,12 @@ export function LandingHero() {
           <div className="flex flex-col items-start">
             <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-accent/[0.08] px-3 py-1.5 text-eyebrow text-accent">
               <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-accent" />
-              Beauty profesionalams · Lietuvoje
+              Grožio profesionalams · Lietuvoje
             </span>
 
             <h1 className="mt-5 text-[40px] font-semibold leading-[1.04] tracking-[-0.034em] text-ink-900 text-balance sm:text-display-lg">
               Pagaliau aišku{" "}
-              <span className="font-medium italic text-accent">kiek lieka</span>.
+              <span className="font-medium italic text-accent">kiek lieka tau</span>.
             </h1>
 
             <p className="mt-5 max-w-[480px] text-[17px] leading-[1.55] text-ink-500 sm:text-body-lg">

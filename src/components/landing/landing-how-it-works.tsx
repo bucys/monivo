@@ -73,7 +73,7 @@ const ServiceListVisual = (
 );
 
 const ChipsVisual = (
-  <div className="relative flex min-h-[180px] items-center justify-center">
+  <div className="relative flex min-h-[180px] items-center justify-center md:min-h-[150px]">
     <div className="flex flex-wrap justify-center gap-2.5">
       {services.map((s, i) => {
         const selected = i === 1;
@@ -159,7 +159,7 @@ export function LandingHowItWorks() {
       className="!pb-20 !pt-10 sm:!pb-24 sm:!pt-14"
     >
       <LandingContainer>
-        <div className="mx-auto max-w-[1040px]">
+        <div className="mx-auto max-w-[1040px] lg:max-w-[960px]">
           <div className="mb-14 flex flex-col items-center text-center">
             <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-accent/[0.08] px-3 py-1.5 text-eyebrow text-accent">
               <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-accent" />
@@ -170,13 +170,13 @@ export function LandingHowItWorks() {
             </h2>
           </div>
 
-          <ol className="flex flex-col gap-6">
+          <ol className="flex flex-col gap-6 lg:gap-5">
             {steps.map((step, i) => {
               const textFirst = i % 2 === 0;
               return (
                 <li
                   key={step.number}
-                  className="grid gap-8 rounded-[28px] border border-hair bg-white p-8 shadow-card sm:gap-14 sm:p-10 md:grid-cols-2 md:items-center"
+                  className="grid gap-8 rounded-[28px] border border-hair bg-white p-8 shadow-card md:grid-cols-2 md:items-center md:gap-10 md:p-7 lg:gap-12 lg:px-9 lg:py-7"
                 >
                   <div className={textFirst ? "md:order-1" : "md:order-2"}>
                     <span className="inline-flex h-11 w-11 items-center justify-center rounded-[14px] bg-accent-soft text-[18px] font-bold tracking-tight text-accent-deep tabular-nums">
