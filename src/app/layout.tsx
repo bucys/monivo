@@ -29,11 +29,20 @@ export const metadata: Metadata = {
     title: siteTitle,
     description: siteDescription,
     url: "/",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Monivo — aišku, kiek lieka",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
+    images: ["/og-image.png"],
   },
 };
 
