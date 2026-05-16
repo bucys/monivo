@@ -18,9 +18,6 @@
     font-feature-settings: "ss01", "cv11";
   }
 
-  .tabular {
-    font-variant-numeric: tabular-nums;
-  }
 }
 
 @layer utilities {
