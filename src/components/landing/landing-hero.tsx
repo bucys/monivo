@@ -57,7 +57,11 @@ export function LandingHero() {
               </Button>
             </div>
 
-            <ul className="mt-7 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[12px] font-medium text-ink-500 sm:justify-start">
+            <p className="mt-3 text-[12px] font-medium text-ink-500">
+              30 dienų nemokamai · Be kortelės
+            </p>
+
+            <ul className="mt-5 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[12px] font-medium text-ink-500 sm:justify-start">
               {reassurances.map((item) => (
                 <li key={item} className="flex items-center gap-1.5">
                   <span
