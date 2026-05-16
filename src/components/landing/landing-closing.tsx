@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { LandingContainer } from "./landing-container";
 import { LandingSection } from "./landing-section";
@@ -30,14 +31,14 @@ export function LandingClosing() {
             <p className="mx-auto mt-4 max-w-[420px] text-[15px] leading-[1.55] text-white/80 sm:text-[16px]">
               Be Excel. Be buhalterinės kalbos. Be streso.
             </p>
-            <div className="mt-7 inline-flex">
+            <Link href="/register" className="mt-7 inline-flex">
               <Button
                 variant="primary"
                 className="!h-auto !w-auto !rounded-[14px] !bg-white !px-[22px] !py-3 !text-[14px] !text-accent-deep"
               >
                 Pradėti nemokamai →
               </Button>
-            </div>
+            </Link>
           </div>
         </div>
       </LandingContainer>

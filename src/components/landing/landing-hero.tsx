@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { LandingContainer } from "./landing-container";
 import { LandingSection } from "./landing-section";
@@ -38,12 +39,14 @@ export function LandingHero() {
             </p>
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5 sm:justify-start">
-              <Button
-                variant="primary"
-                className="!h-auto !w-auto !rounded-[14px] !px-[22px] !py-[13px] !text-[14px]"
-              >
-                Pradėti 30 d. nemokamai →
-              </Button>
+              <Link href="/register">
+                <Button
+                  variant="primary"
+                  className="!h-auto !w-auto !rounded-[14px] !px-[22px] !py-[13px] !text-[14px]"
+                >
+                  Pradėti 30 d. nemokamai →
+                </Button>
+              </Link>
               <Button
                 variant="secondary"
                 className="!h-auto !w-auto !rounded-[14px] !border-hair !px-[22px] !py-[13px] !text-[14px]"

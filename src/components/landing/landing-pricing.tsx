@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { LandingContainer } from "./landing-container";
 import { LandingSection } from "./landing-section";
@@ -84,12 +85,14 @@ export function LandingPricing() {
               ))}
             </ul>
 
-            <Button
-              variant="primary"
-              className="!mt-8 !h-auto !rounded-[14px] !px-5 !py-[14px] !text-[14px]"
-            >
-              Pradėti nemokamai →
-            </Button>
+            <Link href="/register" className="mt-8 block">
+              <Button
+                variant="primary"
+                className="!h-auto !rounded-[14px] !px-5 !py-[14px] !text-[14px]"
+              >
+                Pradėti nemokamai →
+              </Button>
+            </Link>
 
             <p className="mt-4 text-center text-[12px] text-ink-500">
               Galėsi atšaukti bet kada.

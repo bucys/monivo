@@ -54,13 +54,15 @@ export function LandingHeader() {
           >
             Prisijungti
           </Link>
-          <Button
-            variant="primary"
-            className="!h-auto !w-auto !rounded-[12px] !px-3.5 !py-2.5 !text-[13px] sm:!px-4 sm:!py-2.5 sm:!text-[13px]"
-          >
-            <span className="sm:hidden">Pradėti →</span>
-            <span className="hidden sm:inline">Pradėti nemokamai →</span>
-          </Button>
+          <Link href="/register">
+            <Button
+              variant="primary"
+              className="!h-auto !w-auto !rounded-[12px] !px-3.5 !py-2.5 !text-[13px] sm:!px-4 sm:!py-2.5 sm:!text-[13px]"
+            >
+              <span className="sm:hidden">Pradėti →</span>
+              <span className="hidden sm:inline">Pradėti nemokamai →</span>
+            </Button>
+          </Link>
         </div>
         </div>
       </div>
