@@ -1,37 +1,53 @@
-import { Button } from "@/components/ui/button";
-import { AppPreviewCard } from "@/components/landing/app-preview-card";
-import { LandingContainer } from "@/components/landing/landing-container";
-import { LandingCtaGroup } from "@/components/landing/landing-cta-group";
+import Link from "next/link";
+import { LandingAudience } from "@/components/landing/landing-audience";
+import { LandingClosing } from "@/components/landing/landing-closing";
 import { LandingFooter } from "@/components/landing/landing-footer";
 import { LandingHeader } from "@/components/landing/landing-header";
-import { LandingSection } from "@/components/landing/landing-section";
-import { PhoneFrame } from "@/components/landing/phone-frame";
+import { LandingHero } from "@/components/landing/landing-hero";
+import { LandingHowItWorks } from "@/components/landing/landing-how-it-works";
+import { LandingNotMonivo } from "@/components/landing/landing-not-monivo";
+import { LandingProblem } from "@/components/landing/landing-problem";
+import { LandingPromise } from "@/components/landing/landing-promise";
 
 export default function LandingPage() {
   return (
     <>
-      <LandingHeader wordmark="Monivo" />
+      <LandingHeader
+        wordmark="Monivo"
+        action={
+          <Link
+            href="/login"
+            className="text-body-strong text-ink-900 hover:text-accent"
+          >
+            Prisijungti
+          </Link>
+        }
+      />
       <main>
-        <LandingSection>
-          <LandingContainer>
-            <div className="flex flex-col items-start gap-10">
-              <h1 className="text-display text-ink-900">
-                Pagaliau aišku kiek lieka.
-              </h1>
-              <LandingCtaGroup>
-                <Button variant="primary">Pradėti nemokamai</Button>
-                <Button variant="ghost">Kaip tai veikia →</Button>
-              </LandingCtaGroup>
-              <PhoneFrame ariaLabel="Monivo aplikacijos peržiūra">
-                <div className="flex h-full flex-col gap-3 p-4">
-                  <AppPreviewCard label="Gali išleisti" value="€1 247" />
-                </div>
-              </PhoneFrame>
-            </div>
-          </LandingContainer>
-        </LandingSection>
+        <LandingHero />
+        <LandingProblem />
+        <LandingPromise />
+        <LandingHowItWorks />
+        <LandingAudience />
+        <LandingNotMonivo />
+        <LandingClosing />
       </main>
-      <LandingFooter brand="© Monivo" />
+      <LandingFooter
+        brand="© Monivo"
+        links={
+          <>
+            <Link href="/privatumas" className="hover:text-ink-700">
+              Privatumas
+            </Link>
+            <Link href="/salygos" className="hover:text-ink-700">
+              Sąlygos
+            </Link>
+            <Link href="/kontaktai" className="hover:text-ink-700">
+              Kontaktai
+            </Link>
+          </>
+        }
+      />
     </>
   );
 }
