@@ -1,57 +1,69 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BottomNav, type BottomNavItem } from "@/components/ui/bottom-nav";
+import type { ReactNode } from "react";
+
+type Tab = { label: string; href: string; icon: ReactNode };
+
+const leftTabs: ReadonlyArray<Tab> = [
+  { label: "Pagrindinis", href: "/dashboard", icon: <HomeIcon /> },
+  { label: "Veikla", href: "/activity", icon: <ActivityIcon /> },
+];
+
+const rightTabs: ReadonlyArray<Tab> = [
+  { label: "Įžvalgos", href: "/insights", icon: <InsightsIcon /> },
+  { label: "Daugiau", href: "/settings", icon: <MoreIcon /> },
+];
+
+function isActive(pathname: string | null, href: string): boolean {
+  if (!pathname) return false;
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 export function AppBottomNav() {
   const pathname = usePathname();
 
-  const items: ReadonlyArray<BottomNavItem> = [
-    {
-      label: "Pagrindinis",
-      href: "/dashboard",
-      icon: <HomeIcon />,
-      isActive: isActive(pathname, "/dashboard"),
-    },
-    {
-      label: "Veikla",
-      href: "/activity",
-      icon: <ActivityIcon />,
-      isActive: isActive(pathname, "/activity"),
-    },
-    {
-      label: "Įžvalgos",
-      href: "/insights",
-      icon: <InsightsIcon />,
-      isActive: isActive(pathname, "/insights"),
-    },
-    {
-      label: "Nustatymai",
-      href: "/settings",
-      icon: <SettingsIcon />,
-      isActive: isActive(pathname, "/settings"),
-    },
-  ];
-
-  return <BottomNav items={items} ariaLabel="Pagrindinė navigacija" />;
+  return (
+    <nav
+      aria-label="Pagrindinė navigacija"
+      className="fixed inset-x-4 bottom-6 z-30 rounded-[32px] border border-hair bg-white/85 px-2 pb-[env(safe-area-inset-bottom)] shadow-card backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-white/70 lg:hidden"
+    >
+      <ul className="relative flex items-center">
+        {leftTabs.map((tab) => (
+          <NavItem key={tab.href} tab={tab} active={isActive(pathname, tab.href)} />
+        ))}
+        <li aria-hidden className="w-[64px] flex-shrink-0" />
+        {rightTabs.map((tab) => (
+          <NavItem key={tab.href} tab={tab} active={isActive(pathname, tab.href)} />
+        ))}
+      </ul>
+    </nav>
+  );
 }
 
-function isActive(pathname: string | null, prefix: string): boolean {
-  if (!pathname) return false;
-  return pathname === prefix || pathname.startsWith(`${prefix}/`);
+function NavItem({ tab, active }: { tab: Tab; active: boolean }) {
+  return (
+    <li className="flex flex-1">
+      <Link
+        href={tab.href}
+        aria-current={active ? "page" : undefined}
+        className={`flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] font-semibold transition-colors ${
+          active ? "text-accent" : "text-ink-500"
+        }`}
+      >
+        <span aria-hidden className="block h-[22px] w-[22px]">
+          {tab.icon}
+        </span>
+        <span>{tab.label}</span>
+      </Link>
+    </li>
+  );
 }
 
 function HomeIcon() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-6 w-6"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg viewBox="0 0 24 24" className="h-full w-full" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
       <path d="M3 11.5 12 4l9 7.5" />
       <path d="M5 10.5V20h14v-9.5" />
     </svg>
@@ -60,15 +72,7 @@ function HomeIcon() {
 
 function ActivityIcon() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-6 w-6"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg viewBox="0 0 24 24" className="h-full w-full" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
       <path d="M4 7h13" />
       <path d="M4 12h13" />
       <path d="M4 17h9" />
@@ -78,33 +82,18 @@ function ActivityIcon() {
 
 function InsightsIcon() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-6 w-6"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg viewBox="0 0 24 24" className="h-full w-full" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
       <path d="M4 17 9 12l4 4 7-9" />
     </svg>
   );
 }
 
-function SettingsIcon() {
+function MoreIcon() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-6 w-6"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="3" />
-      <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.11-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.03H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.65 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1.03-1.56V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.56 1.03H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.56 1.03Z" />
+    <svg viewBox="0 0 24 24" className="h-full w-full" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="6" cy="12" r="1.4" fill="currentColor" />
+      <circle cx="12" cy="12" r="1.4" fill="currentColor" />
+      <circle cx="18" cy="12" r="1.4" fill="currentColor" />
     </svg>
   );
 }

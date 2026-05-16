@@ -1,16 +1,18 @@
-import type { ReactNode } from "react";
+"use client";
 
-export type AppTopBarProps = {
-  title: ReactNode;
-  action?: ReactNode;
-};
+import { usePathname } from "next/navigation";
+import { getAppRouteMeta } from "./app-route-meta";
 
-export function AppTopBar({ title, action }: AppTopBarProps) {
+export function AppTopBar() {
+  const pathname = usePathname();
+  const { title } = getAppRouteMeta(pathname);
+
   return (
-    <header className="sticky top-0 z-30 border-b border-ink-100 bg-cream/85 pt-[env(safe-area-inset-top)] backdrop-blur supports-[backdrop-filter]:bg-cream/70">
-      <div className="mx-auto flex h-14 max-w-screen-sm items-center justify-between gap-3 px-5">
-        <h1 className="text-h2 text-ink-900">{title}</h1>
-        {action ? <div>{action}</div> : null}
+    <header className="sticky top-0 z-30 border-b border-hair bg-cream/85 pt-[env(safe-area-inset-top)] backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-cream/70 lg:hidden">
+      <div className="mx-auto flex h-14 max-w-screen-sm items-center px-5">
+        <h1 className="text-[18px] font-semibold tracking-tight text-ink-900/90">
+          {title}
+        </h1>
       </div>
     </header>
   );

@@ -1,17 +1,20 @@
 import type { ReactNode } from "react";
-import { AppTopBar } from "./app-top-bar";
+import { cn } from "@/lib/cn";
 
 export type AppScreenProps = {
-  title: ReactNode;
-  action?: ReactNode;
   children: ReactNode;
+  className?: string;
 };
 
-export function AppScreen({ title, action, children }: AppScreenProps) {
+export function AppScreen({ children, className }: AppScreenProps) {
   return (
-    <>
-      <AppTopBar title={title} action={action} />
-      <div className="mx-auto w-full max-w-screen-sm px-5 py-6">{children}</div>
-    </>
+    <div
+      className={cn(
+        "mx-auto w-full max-w-screen-sm px-5 py-6 lg:max-w-[1100px] lg:px-8 lg:py-8",
+        className,
+      )}
+    >
+      {children}
+    </div>
   );
 }

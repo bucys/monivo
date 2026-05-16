@@ -3,7 +3,7 @@ import { LogoutButton } from "@/components/auth/logout-button";
 
 export default function SettingsPage() {
   return (
-    <AppScreen title="Nustatymai">
+    <AppScreen>
       <p className="text-body text-ink-700">
         Čia tvarkysi profilį, mokesčių procentą, kategorijas ir paskyrą.
       </p>

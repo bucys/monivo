@@ -1,10 +1,11 @@
 import { AppScreen } from "@/components/app/app-screen";
 
-export default function InsightsPage() {
+export default function ServicesPage() {
   return (
     <AppScreen>
       <p className="text-body text-ink-700">
-        Čia atsiras mėnesio santrauka ir paprastas šešių mėnesių paveikslas.
+        Čia sutvarkysi paslaugų sąrašą ir kainas, kad jas vienu spustelėjimu
+        pridėtum prie pajamų.
       </p>
     </AppScreen>
   );
