@@ -8,12 +8,33 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+const siteUrl = "https://monivo.lt";
+const siteTitle = "Monivo — aišku, kiek lieka";
+const siteDescription =
+  "Monivo padeda individualiai dirbantiems grožio specialistams sekti pajamas, išlaidas ir mokesčių rezervą — kad būtų aiškiau, kiek lieka.";
+
 export const metadata: Metadata = {
-  title: "Monivo — Pagaliau aišku kiek lieka",
-  description:
-    "Monivo padeda grožio specialistams kasdien matyti, kiek pinigų iš tiesų jų.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: siteTitle,
+    template: "%s · Monivo",
+  },
+  description: siteDescription,
   applicationName: "Monivo",
   manifest: "/manifest.webmanifest",
+  openGraph: {
+    type: "website",
+    locale: "lt_LT",
+    siteName: "Monivo",
+    title: siteTitle,
+    description: siteDescription,
+    url: "/",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+  },
 };
 
 export const viewport: Viewport = {
