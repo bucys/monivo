@@ -6,8 +6,8 @@ export function LandingClosing() {
   return (
     <LandingSection>
       <LandingContainer>
-        <div className="flex flex-col items-center gap-8 text-center">
-          <h2 className="max-w-xl text-display text-ink-900">
+        <div className="mx-auto flex max-w-2xl flex-col items-center gap-8 rounded-xl bg-white p-10 text-center shadow-card sm:p-14">
+          <h2 className="text-display text-ink-900">
             Pradėk matyti, kiek iš tiesų lieka.
           </h2>
           <p className="max-w-md text-body text-ink-700">

@@ -26,14 +26,16 @@ export function LandingProblem() {
   return (
     <LandingSection>
       <LandingContainer>
-        <div className="flex flex-col gap-10">
-          <div className="flex max-w-xl flex-col gap-3">
-            <h2 className="text-h1 text-ink-900">Tau jau pažįstama?</h2>
-            <p className="text-body text-ink-700">
-              Tris dalykus išgirsti beveik iš kiekvienos specialistės.
-            </p>
+        <div className="flex flex-col gap-12">
+          <div className="flex max-w-xl flex-col gap-4">
+            <span className="text-caption uppercase tracking-[0.18em] text-accent">
+              Pažįstama?
+            </span>
+            <h2 className="text-h1 text-ink-900">
+              Trys dalykai, kuriuos išgirsti beveik iš kiekvienos.
+            </h2>
           </div>
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-5 md:grid-cols-3">
             {pains.map((pain) => (
               <Card key={pain.title}>
                 <h3 className="text-h2 text-ink-900">{pain.title}</h3>

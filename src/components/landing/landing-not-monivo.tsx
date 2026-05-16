@@ -12,20 +12,27 @@ export function LandingNotMonivo() {
   return (
     <LandingSection tone="soft">
       <LandingContainer>
-        <div className="grid gap-12 sm:grid-cols-2 sm:gap-16">
+        <div className="grid items-start gap-12 sm:grid-cols-[1fr_1.1fr] sm:gap-20">
           <div className="flex flex-col gap-5">
-            <h2 className="text-h1 text-ink-900">Monivo nėra</h2>
-            <ul className="flex flex-col gap-2 text-body text-ink-700">
+            <span className="text-caption uppercase tracking-[0.18em] text-ink-500">
+              Monivo nėra
+            </span>
+            <ul className="flex flex-col gap-2 text-body text-ink-500">
               {notList.map((item) => (
                 <li key={item}>— {item}</li>
               ))}
             </ul>
           </div>
           <div className="flex flex-col gap-5">
-            <h2 className="text-h1 text-ink-900">Monivo yra</h2>
+            <span className="text-caption uppercase tracking-[0.18em] text-accent">
+              Monivo yra
+            </span>
+            <h2 className="text-h1 text-ink-900">
+              Vienas skaičius, kuriuo gali pasitikėti.
+            </h2>
             <p className="text-body text-ink-700">
-              Vienas skaičius, kuriuo gali pasitikėti. Aiškumas, kurio ieškojai
-              kiekvieną mėnesio pabaigą.
+              Aiškumas, kurio ieškojai kiekvieną mėnesio pabaigą — nesigilindama
+              į apskaitą.
             </p>
           </div>
         </div>
