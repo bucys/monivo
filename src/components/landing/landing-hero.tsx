@@ -1,27 +1,14 @@
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { AppPreviewCard } from "./app-preview-card";
 import { LandingContainer } from "./landing-container";
 import { LandingCtaGroup } from "./landing-cta-group";
 import { LandingSection } from "./landing-section";
-import { PhoneFrame } from "./phone-frame";
-
-type PreviewEntry = {
-  label: string;
-  amount: string;
-  tone: "income" | "expense";
-};
-
-const previewEntries: ReadonlyArray<PreviewEntry> = [
-  { label: "Gelinis lakavimas", amount: "+45 €", tone: "income" },
-  { label: "Blakstienų papildymas", amount: "+60 €", tone: "income" },
-  { label: "Priemonės", amount: "−18 €", tone: "expense" },
-];
 
 export function LandingHero() {
   return (
-    <LandingSection>
+    <LandingSection className="!pb-4 !pt-32 sm:!pb-8 sm:!pt-44">
       <LandingContainer>
-        <div className="grid items-center gap-14 sm:grid-cols-[1.05fr_1fr] sm:gap-20">
+        <div className="grid items-start gap-14 sm:grid-cols-[1.05fr_1fr] sm:gap-20">
           <div className="flex flex-col items-start gap-7">
             <span className="inline-flex items-center gap-2 rounded-full bg-accent-soft px-3 py-1 text-caption text-accent">
               <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-accent" />
@@ -43,53 +30,19 @@ export function LandingHero() {
             </p>
           </div>
 
-          <PhoneFrame ariaLabel="Monivo aplikacijos peržiūra">
-            <div className="flex h-full flex-col gap-3 px-3 pb-3 pt-2">
-              <PreviewStatusBar />
-              <AppPreviewCard
-                label="Galiu išleisti"
-                value="€1 350"
-                footer="Mokesčiams atidėta · €145"
-              />
-              <div className="flex flex-col gap-2">
-                <span className="px-1 text-caption text-ink-500">
-                  Šiandien
-                </span>
-                {previewEntries.map((entry) => (
-                  <PreviewRow key={entry.label} entry={entry} />
-                ))}
-              </div>
-            </div>
-          </PhoneFrame>
+          <div className="mx-auto w-full max-w-xs">
+            <Image
+              src="/landing/hero-phone.png"
+              alt="Monivo aplikacijos peržiūra: galiu išleisti €1 350, mokesčiams atidėta €145, šios dienos pajamų ir išlaidų sąrašas."
+              width={464}
+              height={538}
+              priority
+              sizes="(min-width: 640px) 320px, 100vw"
+              className="h-auto w-full"
+            />
+          </div>
         </div>
       </LandingContainer>
     </LandingSection>
-  );
-}
-
-function PreviewStatusBar() {
-  return (
-    <div className="flex items-center justify-between px-2 pt-1 text-caption text-ink-700">
-      <span className="tabular-nums">9:41</span>
-      <span aria-hidden className="block h-1.5 w-12 rounded-full bg-ink-300" />
-      <span className="tabular-nums">100%</span>
-    </div>
-  );
-}
-
-function PreviewRow({ entry }: { entry: PreviewEntry }) {
-  return (
-    <div className="flex items-center justify-between rounded-md bg-white px-3 py-2.5 shadow-card">
-      <span className="text-caption text-ink-700">{entry.label}</span>
-      <span
-        className={
-          entry.tone === "income"
-            ? "text-caption tabular-nums text-income"
-            : "text-caption tabular-nums text-expense"
-        }
-      >
-        {entry.amount}
-      </span>
-    </div>
   );
 }

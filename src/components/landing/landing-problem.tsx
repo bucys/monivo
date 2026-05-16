@@ -24,7 +24,7 @@ const pains: ReadonlyArray<Pain> = [
 
 export function LandingProblem() {
   return (
-    <LandingSection>
+    <LandingSection className="!pt-4 sm:!pt-8">
       <LandingContainer>
         <div className="flex flex-col gap-12">
           <div className="flex max-w-xl flex-col gap-4">
