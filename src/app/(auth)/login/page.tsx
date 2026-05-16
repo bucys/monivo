@@ -16,11 +16,13 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notRegistered, setNotRegistered] = useState(false);
+  const [rateLimited, setRateLimited] = useState(false);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setNotRegistered(false);
+    setRateLimited(false);
     setLoading(true);
 
     const supabase = createSupabaseBrowserClient();
@@ -41,7 +43,9 @@ function LoginForm() {
 
     if (signInError) {
       const msg = signInError.message.toLowerCase();
-      if (
+      if (msg.includes("rate limit")) {
+        setRateLimited(true);
+      } else if (
         msg.includes("signups not allowed") ||
         msg.includes("user not found") ||
         msg.includes("otp_disabled")
@@ -79,7 +83,12 @@ function LoginForm() {
         />
       </label>
 
-      {notRegistered ? (
+      {rateLimited ? (
+        <div className="rounded-[12px] border border-hair bg-cream px-3.5 py-3 text-[13px] text-ink-900/90">
+          Per trumpą laiką išsiųsta per daug prisijungimo nuorodų. Palaukite
+          kelias minutes ir bandykite dar kartą.
+        </div>
+      ) : notRegistered ? (
         <div className="rounded-[12px] border border-hair bg-cream px-3.5 py-3 text-[13px] text-ink-900/90">
           Paskyros su šiuo el. paštu neradome.{" "}
           <Link

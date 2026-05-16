@@ -12,10 +12,12 @@ export default function RegisterPage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [rateLimited, setRateLimited] = useState(false);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
+    setRateLimited(false);
     setLoading(true);
 
     const supabase = createSupabaseBrowserClient();
@@ -38,7 +40,11 @@ export default function RegisterPage() {
     setLoading(false);
 
     if (signUpError) {
-      setError(signUpError.message);
+      if (signUpError.message.toLowerCase().includes("rate limit")) {
+        setRateLimited(true);
+      } else {
+        setError(signUpError.message);
+      }
       return;
     }
     setSubmitted(true);
@@ -90,7 +96,12 @@ export default function RegisterPage() {
             />
           </label>
 
-          {error ? (
+          {rateLimited ? (
+            <div className="rounded-[12px] border border-hair bg-cream px-3.5 py-3 text-[13px] text-ink-900/90">
+              Per trumpą laiką išsiųsta per daug prisijungimo nuorodų.
+              Palaukite kelias minutes ir bandykite dar kartą.
+            </div>
+          ) : error ? (
             <p className="rounded-[12px] bg-expense-bg px-3.5 py-2.5 text-[13px] text-expense">
               {error}
             </p>
