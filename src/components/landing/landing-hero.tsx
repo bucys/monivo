@@ -38,7 +38,7 @@ export function LandingHero() {
               tau — grožio profesionalui.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5 sm:justify-start">
+            <div className="mt-8 flex justify-center sm:justify-start">
               <Link href="/register">
                 <Button
                   variant="primary"
@@ -47,17 +47,6 @@ export function LandingHero() {
                   Pradėti 30 d. nemokamai →
                 </Button>
               </Link>
-              <Button
-                variant="secondary"
-                className="!h-auto !w-auto !rounded-[14px] !border-hair !px-[22px] !py-[13px] !text-[14px]"
-              >
-                <span aria-hidden className="mr-2 inline-block">
-                  <svg width="12" height="14" viewBox="0 0 12 14" fill="none">
-                    <path d="M1.5 1L11 7L1.5 13V1Z" fill="currentColor" />
-                  </svg>
-                </span>
-                Žiūrėti demo
-              </Button>
             </div>
 
             <p className="mt-3 text-[12px] font-medium text-ink-500">

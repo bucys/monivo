@@ -15,10 +15,12 @@ function LoginForm() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [notRegistered, setNotRegistered] = useState(false);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
+    setNotRegistered(false);
     setLoading(true);
 
     const supabase = createSupabaseBrowserClient();
@@ -38,7 +40,16 @@ function LoginForm() {
     setLoading(false);
 
     if (signInError) {
-      setError(signInError.message);
+      const msg = signInError.message.toLowerCase();
+      if (
+        msg.includes("signups not allowed") ||
+        msg.includes("user not found") ||
+        msg.includes("otp_disabled")
+      ) {
+        setNotRegistered(true);
+      } else {
+        setError(signInError.message);
+      }
       return;
     }
     setSubmitted(true);
@@ -68,7 +79,17 @@ function LoginForm() {
         />
       </label>
 
-      {error ? (
+      {notRegistered ? (
+        <div className="rounded-[12px] border border-hair bg-cream px-3.5 py-3 text-[13px] text-ink-900/90">
+          Paskyros su šiuo el. paštu neradome.{" "}
+          <Link
+            href={`/register?email=${encodeURIComponent(email)}`}
+            className="text-accent-deep hover:underline"
+          >
+            Sukurkite paskyrą nemokamai →
+          </Link>
+        </div>
+      ) : error ? (
         <p className="rounded-[12px] bg-expense-bg px-3.5 py-2.5 text-[13px] text-expense">
           {error}
         </p>
