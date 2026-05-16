@@ -12,7 +12,7 @@ const navLinks: ReadonlyArray<NavLink> = [
 
 export function LandingHeader() {
   return (
-    <header className="sticky top-4 z-50 mx-auto mt-4 w-full max-w-[1180px] px-5 sm:px-8">
+    <header className="sticky top-4 z-50 mx-auto mt-0 w-full max-w-[1180px] px-5 sm:px-8">
       <div className="relative overflow-hidden rounded-full border border-hair bg-white/45 shadow-nav ring-1 ring-inset ring-white/40 backdrop-blur-2xl backdrop-saturate-150 supports-[backdrop-filter]:bg-white/35">
         <div
           aria-hidden

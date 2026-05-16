@@ -39,7 +39,7 @@ export function LandingProblem() {
               <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-accent" />
               Problema · Sprendimas
             </span>
-            <h2 className="mt-5 text-[32px] font-semibold leading-[1.05] tracking-[-0.033em] text-ink-900 text-balance sm:text-[44px]">
+            <h2 className="mt-5 text-[32px] font-semibold leading-[1.05] tracking-[-0.033em] text-ink-900/90 text-balance sm:text-[44px]">
               Užtenka spėlioti savo finansus.
             </h2>
           </div>
@@ -60,7 +60,7 @@ export function LandingProblem() {
                 >
                   →
                 </span>
-                <p className="text-[16px] font-medium leading-[1.4] tracking-tight text-ink-900">
+                <p className="text-[16px] font-medium leading-[1.4] tracking-tight text-ink-900/90">
                   {pain.a}
                 </p>
               </div>

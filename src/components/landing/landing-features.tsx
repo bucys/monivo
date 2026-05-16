@@ -87,14 +87,14 @@ const PhoneIcon = (
 const features: ReadonlyArray<Feature> = [
   {
     title: "Greitas pajamų įrašas",
-    body: "Spustelk paslaugos chip'ą — ir įrašas išsaugotas. Be formų, be klaviatūros.",
+    body: "Spustelk paslaugą — ir įrašas išsaugotas. Be formų, be klaviatūros.",
     iconBg: "bg-income-bg",
     iconText: "text-income",
     icon: PlusIcon,
   },
   {
     title: "Išlaidų sekimas",
-    body: "Medžiagos, nuoma, transportas. Suvedi vieną kartą — matai per visus mėnesius.",
+    body: "Nuoma, priemonės ar transportas — visos išlaidos vienoje vietoje.",
     iconBg: "bg-expense-bg",
     iconText: "text-expense",
     icon: ReceiptIcon,
@@ -114,15 +114,15 @@ const features: ReadonlyArray<Feature> = [
     icon: InsightsIcon,
   },
   {
-    title: "Grožio specialistėms",
-    body: "Paslaugos, presetai ir kalba pritaikyta individualiai dirbančioms grožio specialistėms.",
+    title: "Grožio specialistams",
+    body: "Nuo paslaugų iki pajamų sekimo — viskas pritaikyta kasdieniam darbui.",
     iconBg: "bg-[#EDE6FF]",
     iconText: "text-[#5B3FAA]",
     icon: HeartIcon,
   },
   {
     title: "Mobile-first patirtis",
-    body: "Veikia kaip lengvas telefono app'as. Pajamas gali pridėti viena ranka, tarp klienčių.",
+    body: "Sukurta naudoti telefone — greitai, paprastai ir be nereikalingų žingsnių.",
     iconBg: "bg-[#FFEEDC]",
     iconText: "text-[#8E5A1E]",
     icon: PhoneIcon,
@@ -139,12 +139,12 @@ export function LandingFeatures() {
               <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-accent" />
               Galimybės
             </span>
-            <h2 className="mt-5 text-[32px] font-semibold leading-[1.05] tracking-[-0.033em] text-ink-900 text-balance sm:text-[44px]">
+            <h2 className="mt-5 text-[32px] font-semibold leading-[1.05] tracking-[-0.033em] text-ink-900/90 text-balance sm:text-[44px]">
               Viskas, ko reikia — niekas, ko nereikia.
             </h2>
             <p className="mt-4 max-w-[560px] text-[17px] leading-[1.55] text-ink-500">
               Sukurta būti paprasta. Be lentelių, be kategorijų medžio, be
-              vakarų savaitės pildant duomenis.
+              vakarų pildant duomenis.
             </p>
           </div>
 
@@ -160,7 +160,7 @@ export function LandingFeatures() {
                 >
                   {feature.icon}
                 </span>
-                <h3 className="text-[18px] font-semibold tracking-[-0.022em] text-ink-900">
+                <h3 className="text-[18px] font-semibold tracking-[-0.022em] text-ink-900/90">
                   {feature.title}
                 </h3>
                 <p className="mt-2 text-[14px] leading-[1.5] text-ink-500">

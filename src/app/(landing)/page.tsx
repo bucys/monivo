@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { LandingAudience } from "@/components/landing/landing-audience";
 import { LandingClosing } from "@/components/landing/landing-closing";
+import { LandingFaq } from "@/components/landing/landing-faq";
+import { LandingFeatures } from "@/components/landing/landing-features";
 import { LandingFooter } from "@/components/landing/landing-footer";
 import { LandingHeader } from "@/components/landing/landing-header";
-import { LandingFeatures } from "@/components/landing/landing-features";
 import { LandingHero } from "@/components/landing/landing-hero";
 import { LandingHowItWorks } from "@/components/landing/landing-how-it-works";
-import { LandingNotMonivo } from "@/components/landing/landing-not-monivo";
+import { LandingPricing } from "@/components/landing/landing-pricing";
 import { LandingProblem } from "@/components/landing/landing-problem";
 
 export default function LandingPage() {
@@ -18,8 +18,8 @@ export default function LandingPage() {
         <LandingProblem />
         <LandingFeatures />
         <LandingHowItWorks />
-        <LandingAudience />
-        <LandingNotMonivo />
+        <LandingPricing />
+        <LandingFaq />
         <LandingClosing />
       </main>
       <LandingFooter

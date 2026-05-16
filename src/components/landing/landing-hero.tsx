@@ -24,14 +24,17 @@ export function LandingHero() {
               Grožio profesionalams · Lietuvoje
             </span>
 
-            <h1 className="mt-5 text-[40px] font-semibold leading-[1.04] tracking-[-0.034em] text-ink-900 text-balance sm:text-display-lg">
+            <h1 className="mt-5 text-[40px] font-semibold leading-[1.06] tracking-[-0.034em] text-ink-900 text-balance sm:text-display-lg sm:leading-[1.05]">
               Pagaliau aišku{" "}
-              <span className="font-medium italic text-accent">kiek lieka tau</span>.
+              <span className="inline-block bg-gradient-to-r from-accent-deep to-accent bg-clip-text pb-1 pr-2 font-medium italic tracking-[-0.038em] text-transparent">
+                kiek lieka tau
+              </span>
+              <span className="text-ink-900">.</span>
             </h1>
 
             <p className="mt-5 max-w-[480px] text-[17px] leading-[1.55] text-ink-500 sm:text-body-lg">
               Sek pajamas, išlaidas ir mokesčius be buhalterijos streso. Sukurta
-              tau — manikiūrininkėms, blakstienų meistrėms ir kosmetologėms.
+              tau — grožio profesionalui.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-2.5">
@@ -77,7 +80,7 @@ export function LandingHero() {
             </ul>
 
             <p className="mt-9 border-t border-hair pt-6 text-[13px] text-ink-500">
-              Sukurta individualiai dirbančioms grožio specialistėms Lietuvoje.
+              Sukurta individualiai dirbantiems.
               Be Excel. Be buhalterinės kalbos. Be streso.
             </p>
           </div>
@@ -133,7 +136,7 @@ export function LandingHero() {
                   Mokesčiams atidėta
                 </span>
                 <span className="text-[15px] font-semibold tracking-tight text-tax">
-                  426 €
+                  145 €
                 </span>
               </span>
             </div>

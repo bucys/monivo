@@ -135,13 +135,13 @@ const steps: ReadonlyArray<Step> = [
   {
     number: "01",
     title: "Pridėk savo paslaugas ir kainas",
-    body: "Manikiūras 35€, blakstienos 60€. Vieną kartą — naudosi kiekvieną dieną.",
+    body: "Susikuri savo paslaugas vieną kartą — ir greitai jas pridėsi kiekvieną dieną.",
     visual: ServiceListVisual,
   },
   {
     number: "02",
     title: "Sek pajamas per sekundes",
-    body: "Po kiekvienos klientės — spusteli chip'ą. Suma, paslauga ir laikas — viskas užfiksuota.",
+    body: "Pasirenki paslaugą, patvirtini — ir viskas.",
     visual: ChipsVisual,
   },
   {
@@ -165,7 +165,7 @@ export function LandingHowItWorks() {
               <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-accent" />
               Kaip veikia
             </span>
-            <h2 className="mt-5 text-[32px] font-semibold leading-[1.05] tracking-[-0.033em] text-ink-900 text-balance sm:text-[44px]">
+            <h2 className="mt-5 text-[32px] font-semibold leading-[1.05] tracking-[-0.033em] text-ink-900/90 text-balance sm:text-[44px]">
               Trys žingsniai — ir aišku.
             </h2>
           </div>
@@ -182,7 +182,7 @@ export function LandingHowItWorks() {
                     <span className="inline-flex h-11 w-11 items-center justify-center rounded-[14px] bg-accent-soft text-[18px] font-bold tracking-tight text-accent-deep tabular-nums">
                       {step.number}
                     </span>
-                    <h3 className="mt-4 text-[24px] font-semibold leading-[1.15] tracking-[-0.025em] text-ink-900 sm:text-[28px]">
+                    <h3 className="mt-4 text-[24px] font-semibold leading-[1.15] tracking-[-0.025em] text-ink-900/90 sm:text-[28px]">
                       {step.title}
                     </h3>
                     <p className="mt-3 max-w-[420px] text-[15px] leading-[1.5] text-ink-500">
