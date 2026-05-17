@@ -59,14 +59,14 @@ export function TopServicesCard({
       <Header />
 
       {/* Mobile: horizontal snap scroll. Desktop: equal 5-col grid. */}
-      <div className="-mx-6 mt-5 overflow-x-auto px-6 pb-1 [scrollbar-width:none] lg:mx-0 lg:mt-6 lg:overflow-visible lg:px-0 [&::-webkit-scrollbar]:hidden">
-        <div className="flex w-max gap-3 lg:grid lg:w-auto lg:grid-cols-5 lg:gap-[14px]">
+      <div className="-mx-6 mt-5 overflow-x-auto px-6 pb-2 [scrollbar-width:none] lg:mx-0 lg:mt-7 lg:overflow-visible lg:px-0 [&::-webkit-scrollbar]:hidden">
+        <div className="flex w-max gap-3 lg:grid lg:w-auto lg:grid-cols-5 lg:gap-4">
           {top.map((s, i) => (
             <ServiceTile
               key={s.key}
               service={s}
               tone={toneFor(s.key, i)}
-              highlight={i === 0}
+              rank={i}
               barRatio={s.totalCents / max}
               sharePct={Math.round((s.totalCents / safeTotal) * 100)}
             />
@@ -118,30 +118,40 @@ function FooterLink() {
   );
 }
 
+const BAR_OPACITY_BY_RANK = [1, 0.88, 0.74, 0.6, 0.48];
+
 function ServiceTile({
   service,
   tone,
-  highlight,
+  rank,
   barRatio,
   sharePct,
 }: {
   service: ServiceBucket;
   tone: Tone;
-  highlight: boolean;
+  rank: number;
   barRatio: number;
   sharePct: number;
 }) {
   const initial = service.name.trim().slice(0, 1).toUpperCase() || "·";
   const isZero = service.totalCents === 0;
+  const isTop = rank === 0;
   const barWidthPct = isZero ? 100 : Math.max(barRatio * 100, 8);
   const barFill = isZero
     ? "#E8E4DA"
-    : highlight
+    : isTop
       ? "linear-gradient(90deg, #1F7A6B, #185E53)"
       : tone.bar;
+  const barOpacity = isZero || isTop ? 1 : (BAR_OPACITY_BY_RANK[rank] ?? 0.4);
+
+  const surfaceClass = isTop
+    ? "border-[rgba(23,33,29,0.1)] bg-[#FBFAF6] shadow-[0_1px_2px_rgba(23,33,29,0.05),_0_12px_28px_-12px_rgba(31,122,107,0.25)]"
+    : "border-hair bg-white shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_6px_18px_-10px_rgba(23,33,29,0.08)]";
 
   return (
-    <div className="flex w-[210px] shrink-0 flex-col rounded-[18px] border border-hair bg-white p-5 shadow-[0_1px_2px_rgba(23,33,29,0.04)] lg:w-auto">
+    <div
+      className={`group flex w-[210px] shrink-0 flex-col rounded-[18px] border p-5 transition-[transform,box-shadow] duration-200 ease-out lg:w-auto lg:hover:-translate-y-[1px] lg:hover:shadow-[0_2px_4px_rgba(23,33,29,0.05),_0_16px_36px_-14px_rgba(23,33,29,0.18)] ${surfaceClass}`}
+    >
       <div className="flex items-start justify-between gap-2">
         <span
           aria-hidden
@@ -159,25 +169,29 @@ function ServiceTile({
         </span>
       </div>
 
-      <div className="mt-4 truncate text-[14px] font-semibold tracking-[-0.012em] text-ink-900/90">
+      <div className="mt-4 truncate text-[14px] font-medium tracking-[-0.012em] text-ink-700">
         {service.name}
       </div>
 
-      <div className="mt-1 flex items-baseline gap-0.5 tabular-nums">
-        <span className="text-[22px] font-semibold tracking-[-0.022em] text-ink-900/90">
+      <div className="mt-0.5 flex items-baseline gap-0.5 tabular-nums">
+        <span className="text-[24px] font-semibold leading-[1.1] tracking-[-0.024em] text-ink-900">
           {formatEur(service.totalCents).replace(/\s?€/, "")}
         </span>
-        <span className="ml-0.5 text-[13px] font-medium text-ink-500">€</span>
+        <span className="ml-0.5 text-[14px] font-medium text-ink-500">€</span>
       </div>
 
-      <div className="mt-3 text-[12px] text-ink-500 tabular-nums">
+      <div className="mt-1.5 text-[11px] font-medium uppercase tracking-[0.04em] text-ink-500 tabular-nums">
         {sharePct}% pajamų
       </div>
 
-      <div className="mt-3 h-[6px] overflow-hidden rounded-full bg-[#EEEAE0]">
+      <div className="mt-4 h-[6px] overflow-hidden rounded-full bg-[#EEEAE0]">
         <div
           className="h-full rounded-full"
-          style={{ width: `${barWidthPct}%`, background: barFill }}
+          style={{
+            width: `${barWidthPct}%`,
+            background: barFill,
+            opacity: barOpacity,
+          }}
         />
       </div>
     </div>
