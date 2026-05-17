@@ -3,18 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { useT } from "@/i18n/locale-provider";
 
 type Tab = { label: string; href: string; icon: ReactNode };
-
-const leftTabs: ReadonlyArray<Tab> = [
-  { label: "Pagrindinis", href: "/dashboard", icon: <HomeIcon /> },
-  { label: "Veikla", href: "/activity", icon: <ActivityIcon /> },
-];
-
-const rightTabs: ReadonlyArray<Tab> = [
-  { label: "Įžvalgos", href: "/insights", icon: <InsightsIcon /> },
-  { label: "Daugiau", href: "/settings", icon: <MoreIcon /> },
-];
 
 function isActive(pathname: string | null, href: string): boolean {
   if (!pathname) return false;
@@ -23,10 +14,19 @@ function isActive(pathname: string | null, href: string): boolean {
 
 export function AppBottomNav() {
   const pathname = usePathname();
+  const t = useT();
+  const leftTabs: ReadonlyArray<Tab> = [
+    { label: t.nav.home, href: "/dashboard", icon: <HomeIcon /> },
+    { label: t.nav.activity, href: "/activity", icon: <ActivityIcon /> },
+  ];
+  const rightTabs: ReadonlyArray<Tab> = [
+    { label: t.nav.insights, href: "/insights", icon: <InsightsIcon /> },
+    { label: t.nav.more, href: "/settings", icon: <MoreIcon /> },
+  ];
 
   return (
     <nav
-      aria-label="Pagrindinė navigacija"
+      aria-label={t.nav.mobileNavAria}
       className="fixed inset-x-4 bottom-6 z-30 rounded-[32px] border border-hair bg-white/85 px-2 pb-[env(safe-area-inset-bottom)] shadow-card backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-white/70 lg:hidden"
     >
       <ul className="relative flex items-center">

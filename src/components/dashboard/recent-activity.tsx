@@ -33,40 +33,53 @@ export function expenseLabel(slug: string) {
   return EXPENSE_LABELS[slug] ?? "Išlaidos";
 }
 
-const PAY_LABEL: Record<PaymentMethod, string> = {
-  cash: "Grynais",
-  card: "Kortele",
-  transfer: "Pavedimu",
+export type TodayLabels = {
+  aria: string;
+  title: string;
+  countSingle: string;
+  countFew: string;
+  countMany: string;
+  payCash: string;
+  payCard: string;
+  payTransfer: string;
+  payExpense: string;
 };
 
-const PAY_RIGHT: Record<PaymentMethod, string> = {
-  cash: "Grynais",
-  card: "Kortele",
-  transfer: "Pavedimu",
-};
+function pluralizeCount(n: number, labels: TodayLabels) {
+  if (n === 1) return labels.countSingle;
+  if (n > 1 && n < 10) return labels.countFew;
+  return labels.countMany;
+}
+
+function payLabelFor(pay: PaymentMethod, labels: TodayLabels) {
+  if (pay === "cash") return labels.payCash;
+  if (pay === "card") return labels.payCard;
+  return labels.payTransfer;
+}
 
 export function TodayCard({
   entries,
   incomeCents,
   expenseCents,
+  labels,
 }: {
   entries: ReadonlyArray<RecentEntry>;
   incomeCents: number;
   expenseCents: number;
+  labels: TodayLabels;
 }) {
   const count = entries.length;
-  const countLabel =
-    count === 1 ? "įrašas" : count > 1 && count < 10 ? "įrašai" : "įrašų";
+  const countLabel = pluralizeCount(count, labels);
 
   return (
     <section
-      aria-label="Šios dienos įrašai"
+      aria-label={labels.aria}
       className="overflow-hidden rounded-[20px] bg-white shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]"
     >
       <div className="flex items-center justify-between border-b border-hair px-6 py-5">
         <div>
           <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">
-            Šiandien
+            {labels.title}
           </div>
           <div className="mt-1 text-[18px] font-semibold tracking-[-0.018em] text-ink-900/90">
             {count} {countLabel}
@@ -84,20 +97,28 @@ export function TodayCard({
         </div>
       </div>
       {entries.slice(0, 6).map((e, i, arr) => (
-        <TodayRow key={e.id} entry={e} last={i === arr.length - 1} />
+        <TodayRow key={e.id} entry={e} last={i === arr.length - 1} labels={labels} />
       ))}
     </section>
   );
 }
 
-function TodayRow({ entry, last }: { entry: RecentEntry; last: boolean }) {
+function TodayRow({
+  entry,
+  last,
+  labels,
+}: {
+  entry: RecentEntry;
+  last: boolean;
+  labels: TodayLabels;
+}) {
   const isIncome = entry.kind === "income";
   const sign = isIncome ? "+" : "−";
   const amountText = formatEur(entry.amountCents).replace(/\s?€/, "").replace("−", "");
   const time = formatTime(entry.createdAt);
   const payRight = isIncome && entry.paymentMethod
-    ? PAY_RIGHT[entry.paymentMethod]
-    : "Išlaida";
+    ? payLabelFor(entry.paymentMethod, labels)
+    : labels.payExpense;
 
   return (
     <div
@@ -126,7 +147,7 @@ function TodayRow({ entry, last }: { entry: RecentEntry; last: boolean }) {
           {isIncome && entry.paymentMethod ? (
             <>
               <PayIcon pay={entry.paymentMethod} />
-              <span>{PAY_LABEL[entry.paymentMethod]}</span>
+              <span>{payLabelFor(entry.paymentMethod, labels)}</span>
               <span aria-hidden>·</span>
             </>
           ) : null}

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { dispatchOpenIncomeEntry } from "@/components/add-entry/add-entry-sheet";
+import { useT } from "@/i18n/locale-provider";
 
 export type QuickService = {
   id: string;
@@ -31,19 +32,20 @@ export function QuickActions({
   services: ReadonlyArray<QuickService>;
   canWrite: boolean;
 }) {
+  const t = useT();
   const top = services.slice(0, 5);
 
   return (
     <section
-      aria-label="Greiti veiksmai"
+      aria-label={t.dashboard.quickActions}
       className="flex h-full flex-col rounded-[20px] bg-white p-6 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]"
     >
       <div className="mb-3.5 flex items-baseline justify-between gap-3">
         <h2 className="text-[14px] font-semibold tracking-[-0.012em] text-ink-900/90">
-          Greiti veiksmai
+          {t.dashboard.quickActions}
         </h2>
         <span className="text-[11px] font-medium text-ink-500">
-          Spustelėk — pridėk
+          {t.dashboard.quickActionsHint}
         </span>
       </div>
 
@@ -78,7 +80,7 @@ export function QuickActions({
               href="/services"
               className="flex items-center justify-between rounded-[14px] px-3.5 py-2.5 text-[12px] font-medium text-ink-500 transition-colors hover:text-ink-900/90"
             >
-              Žiūrėti visas paslaugas
+              {t.dashboard.quickActionsAllLink}
               <Chevron />
             </Link>
           </li>
@@ -89,14 +91,15 @@ export function QuickActions({
 }
 
 function EmptyState({ canWrite }: { canWrite: boolean }) {
+  const t = useT();
   return (
     <div className="flex flex-1 flex-col items-start justify-center gap-4 rounded-[14px] bg-cream/60 p-5">
       <div>
         <p className="text-[13px] font-medium text-ink-900/90">
-          Dar nėra paslaugų greitam įvedimui.
+          {t.dashboard.quickActionsEmptyTitle}
         </p>
         <p className="mt-1 text-[12px] leading-[1.5] text-ink-500">
-          Pridėk dažniausias paslaugas — pajamas įvesi vienu paliestimu.
+          {t.dashboard.quickActionsEmptyBody}
         </p>
       </div>
       {canWrite ? (
@@ -104,7 +107,7 @@ function EmptyState({ canWrite }: { canWrite: boolean }) {
           href="/services"
           className="rounded-full bg-accent px-4 py-2 text-[12px] font-semibold text-white shadow-fab transition-colors hover:bg-accent-deep"
         >
-          Pridėti paslaugą
+          {t.dashboard.quickActionsEmptyCta}
         </Link>
       ) : null}
     </div>

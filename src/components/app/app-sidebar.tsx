@@ -7,29 +7,12 @@ import {
   dispatchOpenExpenseEntry,
   dispatchOpenIncomeEntry,
 } from "@/components/add-entry/add-entry-sheet";
+import { useT } from "@/i18n/locale-provider";
 
 type NavGroup = {
   eyebrow: string;
   items: ReadonlyArray<{ label: string; href: string; icon: ReactNode }>;
 };
-
-const groups: ReadonlyArray<NavGroup> = [
-  {
-    eyebrow: "Naršyti",
-    items: [
-      { label: "Apžvalga", href: "/dashboard", icon: <HomeIcon /> },
-      { label: "Veikla", href: "/activity", icon: <ActivityIcon /> },
-      { label: "Įžvalgos", href: "/insights", icon: <InsightsIcon /> },
-    ],
-  },
-  {
-    eyebrow: "Verslas",
-    items: [
-      { label: "Paslaugos ir kainos", href: "/services", icon: <ServiceIcon /> },
-      { label: "Nustatymai", href: "/settings", icon: <SettingsIcon /> },
-    ],
-  },
-];
 
 function isActive(pathname: string | null, href: string): boolean {
   if (!pathname) return false;
@@ -38,6 +21,24 @@ function isActive(pathname: string | null, href: string): boolean {
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const t = useT();
+  const groups: ReadonlyArray<NavGroup> = [
+    {
+      eyebrow: t.nav.browse,
+      items: [
+        { label: t.nav.dashboard, href: "/dashboard", icon: <HomeIcon /> },
+        { label: t.nav.activity, href: "/activity", icon: <ActivityIcon /> },
+        { label: t.nav.insights, href: "/insights", icon: <InsightsIcon /> },
+      ],
+    },
+    {
+      eyebrow: t.nav.business,
+      items: [
+        { label: t.nav.services, href: "/services", icon: <ServiceIcon /> },
+        { label: t.nav.settings, href: "/settings", icon: <SettingsIcon /> },
+      ],
+    },
+  ];
 
   return (
     <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-20 lg:flex lg:h-dvh lg:w-[260px] lg:flex-col lg:gap-5 lg:overflow-y-auto lg:border-r lg:border-hair lg:bg-[#F4F1EA] lg:p-[22px]">
@@ -69,7 +70,7 @@ export function AppSidebar() {
           >
             +
           </span>
-          Pridėti pajamas
+          {t.nav.addIncome}
         </button>
         <button
           type="button"
@@ -82,11 +83,11 @@ export function AppSidebar() {
           >
             −
           </span>
-          Pridėti išlaidas
+          {t.nav.addExpense}
         </button>
       </div>
 
-      <nav aria-label="Šoninė navigacija" className="flex flex-col gap-5">
+      <nav aria-label={t.nav.sidebarAria} className="flex flex-col gap-5">
         {groups.map((group) => (
           <div key={group.eyebrow} className="flex flex-col gap-1">
             <span className="px-2.5 pb-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">
@@ -125,10 +126,13 @@ export function AppSidebar() {
       <div className="rounded-[16px] border border-hair bg-white p-3.5 shadow-card">
         <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.05em] text-ink-500">
           <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-[#E2B673]" />
-          Mokesčių rezervas
+          {t.nav.taxReserveMini}
         </div>
         <div className="mt-1.5 text-[18px] font-semibold tracking-tight text-ink-900/90">
-          — <span className="text-[11px] font-medium text-ink-500">nuo pajamų</span>
+          —{" "}
+          <span className="text-[11px] font-medium text-ink-500">
+            {t.nav.taxReserveSubline}
+          </span>
         </div>
       </div>
 
@@ -145,7 +149,7 @@ export function AppSidebar() {
         </span>
         <span className="flex flex-1 flex-col text-left">
           <span className="text-[13px] font-semibold text-ink-900/90">—</span>
-          <span className="mt-0.5 text-[11px] text-ink-500">Individuali veikla</span>
+          <span className="mt-0.5 text-[11px] text-ink-500">{t.nav.individualActivity}</span>
         </span>
         <svg
           width="11"

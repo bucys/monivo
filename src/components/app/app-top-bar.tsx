@@ -2,11 +2,13 @@
 
 import { usePathname } from "next/navigation";
 import { NotificationBell } from "@/components/notifications/notification-bell";
+import { useT } from "@/i18n/locale-provider";
 import { getAppRouteMeta } from "./app-route-meta";
 
 export function AppTopBar() {
   const pathname = usePathname();
-  const { title } = getAppRouteMeta(pathname);
+  const t = useT();
+  const { title } = getAppRouteMeta(t, pathname);
 
   return (
     <header className="sticky top-0 z-30 border-b border-hair bg-cream/85 pt-[env(safe-area-inset-top)] backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-cream/70 lg:hidden">

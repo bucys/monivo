@@ -7,6 +7,11 @@ export type Dictionary = {
     loading: string;
     soon: string;
     saved: string;
+    income: string;
+    expense: string;
+    taxReserve: string;
+    seeAll: string;
+    thisMonth: string;
   };
   nav: {
     dashboard: string;
@@ -14,6 +19,67 @@ export type Dictionary = {
     insights: string;
     services: string;
     settings: string;
+    more: string;
+    home: string;
+    browse: string;
+    business: string;
+    sidebarAria: string;
+    mobileNavAria: string;
+    addIncome: string;
+    addExpense: string;
+    dashboardSub: string;
+    activitySub: string;
+    insightsSub: string;
+    servicesSub: string;
+    settingsSub: string;
+    taxReserveMini: string;
+    taxReserveSubline: string;
+    individualActivity: string;
+  };
+  topbar: {
+    notificationsAria: string;
+  };
+  dashboard: {
+    greeting: string;
+    greetingNamed: string;
+    spendableTitle: string;
+    spendableSubPositive: string;
+    spendableSubNegative: string;
+    monthlyComposition: string;
+    incomeRemainderLabel: string;
+    incomeCaption: string;
+    statsIncome: string;
+    statsExpense: string;
+    statsTaxReserve: string;
+    weeklyTitle: string;
+    weeklyWeekShort: string;
+    quickActions: string;
+    quickActionsHint: string;
+    quickActionsSeeAll: string;
+    quickActionsEmptyTitle: string;
+    quickActionsEmptyBody: string;
+    quickActionsEmptyCta: string;
+    quickActionsAllLinkShort: string;
+    quickActionsAllLink: string;
+    todayAria: string;
+    todayTitle: string;
+    todayCountSingle: string;
+    todayCountFew: string;
+    todayCountMany: string;
+    todayEmptyTitle: string;
+    todayEmptyBody: string;
+    todayPaymentCash: string;
+    todayPaymentCard: string;
+    todayPaymentTransfer: string;
+    todayPaymentExpense: string;
+  };
+  notifications: {
+    title: string;
+    unreadCount: string;
+    allRead: string;
+    markAllRead: string;
+    emptyTitle: string;
+    emptyBody: string;
   };
   settings: {
     title: string;
@@ -69,6 +135,11 @@ export const lt: Dictionary = {
     loading: "Įkeliama…",
     soon: "Greitai",
     saved: "Išsaugota",
+    income: "Pajamos",
+    expense: "Išlaidos",
+    taxReserve: "Atidėta",
+    seeAll: "Visi įrašai",
+    thisMonth: "Šis mėnuo",
   },
   nav: {
     dashboard: "Apžvalga",
@@ -76,6 +147,69 @@ export const lt: Dictionary = {
     insights: "Įžvalgos",
     services: "Paslaugos",
     settings: "Nustatymai",
+    more: "Daugiau",
+    home: "Pagrindinis",
+    browse: "Naršyti",
+    business: "Verslas",
+    sidebarAria: "Šoninė navigacija",
+    mobileNavAria: "Pagrindinė navigacija",
+    addIncome: "Pridėti pajamas",
+    addExpense: "Pridėti išlaidas",
+    dashboardSub: "Šis mėnuo",
+    activitySub: "Šis mėnuo",
+    insightsSub: "Šis mėnuo",
+    servicesSub: "Tavo presetai",
+    settingsSub: "Paskyra",
+    taxReserveMini: "Mokesčių rezervas",
+    taxReserveSubline: "nuo pajamų",
+    individualActivity: "Individuali veikla",
+  },
+  topbar: {
+    notificationsAria: "Pranešimai",
+  },
+  dashboard: {
+    greeting: "Labas",
+    greetingNamed: "Labas, {name}",
+    spendableTitle: "Kiek galiu išleisti",
+    spendableSubPositive: "Lieka po mokesčių rezervo ir išlaidų.",
+    spendableSubNegative: "Šį mėnesį išlaidos viršija pajamas.",
+    monthlyComposition: "Mėnesio sudėtis",
+    incomeRemainderLabel: "Šio mėnesio pajamos",
+    incomeCaption: "pajamos",
+    statsIncome: "Pajamos",
+    statsExpense: "Išlaidos",
+    statsTaxReserve: "Atidėta",
+    weeklyTitle: "Uždarbis šį mėnesį",
+    weeklyWeekShort: "sav.",
+    quickActions: "Greiti veiksmai",
+    quickActionsHint: "Spustelėk — pridėk",
+    quickActionsSeeAll: "Žiūrėti visas",
+    quickActionsEmptyTitle: "Dar nėra paslaugų greitam įvedimui.",
+    quickActionsEmptyBody:
+      "Pridėk dažniausias paslaugas — pajamas įvesi vienu paliestimu.",
+    quickActionsEmptyCta: "Pridėti paslaugą",
+    quickActionsAllLinkShort: "Visos",
+    quickActionsAllLink: "Žiūrėti visas paslaugas",
+    todayAria: "Šios dienos įrašai",
+    todayTitle: "Šiandien",
+    todayCountSingle: "įrašas",
+    todayCountFew: "įrašai",
+    todayCountMany: "įrašų",
+    todayEmptyTitle: "Šiandien dar nieko neužregistruota.",
+    todayEmptyBody: "Pridėk pajamas ar išlaidas — pamatysi jas čia.",
+    todayPaymentCash: "Grynais",
+    todayPaymentCard: "Kortele",
+    todayPaymentTransfer: "Pavedimu",
+    todayPaymentExpense: "Išlaida",
+  },
+  notifications: {
+    title: "Pranešimai",
+    unreadCount: "{n} naujų",
+    allRead: "Viskas perskaityta",
+    markAllRead: "Pažymėti perskaitytus",
+    emptyTitle: "Kol kas pranešimų nėra.",
+    emptyBody:
+      "Čia matysi mokesčių priminimus, mėnesio įžvalgas ir paskyros žinutes.",
   },
   settings: {
     title: "Daugiau",

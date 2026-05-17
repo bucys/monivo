@@ -1,22 +1,30 @@
 export function TodayEmpty({
   incomeCents,
   expenseCents,
+  labels,
 }: {
   incomeCents: number;
   expenseCents: number;
+  labels: {
+    aria: string;
+    title: string;
+    countZero: string;
+    emptyTitle: string;
+    emptyBody: string;
+  };
 }) {
   return (
     <section
-      aria-label="Šios dienos įrašai"
+      aria-label={labels.aria}
       className="overflow-hidden rounded-[20px] bg-white shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]"
     >
       <div className="flex items-center justify-between border-b border-hair px-6 py-5">
         <div>
           <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">
-            Šiandien
+            {labels.title}
           </div>
           <div className="mt-1 text-[18px] font-semibold tracking-[-0.018em] text-ink-900/90">
-            0 įrašų
+            {labels.countZero}
           </div>
         </div>
         <div className="text-[12px] font-medium text-ink-500">
@@ -46,10 +54,10 @@ export function TodayEmpty({
           </svg>
         </span>
         <h3 className="mt-4 text-[15px] font-semibold tracking-[-0.012em] text-ink-900/90">
-          Šiandien dar nieko neužregistruota.
+          {labels.emptyTitle}
         </h3>
         <p className="mt-1.5 max-w-[320px] text-[13px] leading-[1.5] text-ink-500">
-          Pridėk pajamas ar išlaidas — pamatysi jas čia.
+          {labels.emptyBody}
         </p>
         {incomeCents > 0 || expenseCents > 0 ? null : null}
       </div>

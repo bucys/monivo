@@ -2,10 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ModalSheet } from "@/components/ui/modal-sheet";
+import { format } from "@/i18n";
+import { useT } from "@/i18n/locale-provider";
 import { NotificationItem } from "./notification-item";
 import { useNotifications } from "./notifications-provider";
 
 export function NotificationBell() {
+  const t = useT();
   const { visible, unreadCount, markRead, markAllRead, isRead } =
     useNotifications();
   const [open, setOpen] = useState(false);
@@ -42,7 +45,7 @@ export function NotificationBell() {
     <div ref={containerRef} className="relative">
       <button
         type="button"
-        aria-label="Pranešimai"
+        aria-label={t.topbar.notificationsAria}
         aria-haspopup="dialog"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
@@ -64,7 +67,7 @@ export function NotificationBell() {
         </svg>
         {unreadCount > 0 ? (
           <span
-            aria-label={`${unreadCount} naujų pranešimų`}
+            aria-label={format(t.notifications.unreadCount, { n: unreadCount })}
             className="absolute right-[7px] top-[7px] h-2 w-2 rounded-full bg-accent ring-2 ring-cream"
           />
         ) : null}
@@ -87,7 +90,7 @@ export function NotificationBell() {
         <ModalSheet
           open={open}
           onClose={() => setOpen(false)}
-          ariaLabel="Pranešimai"
+          ariaLabel={t.notifications.title}
         >
           <PanelHeader
             count={visible.length}
@@ -116,11 +119,12 @@ function PanelCard({
   onItem: (id: string) => void;
   onMarkAll: () => void;
 }) {
+  const t = useT();
   const unread = items.filter((n) => !isRead(n.id)).length;
   return (
     <div
       role="dialog"
-      aria-label="Pranešimai"
+      aria-label={t.notifications.title}
       className="overflow-hidden rounded-[18px] border border-hair bg-white shadow-[0_12px_40px_-12px_rgba(23,33,29,0.2),_0_2px_6px_rgba(23,33,29,0.06)]"
     >
       <PanelHeader count={items.length} unread={unread} onMarkAll={onMarkAll} />
@@ -138,15 +142,18 @@ function PanelHeader({
   unread: number;
   onMarkAll: () => void;
 }) {
+  const t = useT();
   return (
     <div className="flex items-center justify-between gap-3 px-4 pb-3 pt-1 lg:pt-4">
       <div>
         <h3 className="text-[15px] font-semibold tracking-[-0.012em] text-ink-900/90">
-          Pranešimai
+          {t.notifications.title}
         </h3>
         {count > 0 ? (
           <p className="mt-0.5 text-[12px] text-ink-500 tabular-nums">
-            {unread > 0 ? `${unread} naujų` : "Viskas perskaityta"}
+            {unread > 0
+              ? format(t.notifications.unreadCount, { n: unread })
+              : t.notifications.allRead}
           </p>
         ) : null}
       </div>
@@ -156,7 +163,7 @@ function PanelHeader({
           onClick={onMarkAll}
           className="rounded-[10px] px-2 py-1 text-[12px] font-medium text-accent transition-colors hover:text-accent-deep"
         >
-          Pažymėti perskaitytus
+          {t.notifications.markAllRead}
         </button>
       ) : null}
     </div>
@@ -172,6 +179,7 @@ function PanelBody({
   isRead: (id: string) => boolean;
   onItem: (id: string) => void;
 }) {
+  const t = useT();
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center px-6 pb-6 pt-4 text-center">
@@ -195,10 +203,10 @@ function PanelBody({
           </svg>
         </span>
         <p className="mt-3 text-[14px] font-semibold tracking-[-0.012em] text-ink-900/90">
-          Kol kas pranešimų nėra.
+          {t.notifications.emptyTitle}
         </p>
         <p className="mt-1 max-w-[260px] text-[12px] leading-[1.5] text-ink-500">
-          Čia matysi mokesčių priminimus, mėnesio įžvalgas ir paskyros žinutes.
+          {t.notifications.emptyBody}
         </p>
       </div>
     );

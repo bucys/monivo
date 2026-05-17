@@ -1,45 +1,66 @@
 import { formatEur } from "@/lib/format";
 import type { RecentEntry, PaymentMethod } from "./recent-activity";
 
-const PAY_LABEL: Record<PaymentMethod, string> = {
-  cash: "Grynais",
-  card: "Kortele",
-  transfer: "Pavedimu",
+export type MobileTodayLabels = {
+  aria: string;
+  title: string;
+  seeAll: string;
+  emptyTitle: string;
+  emptyBody: string;
+  payCash: string;
+  payCard: string;
+  payTransfer: string;
 };
+
+function payLabelFor(pay: PaymentMethod, labels: MobileTodayLabels) {
+  if (pay === "cash") return labels.payCash;
+  if (pay === "card") return labels.payCard;
+  return labels.payTransfer;
+}
 
 export function MobileTodayList({
   entries,
+  labels,
 }: {
   entries: ReadonlyArray<RecentEntry>;
+  labels: MobileTodayLabels;
 }) {
   return (
-    <section aria-label="Šios dienos įrašai" className="lg:hidden">
-      <SectionHeader />
+    <section aria-label={labels.aria} className="lg:hidden">
+      <SectionHeader title={labels.title} seeAll={labels.seeAll} />
       {entries.length > 0 ? (
         <div className="overflow-hidden rounded-[22px] bg-white shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
           {entries.slice(0, 6).map((e, i, arr) => (
-            <Row key={e.id} entry={e} last={i === arr.length - 1} />
+            <Row key={e.id} entry={e} last={i === arr.length - 1} labels={labels} />
           ))}
         </div>
       ) : (
-        <EmptyCard />
+        <EmptyCard emptyTitle={labels.emptyTitle} emptyBody={labels.emptyBody} />
       )}
     </section>
   );
 }
 
-function SectionHeader() {
+function SectionHeader({ title, seeAll }: { title: string; seeAll: string }) {
   return (
     <div className="mb-3 flex items-center justify-between px-0.5">
       <h2 className="text-[14px] font-semibold tracking-[-0.012em] text-ink-900/90">
-        Šiandien
+        {title}
       </h2>
-      <span className="text-[13px] font-medium text-accent">Visi įrašai</span>
+      <span className="text-[13px] font-medium text-accent">{seeAll}</span>
     </div>
   );
 }
 
-function Row({ entry, last }: { entry: RecentEntry; last: boolean }) {
+function Row({
+  entry,
+  last,
+  labels,
+}: {
+  entry: RecentEntry;
+  last: boolean;
+  labels: MobileTodayLabels;
+}) {
   const isIncome = entry.kind === "income";
   const sign = isIncome ? "+" : "−";
   const amount = formatEur(entry.amountCents).replace(/\s?€/, "").replace("−", "");
@@ -71,7 +92,7 @@ function Row({ entry, last }: { entry: RecentEntry; last: boolean }) {
           {isIncome && entry.paymentMethod ? (
             <>
               <PayIcon pay={entry.paymentMethod} />
-              <span>{PAY_LABEL[entry.paymentMethod]}</span>
+              <span>{payLabelFor(entry.paymentMethod, labels)}</span>
               <span aria-hidden>·</span>
             </>
           ) : null}
@@ -90,7 +111,13 @@ function Row({ entry, last }: { entry: RecentEntry; last: boolean }) {
   );
 }
 
-function EmptyCard() {
+function EmptyCard({
+  emptyTitle,
+  emptyBody,
+}: {
+  emptyTitle: string;
+  emptyBody: string;
+}) {
   return (
     <div className="flex flex-col items-center rounded-[22px] bg-white px-6 py-10 text-center shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
       <span
@@ -112,10 +139,10 @@ function EmptyCard() {
         </svg>
       </span>
       <h3 className="mt-3.5 text-[15px] font-semibold tracking-[-0.012em] text-ink-900/90">
-        Šiandien dar nieko neužregistruota.
+        {emptyTitle}
       </h3>
       <p className="mt-1.5 max-w-[260px] text-[13px] leading-[1.5] text-ink-500">
-        Pridėk pajamas ar išlaidas — pamatysi jas čia.
+        {emptyBody}
       </p>
     </div>
   );

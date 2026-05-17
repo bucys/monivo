@@ -12,16 +12,18 @@ export function MonthlyStats({
   incomeCents,
   expenseCents,
   taxReserveCents,
+  labels,
 }: {
   incomeCents: number;
   expenseCents: number;
   taxReserveCents: number;
+  labels: { income: string; expense: string; taxReserve: string };
 }) {
   return (
     <div className="grid grid-cols-3 gap-2.5 lg:hidden">
-      <MiniCard label="Pajamos" cents={incomeCents} tone="income" arrow="up" />
-      <MiniCard label="Išlaidos" cents={expenseCents} tone="expense" arrow="down" />
-      <MiniCard label="Atidėta" cents={taxReserveCents} tone="tax" arrow="up" />
+      <MiniCard label={labels.income} cents={incomeCents} tone="income" arrow="up" />
+      <MiniCard label={labels.expense} cents={expenseCents} tone="expense" arrow="down" />
+      <MiniCard label={labels.taxReserve} cents={taxReserveCents} tone="tax" arrow="up" />
     </div>
   );
 }

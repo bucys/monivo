@@ -17,6 +17,8 @@ import {
 import { SpendableHero } from "@/components/dashboard/spendable-card";
 import { MobileTodayList } from "@/components/dashboard/today-list";
 import { WeeklyEarnings } from "@/components/dashboard/weekly-earnings";
+import { format } from "@/i18n";
+import { getT } from "@/i18n/server";
 import { monthRange } from "@/lib/format";
 import { canWriteProfile } from "@/lib/profile";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -41,6 +43,7 @@ export default async function DashboardPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
+  const { t } = await getT();
   const { monthStart, nextMonthStart, label } = monthRange();
   const today = todayIso();
 
@@ -86,7 +89,9 @@ export default async function DashboardPage() {
   const taxRate = Number(profile?.tax_rate ?? 0);
   const canWrite = canWriteProfile(profile);
   const displayName = profile?.display_name?.trim() ?? "";
-  const greeting = displayName ? `Labas, ${displayName}` : "Labas";
+  const greeting = displayName
+    ? format(t.dashboard.greetingNamed, { name: displayName })
+    : t.dashboard.greeting;
 
   const incomeCents = incomes.reduce((acc, r) => acc + (r.amount_cents ?? 0), 0);
   const expenseCents = expenses.reduce(
@@ -98,8 +103,51 @@ export default async function DashboardPage() {
   const wentNegative = spendableCents < 0;
 
   const heroSub = wentNegative
-    ? "Šį mėnesį išlaidos viršija pajamas."
-    : "Lieka po mokesčių rezervo ir išlaidų.";
+    ? t.dashboard.spendableSubNegative
+    : t.dashboard.spendableSubPositive;
+
+  const heroLabels = {
+    title: t.dashboard.spendableTitle,
+    monthlyComposition: t.dashboard.monthlyComposition,
+    incomeRemainder: t.dashboard.incomeRemainderLabel,
+    incomeCaption: t.dashboard.incomeCaption,
+    income: t.dashboard.statsIncome,
+    expense: t.dashboard.statsExpense,
+    taxReserve: t.dashboard.statsTaxReserve,
+  };
+  const statLabels = {
+    income: t.dashboard.statsIncome,
+    expense: t.dashboard.statsExpense,
+    taxReserve: t.dashboard.statsTaxReserve,
+  };
+  const todayLabels = {
+    aria: t.dashboard.todayAria,
+    title: t.dashboard.todayTitle,
+    countSingle: t.dashboard.todayCountSingle,
+    countFew: t.dashboard.todayCountFew,
+    countMany: t.dashboard.todayCountMany,
+    payCash: t.dashboard.todayPaymentCash,
+    payCard: t.dashboard.todayPaymentCard,
+    payTransfer: t.dashboard.todayPaymentTransfer,
+    payExpense: t.dashboard.todayPaymentExpense,
+  };
+  const emptyLabels = {
+    aria: t.dashboard.todayAria,
+    title: t.dashboard.todayTitle,
+    countZero: `0 ${t.dashboard.todayCountMany}`,
+    emptyTitle: t.dashboard.todayEmptyTitle,
+    emptyBody: t.dashboard.todayEmptyBody,
+  };
+  const mobileTodayLabels = {
+    aria: t.dashboard.todayAria,
+    title: t.dashboard.todayTitle,
+    seeAll: t.common.seeAll,
+    emptyTitle: t.dashboard.todayEmptyTitle,
+    emptyBody: t.dashboard.todayEmptyBody,
+    payCash: t.dashboard.todayPaymentCash,
+    payCard: t.dashboard.todayPaymentCard,
+    payTransfer: t.dashboard.todayPaymentTransfer,
+  };
 
   const weeks: [number, number, number, number] = [0, 0, 0, 0];
   for (const r of incomes) {
@@ -167,12 +215,14 @@ export default async function DashboardPage() {
           expenseCents={expenseCents}
           taxReserveCents={taxReserveCents}
           heroSub={heroSub}
+          labels={heroLabels}
         />
 
         <MonthlyStats
           incomeCents={incomeCents}
           expenseCents={expenseCents}
           taxReserveCents={taxReserveCents}
+          labels={statLabels}
         />
 
         <MobileQuickActions services={serviceList} canWrite={canWrite} />
@@ -182,6 +232,8 @@ export default async function DashboardPage() {
             weeks={weeks}
             totalCents={incomeCents}
             currentWeekIndex={currentWeekIndex}
+            title={t.dashboard.weeklyTitle}
+            weekLabel={t.dashboard.weeklyWeekShort}
           />
           <QuickActions services={serviceList} canWrite={canWrite} />
         </div>
@@ -192,16 +244,18 @@ export default async function DashboardPage() {
               entries={todayEntries}
               incomeCents={todayIncomeCents}
               expenseCents={todayExpenseCents}
+              labels={todayLabels}
             />
           ) : (
             <TodayEmpty
               incomeCents={todayIncomeCents}
               expenseCents={todayExpenseCents}
+              labels={emptyLabels}
             />
           )}
         </div>
 
-        <MobileTodayList entries={todayEntries} />
+        <MobileTodayList entries={todayEntries} labels={mobileTodayLabels} />
       </div>
     </AppScreen>
   );

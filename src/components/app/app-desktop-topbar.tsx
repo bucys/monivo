@@ -2,11 +2,13 @@
 
 import { usePathname } from "next/navigation";
 import { NotificationBell } from "@/components/notifications/notification-bell";
+import { useT } from "@/i18n/locale-provider";
 import { getAppRouteMeta } from "./app-route-meta";
 
 export function AppDesktopTopBar() {
   const pathname = usePathname();
-  const { title, sub } = getAppRouteMeta(pathname);
+  const t = useT();
+  const { title, sub } = getAppRouteMeta(t, pathname);
   const isDashboard = pathname === "/dashboard";
 
   if (isDashboard) return null;

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { dispatchOpenIncomeEntry } from "@/components/add-entry/add-entry-sheet";
+import { useT } from "@/i18n/locale-provider";
 import type { QuickService } from "./quick-actions";
 
 const TONE_PALETTE = ["#DDF4EC", "#FFE7E7", "#FFF2D9", "#E5E0F4", "#F4E5DC"];
@@ -22,19 +23,20 @@ export function MobileQuickActions({
   services: ReadonlyArray<QuickService>;
   canWrite: boolean;
 }) {
+  const t = useT();
   if (services.length === 0) return null;
 
   return (
-    <section aria-label="Greiti veiksmai" className="lg:hidden">
+    <section aria-label={t.dashboard.quickActions} className="lg:hidden">
       <div className="mb-3 flex items-center justify-between px-0.5">
         <h2 className="text-[14px] font-semibold tracking-[-0.012em] text-ink-900/90">
-          Greiti veiksmai
+          {t.dashboard.quickActions}
         </h2>
         <Link
           href="/services"
           className="text-[13px] font-medium text-accent"
         >
-          Žiūrėti visas
+          {t.dashboard.quickActionsSeeAll}
         </Link>
       </div>
       <div className="-mx-5 overflow-x-auto px-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">

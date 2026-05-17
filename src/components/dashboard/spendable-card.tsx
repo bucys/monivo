@@ -6,12 +6,22 @@ export function SpendableHero({
   expenseCents,
   taxReserveCents,
   heroSub,
+  labels,
 }: {
   spendableCents: number;
   incomeCents: number;
   expenseCents: number;
   taxReserveCents: number;
   heroSub: string;
+  labels: {
+    title: string;
+    monthlyComposition: string;
+    incomeRemainder: string;
+    incomeCaption: string;
+    income: string;
+    expense: string;
+    taxReserve: string;
+  };
 }) {
   const display = Math.max(0, spendableCents);
   const free = Math.max(0, spendableCents);
@@ -59,7 +69,7 @@ export function SpendableHero({
             >
               <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z" />
             </svg>
-            Kiek galiu išleisti
+            {labels.title}
           </div>
           <div className="mt-3 flex items-baseline gap-1 whitespace-nowrap text-[56px] font-semibold leading-none tracking-[-0.027em] tabular-nums sm:mt-4 sm:gap-1.5 sm:text-[64px] lg:text-[84px] lg:tracking-[-0.03em]">
             <span>{formatEur(display).replace(/\s?€/, "")}</span>
@@ -92,8 +102,8 @@ export function SpendableHero({
               />
             </div>
             <div className="mt-2.5 flex items-center justify-between text-[11px] opacity-75 tabular-nums">
-              <span>Šio mėnesio pajamos</span>
-              <span>{incomeText} € </span>
+              <span>{labels.incomeRemainder}</span>
+              <span>{incomeText} € · {labels.incomeCaption}</span>
             </div>
           </div>
         </div>
@@ -101,7 +111,7 @@ export function SpendableHero({
         {/* desktop-only breakdown panel */}
         <div className="hidden lg:block">
           <div className="mb-3.5 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-70">
-            Mėnesio sudėtis
+            {labels.monthlyComposition}
           </div>
           <div
             className="flex h-2.5 overflow-hidden rounded-full"
@@ -123,17 +133,17 @@ export function SpendableHero({
           </div>
           <div className="mt-[18px] grid grid-cols-3 gap-3">
             <BreakdownItem
-              label="Pajamos"
+              label={labels.income}
               cents={incomeCents}
               dot="#DDF4EC"
             />
             <BreakdownItem
-              label="Išlaidos"
+              label={labels.expense}
               cents={expenseCents}
               dot="#FFE7E7"
             />
             <BreakdownItem
-              label="Atidėta"
+              label={labels.taxReserve}
               cents={taxReserveCents}
               dot="#FFF2D9"
             />

@@ -115,7 +115,6 @@ export function ServicesClient({
                 <span className="text-[16px] font-semibold tracking-[-0.018em] text-ink-900/90">
                   {s.name}
                 </span>
-                <span className="text-[12px] text-ink-500">Presetas</span>
               </span>
               <span className="text-[18px] font-semibold tabular-nums text-ink-900/90">
                 {formatEur(s.price_cents)}

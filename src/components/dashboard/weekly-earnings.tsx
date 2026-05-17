@@ -4,22 +4,26 @@ export function WeeklyEarnings({
   weeks,
   totalCents,
   currentWeekIndex,
+  title,
+  weekLabel,
 }: {
   weeks: ReadonlyArray<number>;
   totalCents: number;
   currentWeekIndex: number;
+  title: string;
+  weekLabel: string;
 }) {
   const max = Math.max(...weeks, 1);
 
   return (
     <section
-      aria-label="Uždarbis šį mėnesį"
+      aria-label={title}
       className="flex h-full flex-col rounded-[20px] bg-white p-[26px] shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]"
     >
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">
-            Uždarbis šį mėnesį
+            {title}
           </div>
           <div className="mt-2 flex items-baseline gap-1.5 whitespace-nowrap text-[28px] font-semibold leading-none tracking-[-0.02em] tabular-nums text-ink-900/90">
             <span>{formatEur(totalCents).replace(/\s?€/, "")}</span>
@@ -54,7 +58,7 @@ export function WeeklyEarnings({
                 }}
               />
               <div className="text-[11px] font-medium text-ink-500">
-                sav. {i + 1}
+                {weekLabel} {i + 1}
               </div>
             </div>
           );

@@ -1,23 +1,26 @@
+import type { Dictionary } from "@/i18n";
+
 export type AppRouteMeta = {
   title: string;
   sub: string;
 };
 
-const meta: Record<string, AppRouteMeta> = {
-  "/dashboard": { title: "Apžvalga", sub: "Šis mėnuo" },
-  "/activity": { title: "Veikla", sub: "Šis mėnuo" },
-  "/insights": { title: "Įžvalgos", sub: "Šis mėnuo" },
-  "/services": { title: "Paslaugos", sub: "Tavo" },
-  "/settings": { title: "Nustatymai", sub: "Paskyra" },
-};
-
-const fallback: AppRouteMeta = { title: "Monivo", sub: "" };
-
-export function getAppRouteMeta(pathname: string | null): AppRouteMeta {
+export function getAppRouteMeta(
+  t: Dictionary,
+  pathname: string | null,
+): AppRouteMeta {
+  const map: Record<string, AppRouteMeta> = {
+    "/dashboard": { title: t.nav.dashboard, sub: t.nav.dashboardSub },
+    "/activity": { title: t.nav.activity, sub: t.nav.activitySub },
+    "/insights": { title: t.nav.insights, sub: t.nav.insightsSub },
+    "/services": { title: t.nav.services, sub: t.nav.servicesSub },
+    "/settings": { title: t.nav.settings, sub: t.nav.settingsSub },
+  };
+  const fallback: AppRouteMeta = { title: "Monivo", sub: "" };
   if (!pathname) return fallback;
-  for (const key of Object.keys(meta)) {
+  for (const key of Object.keys(map)) {
     if (pathname === key || pathname.startsWith(`${key}/`)) {
-      return meta[key]!;
+      return map[key]!;
     }
   }
   return fallback;

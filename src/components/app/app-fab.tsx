@@ -7,9 +7,11 @@ import {
   dispatchOpenExpenseEntry,
   dispatchOpenIncomeEntry,
 } from "@/components/add-entry/add-entry-sheet";
+import { useT } from "@/i18n/locale-provider";
 
 export function AppFab() {
   const pathname = usePathname();
+  const t = useT();
   const onServices =
     pathname === "/services" || pathname?.startsWith("/services/");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -68,13 +70,13 @@ export function AppFab() {
           tabIndex={showMenu ? 0 : -1}
           onClick={() => choose("income")}
           tone="income"
-          label="Įvesti pajamas"
+          label={t.nav.addIncome}
         />
         <MenuPill
           tabIndex={showMenu ? 0 : -1}
           onClick={() => choose("expense")}
           tone="expense"
-          label="Įvesti išlaidas"
+          label={t.nav.addExpense}
         />
       </div>
 
