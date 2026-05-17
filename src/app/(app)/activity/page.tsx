@@ -6,17 +6,22 @@ import {
   type PaymentMethod,
   type RecentEntry,
 } from "@/components/dashboard/recent-activity";
-import { monthRange } from "@/lib/format";
+import { resolvePeriod } from "@/lib/activity";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export default async function ActivityPage() {
+export default async function ActivityPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ period?: string }>;
+}) {
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { monthStart, nextMonthStart } = monthRange();
+  const { period: periodParam } = await searchParams;
+  const period = resolvePeriod(periodParam);
 
   const [{ data: incomeRows }, { data: expenseRows }] = await Promise.all([
     supabase
@@ -25,8 +30,8 @@ export default async function ActivityPage() {
         "id, amount_cents, service_name, payment_method, note, occurred_at, created_at",
       )
       .eq("user_id", user.id)
-      .gte("occurred_at", monthStart)
-      .lt("occurred_at", nextMonthStart)
+      .gte("occurred_at", period.startDate)
+      .lt("occurred_at", period.endDate)
       .order("occurred_at", { ascending: false })
       .order("created_at", { ascending: false })
       .order("id", { ascending: false }),
@@ -34,8 +39,8 @@ export default async function ActivityPage() {
       .from("expense_entries")
       .select("id, amount_cents, category, note, occurred_at, created_at")
       .eq("user_id", user.id)
-      .gte("occurred_at", monthStart)
-      .lt("occurred_at", nextMonthStart)
+      .gte("occurred_at", period.startDate)
+      .lt("occurred_at", period.endDate)
       .order("occurred_at", { ascending: false })
       .order("created_at", { ascending: false })
       .order("id", { ascending: false }),
@@ -72,7 +77,12 @@ export default async function ActivityPage() {
 
   return (
     <AppScreen>
-      <ActivityFeed entries={entries} />
+      <ActivityFeed
+        entries={entries}
+        periodMode={period.mode}
+        periodLabel={period.label}
+        monthValue={period.monthValue}
+      />
     </AppScreen>
   );
 }

@@ -1,9 +1,19 @@
+import type { PeriodMode } from "@/lib/activity";
+
+const EMPTY_TITLE: Record<PeriodMode, string> = {
+  week: "Šią savaitę įrašų nėra.",
+  month: "Šį mėnesį įrašų nėra.",
+  custom: "Pasirinktą mėnesį įrašų nėra.",
+};
+
 export function ActivityEmpty({
   onReset,
   filtered,
+  periodMode,
 }: {
   onReset?: () => void;
   filtered: boolean;
+  periodMode: PeriodMode;
 }) {
   return (
     <div className="flex flex-col items-center rounded-[22px] bg-white px-6 py-12 text-center shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
@@ -26,7 +36,7 @@ export function ActivityEmpty({
         </svg>
       </span>
       <h3 className="mt-4 text-[15px] font-semibold tracking-[-0.012em] text-ink-900/90">
-        {filtered ? "Pagal šį filtrą įrašų nėra." : "Šį mėnesį dar nieko nėra."}
+        {filtered ? "Pagal šį filtrą įrašų nėra." : EMPTY_TITLE[periodMode]}
       </h3>
       <p className="mt-1.5 max-w-[300px] text-[13px] leading-[1.5] text-ink-500">
         {filtered
