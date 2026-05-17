@@ -13,9 +13,11 @@ const PAY_LABEL: Record<PaymentMethod, string> = {
 export function MobileActivityRow({
   entry,
   last,
+  onActions,
 }: {
   entry: RecentEntry;
   last: boolean;
+  onActions?: (entry: RecentEntry) => void;
 }) {
   const isIncome = entry.kind === "income";
   const sign = isIncome ? "+" : "−";
@@ -63,7 +65,27 @@ export function MobileActivityRow({
         {sign}
         {amount} €
       </div>
+      {onActions ? (
+        <button
+          type="button"
+          aria-label="Veiksmai"
+          onClick={() => onActions(entry)}
+          className="-mr-1.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink-500 transition-colors hover:bg-cream/60 hover:text-ink-900/90"
+        >
+          <MoreIcon />
+        </button>
+      ) : null}
     </div>
+  );
+}
+
+function MoreIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <circle cx="5" cy="12" r="1.6" />
+      <circle cx="12" cy="12" r="1.6" />
+      <circle cx="19" cy="12" r="1.6" />
+    </svg>
   );
 }
 

@@ -111,6 +111,7 @@ export default async function DashboardPage() {
   const todayEntries: ReadonlyArray<RecentEntry> = [
     ...incomes.map<RecentEntry>((r) => ({
       id: `i_${r.id}`,
+      rawId: String(r.id),
       kind: "income",
       label: r.service_name ?? "Pajamos",
       amountCents: r.amount_cents,
@@ -122,6 +123,7 @@ export default async function DashboardPage() {
     })),
     ...expenses.map<RecentEntry>((r) => ({
       id: `e_${r.id}`,
+      rawId: String(r.id),
       kind: "expense",
       label: expenseLabel(r.category),
       amountCents: r.amount_cents,
@@ -129,6 +131,7 @@ export default async function DashboardPage() {
       createdAt: r.created_at,
       sortKey: r.created_at,
       note: r.note,
+      categorySlug: r.category,
     })),
   ]
     .filter((e) => e.occurredAt === today)
@@ -152,7 +155,9 @@ export default async function DashboardPage() {
             {greeting}
           </h1>
         </div>
-        <NotificationBell />
+        <div className="hidden lg:block">
+          <NotificationBell />
+        </div>
       </header>
 
       <div className="flex flex-col gap-[18px] lg:gap-[22px]">

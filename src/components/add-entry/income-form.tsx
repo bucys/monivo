@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { createIncomeEntry } from "@/app/(app)/entries/actions";
+import {
+  createIncomeEntry,
+  updateIncomeEntry,
+} from "@/app/(app)/entries/actions";
 import { Button } from "@/components/ui/button";
 
 export type ServiceChip = {
@@ -37,28 +40,47 @@ function cleanAmount(raw: string) {
   );
 }
 
+export type IncomeInitial = {
+  amountCents: number;
+  serviceId: string | null;
+  paymentMethod: PaymentMethod;
+  note: string | null;
+};
+
 export function IncomeForm({
   services,
   onAdded,
   initialServiceId = null,
+  mode = "create",
+  entryId,
+  initial,
 }: {
   services: ReadonlyArray<ServiceChip>;
   onAdded: () => void;
   initialServiceId?: string | null;
+  mode?: "create" | "edit";
+  entryId?: string;
+  initial?: IncomeInitial;
 }) {
   const router = useRouter();
   const initialService = initialServiceId
     ? (services.find((s) => s.id === initialServiceId) ?? null)
     : null;
   const [amount, setAmount] = useState(
-    initialService ? centsToInput(initialService.price_cents) : "",
+    initial
+      ? centsToInput(initial.amountCents)
+      : initialService
+        ? centsToInput(initialService.price_cents)
+        : "",
   );
   const [serviceId, setServiceId] = useState<string | null>(
-    initialService ? initialService.id : null,
+    initial ? initial.serviceId : initialService ? initialService.id : null,
   );
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
-  const [noteOpen, setNoteOpen] = useState(false);
-  const [note, setNote] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(
+    initial?.paymentMethod ?? "cash",
+  );
+  const [noteOpen, setNoteOpen] = useState(Boolean(initial?.note));
+  const [note, setNote] = useState(initial?.note ?? "");
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -86,12 +108,16 @@ export function IncomeForm({
 
     startTransition(async () => {
       try {
-        await createIncomeEntry(fd);
-        setAmount("");
-        setServiceId(null);
-        setPaymentMethod("cash");
-        setNoteOpen(false);
-        setNote("");
+        if (mode === "edit" && entryId) {
+          await updateIncomeEntry(entryId, fd);
+        } else {
+          await createIncomeEntry(fd);
+          setAmount("");
+          setServiceId(null);
+          setPaymentMethod("cash");
+          setNoteOpen(false);
+          setNote("");
+        }
         router.refresh();
         onAdded();
       } catch (e) {
@@ -230,7 +256,7 @@ export function IncomeForm({
         disabled={submitDisabled}
         className="!h-auto !rounded-[14px] !px-5 !py-3 !text-[14px]"
       >
-        Pridėti
+        {mode === "edit" ? "Išsaugoti" : "Pridėti"}
       </Button>
     </form>
   );

@@ -28,6 +28,16 @@ function parseAmountCents(raw: unknown) {
   return cents;
 }
 
+function parseNote(raw: unknown) {
+  const noteRaw = String(raw ?? "").trim();
+  return noteRaw.length > 0 ? noteRaw.slice(0, MAX_NOTE) : null;
+}
+
+function parsePaymentMethod(raw: unknown) {
+  const v = String(raw ?? "cash");
+  return PAYMENT_METHODS.has(v) ? v : "cash";
+}
+
 function todayDateString() {
   const d = new Date();
   const y = d.getFullYear();
@@ -36,37 +46,47 @@ function todayDateString() {
   return `${y}-${m}-${day}`;
 }
 
-export async function createIncomeEntry(formData: FormData) {
-  const amountCents = parseAmountCents(formData.get("amount"));
-  const paymentMethodRaw = String(formData.get("payment_method") ?? "cash");
-  const paymentMethod = PAYMENT_METHODS.has(paymentMethodRaw)
-    ? paymentMethodRaw
-    : "cash";
+function revalidateEntries() {
+  revalidatePath("/dashboard");
+  revalidatePath("/activity");
+  revalidatePath("/insights");
+}
 
-  const serviceIdRaw = String(formData.get("service_id") ?? "").trim();
-  const serviceId = serviceIdRaw.length > 0 ? serviceIdRaw : null;
-  const noteRaw = String(formData.get("note") ?? "").trim();
-  const note = noteRaw.length > 0 ? noteRaw.slice(0, MAX_NOTE) : null;
-
+async function authedClient() {
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
     error: userErr,
   } = await supabase.auth.getUser();
-
   if (userErr) throw new Error("Nepavyko nustatyti vartotojo.");
   if (!user) redirect("/login");
+  return { supabase, user };
+}
 
-  let serviceName = "Pajamos";
-  if (serviceId) {
-    const { data: svc } = await supabase
-      .from("services")
-      .select("name")
-      .eq("id", serviceId)
-      .eq("user_id", user.id)
-      .maybeSingle();
-    if (svc?.name) serviceName = svc.name;
-  }
+async function resolveServiceName(
+  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
+  userId: string,
+  serviceId: string | null,
+) {
+  if (!serviceId) return "Pajamos";
+  const { data: svc } = await supabase
+    .from("services")
+    .select("name")
+    .eq("id", serviceId)
+    .eq("user_id", userId)
+    .maybeSingle();
+  return svc?.name ?? "Pajamos";
+}
+
+export async function createIncomeEntry(formData: FormData) {
+  const amountCents = parseAmountCents(formData.get("amount"));
+  const paymentMethod = parsePaymentMethod(formData.get("payment_method"));
+  const serviceIdRaw = String(formData.get("service_id") ?? "").trim();
+  const serviceId = serviceIdRaw.length > 0 ? serviceIdRaw : null;
+  const note = parseNote(formData.get("note"));
+
+  const { supabase, user } = await authedClient();
+  const serviceName = await resolveServiceName(supabase, user.id, serviceId);
 
   const { error } = await supabase
     .from("income_entries")
@@ -83,10 +103,7 @@ export async function createIncomeEntry(formData: FormData) {
     .single();
 
   if (error) throw new Error(`Nepavyko išsaugoti: ${error.message}`);
-
-  revalidatePath("/dashboard");
-  revalidatePath("/activity");
-  revalidatePath("/insights");
+  revalidateEntries();
 }
 
 export async function createExpenseEntry(formData: FormData) {
@@ -95,17 +112,9 @@ export async function createExpenseEntry(formData: FormData) {
   if (!EXPENSE_CATEGORIES.has(categoryRaw)) {
     throw new Error("Pasirink kategoriją.");
   }
-  const noteRaw = String(formData.get("note") ?? "").trim();
-  const note = noteRaw.length > 0 ? noteRaw.slice(0, MAX_NOTE) : null;
+  const note = parseNote(formData.get("note"));
 
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-    error: userErr,
-  } = await supabase.auth.getUser();
-
-  if (userErr) throw new Error("Nepavyko nustatyti vartotojo.");
-  if (!user) redirect("/login");
+  const { supabase, user } = await authedClient();
 
   const { error } = await supabase
     .from("expense_entries")
@@ -120,8 +129,77 @@ export async function createExpenseEntry(formData: FormData) {
     .single();
 
   if (error) throw new Error(`Nepavyko išsaugoti: ${error.message}`);
+  revalidateEntries();
+}
 
-  revalidatePath("/dashboard");
-  revalidatePath("/activity");
-  revalidatePath("/insights");
+export async function updateIncomeEntry(id: string, formData: FormData) {
+  const amountCents = parseAmountCents(formData.get("amount"));
+  const paymentMethod = parsePaymentMethod(formData.get("payment_method"));
+  const serviceIdRaw = String(formData.get("service_id") ?? "").trim();
+  const serviceId = serviceIdRaw.length > 0 ? serviceIdRaw : null;
+  const note = parseNote(formData.get("note"));
+
+  const { supabase, user } = await authedClient();
+  const serviceName = await resolveServiceName(supabase, user.id, serviceId);
+
+  const { error } = await supabase
+    .from("income_entries")
+    .update({
+      amount_cents: amountCents,
+      service_id: serviceId,
+      service_name: serviceName,
+      payment_method: paymentMethod,
+      note,
+    })
+    .eq("id", id)
+    .eq("user_id", user.id);
+
+  if (error) throw new Error(`Nepavyko išsaugoti: ${error.message}`);
+  revalidateEntries();
+}
+
+export async function updateExpenseEntry(id: string, formData: FormData) {
+  const amountCents = parseAmountCents(formData.get("amount"));
+  const categoryRaw = String(formData.get("category") ?? "").trim();
+  if (!EXPENSE_CATEGORIES.has(categoryRaw)) {
+    throw new Error("Pasirink kategoriją.");
+  }
+  const note = parseNote(formData.get("note"));
+
+  const { supabase, user } = await authedClient();
+
+  const { error } = await supabase
+    .from("expense_entries")
+    .update({
+      amount_cents: amountCents,
+      category: categoryRaw,
+      note,
+    })
+    .eq("id", id)
+    .eq("user_id", user.id);
+
+  if (error) throw new Error(`Nepavyko išsaugoti: ${error.message}`);
+  revalidateEntries();
+}
+
+export async function deleteIncomeEntry(id: string) {
+  const { supabase, user } = await authedClient();
+  const { error } = await supabase
+    .from("income_entries")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", user.id);
+  if (error) throw new Error(`Nepavyko ištrinti: ${error.message}`);
+  revalidateEntries();
+}
+
+export async function deleteExpenseEntry(id: string) {
+  const { supabase, user } = await authedClient();
+  const { error } = await supabase
+    .from("expense_entries")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", user.id);
+  if (error) throw new Error(`Nepavyko ištrinti: ${error.message}`);
+  revalidateEntries();
 }

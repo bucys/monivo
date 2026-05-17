@@ -1,6 +1,8 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import type { ServiceChip } from "@/components/add-entry/income-form";
 import type { RecentEntry } from "@/components/dashboard/recent-activity";
 import {
   dayLabel,
@@ -10,22 +12,33 @@ import {
   type PeriodMode,
 } from "@/lib/activity";
 import { ActivityDayGroup } from "./activity-day-group";
+import { ActivityDeleteConfirm } from "./activity-delete-confirm";
+import { ActivityEditSheet } from "./activity-edit-sheet";
 import { ActivityEmpty } from "./activity-empty";
 import { ActivityFilters, type PillCounts } from "./activity-filters";
 import { ActivityPeriod } from "./activity-period";
+import { ActivityRowActions } from "./activity-row-actions";
 
 export function ActivityFeed({
   entries,
   periodMode,
   periodLabel,
   monthValue,
+  services,
+  canWrite,
 }: {
   entries: ReadonlyArray<RecentEntry>;
   periodMode: PeriodMode;
   periodLabel: string;
   monthValue?: string;
+  services: ReadonlyArray<ServiceChip>;
+  canWrite: boolean;
 }) {
+  const router = useRouter();
   const [kind, setKind] = useState<ActivityKind>("all");
+  const [actionsEntry, setActionsEntry] = useState<RecentEntry | null>(null);
+  const [editingEntry, setEditingEntry] = useState<RecentEntry | null>(null);
+  const [deletingEntry, setDeletingEntry] = useState<RecentEntry | null>(null);
 
   const counts = useMemo<PillCounts>(() => {
     let income = 0;
@@ -44,6 +57,26 @@ export function ActivityFeed({
 
   const hasAny = entries.length > 0;
   const showEmpty = groups.length === 0;
+  const openActions = canWrite ? setActionsEntry : undefined;
+
+  const handleEdit = () => {
+    if (!actionsEntry) return;
+    setEditingEntry(actionsEntry);
+    setActionsEntry(null);
+  };
+  const handleDelete = () => {
+    if (!actionsEntry) return;
+    setDeletingEntry(actionsEntry);
+    setActionsEntry(null);
+  };
+  const onSaved = () => {
+    setEditingEntry(null);
+    router.refresh();
+  };
+  const onDeleted = () => {
+    setDeletingEntry(null);
+    router.refresh();
+  };
 
   return (
     <div className="flex flex-col gap-[18px] lg:gap-[22px]">
@@ -73,9 +106,28 @@ export function ActivityFeed({
             key={group.date}
             group={group}
             label={dayLabel(group.date)}
+            onActions={openActions}
           />
         ))
       )}
+
+      <ActivityRowActions
+        open={actionsEntry !== null}
+        onClose={() => setActionsEntry(null)}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
+      <ActivityEditSheet
+        entry={editingEntry}
+        services={services}
+        onClose={() => setEditingEntry(null)}
+        onSaved={onSaved}
+      />
+      <ActivityDeleteConfirm
+        entry={deletingEntry}
+        onClose={() => setDeletingEntry(null)}
+        onDeleted={onDeleted}
+      />
     </div>
   );
 }

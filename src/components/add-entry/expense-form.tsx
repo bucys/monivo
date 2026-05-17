@@ -2,7 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { createExpenseEntry } from "@/app/(app)/entries/actions";
+import {
+  createExpenseEntry,
+  updateExpenseEntry,
+} from "@/app/(app)/entries/actions";
 import { Button } from "@/components/ui/button";
 
 type CategorySlug =
@@ -25,6 +28,16 @@ export const EXPENSE_CATEGORIES: ReadonlyArray<{
   { slug: "other", label: "Kita" },
 ];
 
+export type ExpenseInitial = {
+  amountCents: number;
+  category: CategorySlug;
+  note: string | null;
+};
+
+function centsToInput(cents: number) {
+  return (cents / 100).toFixed(2).replace(".", ",");
+}
+
 function cleanAmount(raw: string) {
   const normalized = raw.replace(/[^\d.,]/g, "").replace(/\./g, ",");
   const first = normalized.indexOf(",");
@@ -35,12 +48,26 @@ function cleanAmount(raw: string) {
   );
 }
 
-export function ExpenseForm({ onAdded }: { onAdded: () => void }) {
+export function ExpenseForm({
+  onAdded,
+  mode = "create",
+  entryId,
+  initial,
+}: {
+  onAdded: () => void;
+  mode?: "create" | "edit";
+  entryId?: string;
+  initial?: ExpenseInitial;
+}) {
   const router = useRouter();
-  const [amount, setAmount] = useState("");
-  const [category, setCategory] = useState<CategorySlug | null>(null);
-  const [noteOpen, setNoteOpen] = useState(false);
-  const [note, setNote] = useState("");
+  const [amount, setAmount] = useState(
+    initial ? centsToInput(initial.amountCents) : "",
+  );
+  const [category, setCategory] = useState<CategorySlug | null>(
+    initial?.category ?? null,
+  );
+  const [noteOpen, setNoteOpen] = useState(Boolean(initial?.note));
+  const [note, setNote] = useState(initial?.note ?? "");
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -62,11 +89,15 @@ export function ExpenseForm({ onAdded }: { onAdded: () => void }) {
 
     startTransition(async () => {
       try {
-        await createExpenseEntry(fd);
-        setAmount("");
-        setCategory(null);
-        setNoteOpen(false);
-        setNote("");
+        if (mode === "edit" && entryId) {
+          await updateExpenseEntry(entryId, fd);
+        } else {
+          await createExpenseEntry(fd);
+          setAmount("");
+          setCategory(null);
+          setNoteOpen(false);
+          setNote("");
+        }
         router.refresh();
         onAdded();
       } catch (e) {
@@ -84,7 +115,7 @@ export function ExpenseForm({ onAdded }: { onAdded: () => void }) {
       className="flex flex-col gap-5"
     >
       <h2 className="text-[20px] font-semibold tracking-[-0.022em] text-ink-900/90">
-        Pridėti išlaidas
+        {mode === "edit" ? "Redaguoti išlaidas" : "Pridėti išlaidas"}
       </h2>
 
       <label className="flex flex-col gap-2">
@@ -162,7 +193,7 @@ export function ExpenseForm({ onAdded }: { onAdded: () => void }) {
         disabled={submitDisabled}
         className="!h-auto !rounded-[14px] !px-5 !py-3 !text-[14px]"
       >
-        Pridėti išlaidas
+        {mode === "edit" ? "Išsaugoti" : "Pridėti išlaidas"}
       </Button>
     </form>
   );

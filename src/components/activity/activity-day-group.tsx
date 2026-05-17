@@ -2,23 +2,34 @@ import { formatEur } from "@/lib/format";
 import { DesktopActivityRow } from "./activity-row-desktop";
 import { MobileActivityRow } from "./activity-row";
 import type { DayGroup } from "@/lib/activity";
+import type { RecentEntry } from "@/components/dashboard/recent-activity";
 
 export function ActivityDayGroup({
   group,
   label,
+  onActions,
 }: {
   group: DayGroup;
   label: string;
+  onActions?: (entry: RecentEntry) => void;
 }) {
   return (
     <div>
-      <MobileGroup group={group} label={label} />
-      <DesktopGroup group={group} label={label} />
+      <MobileGroup group={group} label={label} onActions={onActions} />
+      <DesktopGroup group={group} label={label} onActions={onActions} />
     </div>
   );
 }
 
-function MobileGroup({ group, label }: { group: DayGroup; label: string }) {
+function MobileGroup({
+  group,
+  label,
+  onActions,
+}: {
+  group: DayGroup;
+  label: string;
+  onActions?: (entry: RecentEntry) => void;
+}) {
   return (
     <div className="lg:hidden">
       <DayHeader
@@ -29,14 +40,27 @@ function MobileGroup({ group, label }: { group: DayGroup; label: string }) {
       />
       <div className="overflow-hidden rounded-[22px] bg-white shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
         {group.entries.map((e, i, arr) => (
-          <MobileActivityRow key={e.id} entry={e} last={i === arr.length - 1} />
+          <MobileActivityRow
+            key={e.id}
+            entry={e}
+            last={i === arr.length - 1}
+            onActions={onActions}
+          />
         ))}
       </div>
     </div>
   );
 }
 
-function DesktopGroup({ group, label }: { group: DayGroup; label: string }) {
+function DesktopGroup({
+  group,
+  label,
+  onActions,
+}: {
+  group: DayGroup;
+  label: string;
+  onActions?: (entry: RecentEntry) => void;
+}) {
   return (
     <div className="hidden overflow-hidden rounded-[22px] bg-white shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] lg:block">
       <DayHeader
@@ -46,7 +70,12 @@ function DesktopGroup({ group, label }: { group: DayGroup; label: string }) {
         className="flex items-center justify-between border-b border-hair bg-cream/60 px-[22px] py-3.5"
       />
       {group.entries.map((e, i, arr) => (
-        <DesktopActivityRow key={e.id} entry={e} last={i === arr.length - 1} />
+        <DesktopActivityRow
+          key={e.id}
+          entry={e}
+          last={i === arr.length - 1}
+          onActions={onActions}
+        />
       ))}
     </div>
   );

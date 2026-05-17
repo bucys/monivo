@@ -4,6 +4,8 @@ export type PaymentMethod = "cash" | "card" | "transfer";
 
 export type RecentEntry = {
   id: string;
+  /** raw uuid without the `i_` / `e_` prefix — used by edit/delete actions */
+  rawId: string;
   kind: "income" | "expense";
   label: string;
   amountCents: number;
@@ -12,6 +14,10 @@ export type RecentEntry = {
   sortKey: string;
   paymentMethod?: PaymentMethod | null;
   note?: string | null;
+  /** income only — preset service id when one is associated */
+  serviceId?: string | null;
+  /** expense only — raw category slug */
+  categorySlug?: string | null;
 };
 
 const EXPENSE_LABELS: Record<string, string> = {

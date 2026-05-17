@@ -13,9 +13,11 @@ const PAY_LABEL: Record<PaymentMethod, string> = {
 export function DesktopActivityRow({
   entry,
   last,
+  onActions,
 }: {
   entry: RecentEntry;
   last: boolean;
+  onActions?: (entry: RecentEntry) => void;
 }) {
   const isIncome = entry.kind === "income";
   const sign = isIncome ? "+" : "−";
@@ -27,7 +29,7 @@ export function DesktopActivityRow({
 
   return (
     <div
-      className={`flex items-center gap-4 px-[22px] py-4 ${
+      className={`group flex items-center gap-4 px-[22px] py-4 ${
         last ? "" : "border-b border-hair"
       }`}
     >
@@ -70,7 +72,27 @@ export function DesktopActivityRow({
         {sign}
         {amount} €
       </div>
+      {onActions ? (
+        <button
+          type="button"
+          aria-label="Veiksmai"
+          onClick={() => onActions(entry)}
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink-500 opacity-0 transition-opacity hover:bg-cream/60 hover:text-ink-900/90 focus-visible:opacity-100 group-hover:opacity-100"
+        >
+          <MoreIcon />
+        </button>
+      ) : null}
     </div>
+  );
+}
+
+function MoreIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <circle cx="5" cy="12" r="1.6" />
+      <circle cx="12" cy="12" r="1.6" />
+      <circle cx="19" cy="12" r="1.6" />
+    </svg>
   );
 }
 
