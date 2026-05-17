@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { LocaleProvider } from "@/i18n/locale-provider";
+import { getServerLocale } from "@/i18n/server";
 import "./globals.css";
 
 const inter = Inter({
@@ -53,14 +55,17 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getServerLocale();
   return (
-    <html lang="lt" className={inter.variable}>
-      <body>{children}</body>
+    <html lang={locale} className={inter.variable}>
+      <body>
+        <LocaleProvider initialLocale={locale}>{children}</LocaleProvider>
+      </body>
     </html>
   );
 }

@@ -1,17 +1,169 @@
+import { redirect } from "next/navigation";
 import { AppScreen } from "@/components/app/app-screen";
-import { LogoutButton } from "@/components/auth/logout-button";
+import { LogoutRow } from "@/components/settings/logout-row";
+import { ProfileCard } from "@/components/settings/profile-card";
+import {
+  SettingsRow,
+  SettingsSection,
+} from "@/components/settings/settings-card";
+import {
+  IconCrown,
+  IconExport,
+  IconGlobe,
+  IconList,
+  IconNote,
+  IconPerson,
+  IconReceipt,
+  IconSparkle,
+} from "@/components/settings/settings-icons";
+import { LanguageToggle } from "@/components/settings/language-toggle";
+import { TaxRatePill } from "@/components/settings/profile-form";
+import { getDictionary } from "@/i18n";
+import { getServerLocale } from "@/i18n/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export default function SettingsPage() {
+function trialDaysLeft(trialEndsAt: string | null): number | null {
+  if (!trialEndsAt) return null;
+  const ms = Date.parse(trialEndsAt) - Date.now();
+  if (Number.isNaN(ms)) return null;
+  return Math.max(0, Math.ceil(ms / 86_400_000));
+}
+
+export default async function SettingsPage() {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const locale = await getServerLocale();
+  const t = getDictionary(locale);
+
+  const [{ data: profile }, servicesCount] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select(
+        "display_name, tax_rate, subscription_status, trial_ends_at, past_due_since",
+      )
+      .eq("id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("services")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id),
+  ]);
+  const serviceCount = servicesCount.count ?? 0;
+
+  const displayName = profile?.display_name ?? "";
+  const taxPercent = Math.round(Number(profile?.tax_rate ?? 0) * 100);
+  const status = profile?.subscription_status ?? "trialing";
+  const daysLeft = trialDaysLeft(profile?.trial_ends_at ?? null);
+
+  const statusLabel = (() => {
+    switch (status) {
+      case "active":
+        return t.settings.subscription.statusActive;
+      case "trialing":
+        return t.settings.subscription.statusTrialing;
+      case "expired":
+        return t.settings.subscription.statusExpired;
+      case "past_due":
+        return t.settings.subscription.statusPastDue;
+      case "canceled":
+        return t.settings.subscription.statusCanceled;
+      default:
+        return status;
+    }
+  })();
+
+  const trialNote =
+    status === "trialing"
+      ? daysLeft !== null && daysLeft > 0
+        ? t.settings.subscription.trialDaysLeft.replace("{n}", String(daysLeft))
+        : t.settings.subscription.trialEnded
+      : undefined;
+
   return (
     <AppScreen>
-      <p className="text-body text-ink-700">
-        Čia tvarkysi profilį, mokesčių procentą, kategorijas ir paskyrą.
-      </p>
-      <div className="mt-8 flex flex-col items-start gap-2">
-        <span className="text-[12px] font-semibold uppercase tracking-[0.18em] text-ink-500">
-          Paskyra
-        </span>
-        <LogoutButton />
+      <div className="flex flex-col gap-[18px] lg:gap-[22px]">
+        <div className="lg:hidden">
+          <p className="text-[13px] font-medium tracking-[0.01em] text-ink-500">
+            {t.settings.subtitle}
+          </p>
+          <h1 className="mt-0.5 text-[28px] font-semibold leading-tight tracking-[-0.028em] text-ink-900/95">
+            {t.settings.title}
+          </h1>
+        </div>
+
+        <ProfileCard
+          displayName={displayName}
+          subline={t.settings.profile.individualActivity}
+          editLabel={t.settings.profile.editTitle}
+        />
+
+        <SettingsSection label={t.settings.sections.business}>
+          <SettingsRow
+            icon={<IconList />}
+            label={t.settings.business.services}
+            detail={String(serviceCount)}
+            href="/services"
+          />
+          <SettingsRow
+            icon={<IconReceipt />}
+            label={t.settings.business.taxRate}
+            right={<TaxRatePill initialPercent={taxPercent} />}
+            chevron={false}
+          />
+          <SettingsRow
+            icon={<IconNote />}
+            label={t.settings.business.activityType}
+            detail={t.settings.profile.individualActivity}
+            last
+          />
+        </SettingsSection>
+
+        <SettingsSection label={t.settings.sections.app}>
+          <SettingsRow
+            icon={<IconSparkle />}
+            label={t.settings.app.appearance}
+            detail={t.settings.app.appearanceValue}
+          />
+          <SettingsRow
+            icon={<IconGlobe />}
+            label={t.settings.app.language}
+            right={<LanguageToggle />}
+            chevron={false}
+          />
+          <SettingsRow
+            icon={<IconExport />}
+            label={t.settings.app.export}
+            detail={t.settings.app.exportValue}
+            last
+          />
+        </SettingsSection>
+
+        <SettingsSection label={t.settings.sections.subscription}>
+          <SettingsRow
+            icon={<IconCrown />}
+            label={t.settings.subscription.title}
+            detail={trialNote ?? statusLabel}
+            chevron={false}
+            right={
+              <span className="inline-flex items-center rounded-full bg-accent-soft px-3 py-1 text-[12px] font-semibold text-accent-deep">
+                {statusLabel}
+              </span>
+            }
+            last
+          />
+        </SettingsSection>
+
+        <SettingsSection label={t.settings.sections.account}>
+          <SettingsRow
+            icon={<IconPerson />}
+            label={t.settings.account.account}
+          />
+          <LogoutRow label={t.settings.account.logout} />
+        </SettingsSection>
       </div>
     </AppScreen>
   );
