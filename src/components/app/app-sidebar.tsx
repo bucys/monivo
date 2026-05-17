@@ -40,7 +40,7 @@ export function AppSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden h-dvh w-[260px] flex-shrink-0 flex-col gap-5 border-r border-hair bg-[#F4F1EA] p-[22px] lg:flex">
+    <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-20 lg:flex lg:h-dvh lg:w-[260px] lg:flex-col lg:gap-5 lg:overflow-y-auto lg:border-r lg:border-hair lg:bg-[#F4F1EA] lg:p-[22px]">
       <Link
         href="/dashboard"
         className="flex items-center gap-2.5 px-1.5"

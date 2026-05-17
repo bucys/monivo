@@ -30,22 +30,13 @@ export function RecentActivity({
   if (entries.length === 0) return null;
 
   return (
-    <section
-      aria-label="Naujausi įrašai"
-      className="rounded-[24px] border border-hair bg-white p-4 sm:p-5 lg:p-6"
-    >
-      <div className="flex items-baseline justify-between px-1 pb-3">
-        <h2 className="text-[14px] font-semibold tracking-tight text-ink-900/90">
-          Naujausi įrašai
-        </h2>
-      </div>
+    <section aria-label="Naujausi įrašai" className="flex flex-col">
+      <h2 className="px-1 pb-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">
+        Naujausi įrašai
+      </h2>
       <ul className="flex flex-col">
         {entries.slice(0, 5).map((e, i) => (
-          <RecentRow
-            key={e.id}
-            entry={e}
-            desktopOnly={i >= 3}
-          />
+          <RecentRow key={e.id} entry={e} desktopOnly={i >= 3} />
         ))}
       </ul>
     </section>
@@ -61,24 +52,24 @@ function RecentRow({
 }) {
   const isIncome = entry.kind === "income";
   const sign = isIncome ? "+" : "−";
-  const tone = isIncome
-    ? "bg-accent-soft text-accent-deep"
-    : "bg-expense-bg text-expense";
+  const toneBg = isIncome ? "bg-accent-soft" : "bg-expense-bg";
+  const toneText = isIncome ? "text-accent-deep" : "text-expense";
   const date = new Date(`${entry.occurredAt}T00:00:00`);
+  const amountText = formatEur(entry.amountCents).replace("−", "");
 
   return (
     <li
-      className={`items-center gap-3 border-t border-hair px-1 py-3 first:border-t-0 ${
+      className={`items-center gap-3.5 border-t border-hair px-1 py-4 first:border-t-0 ${
         desktopOnly ? "hidden lg:flex" : "flex"
       }`}
     >
       <span
         aria-hidden
-        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[14px] font-semibold ${tone}`}
+        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[15px] font-semibold ${toneBg} ${toneText}`}
       >
         {sign}
       </span>
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <span className="truncate text-[14px] font-medium text-ink-900/90">
           {entry.label}
         </span>
@@ -86,7 +77,7 @@ function RecentRow({
       </div>
       <span className="shrink-0 text-[15px] font-semibold tabular-nums text-ink-900/90">
         {sign}
-        {formatEur(entry.amountCents).replace("−", "")}
+        {amountText}
       </span>
     </li>
   );

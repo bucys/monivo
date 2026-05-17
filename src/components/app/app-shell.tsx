@@ -8,9 +8,9 @@ import { AppTopBar } from "./app-top-bar";
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-dvh bg-cream">
+    <div className="min-h-dvh bg-cream">
       <AppSidebar />
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-h-dvh min-w-0 flex-col lg:pl-[260px]">
         <AppTopBar />
         <AppDesktopTopBar />
         <main className="flex-1 pb-32 lg:pb-12">{children}</main>

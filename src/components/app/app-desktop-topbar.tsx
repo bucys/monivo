@@ -6,6 +6,9 @@ import { getAppRouteMeta } from "./app-route-meta";
 export function AppDesktopTopBar() {
   const pathname = usePathname();
   const { title, sub } = getAppRouteMeta(pathname);
+  const isDashboard = pathname === "/dashboard";
+
+  if (isDashboard) return null;
 
   return (
     <header className="sticky top-0 z-20 hidden border-b border-hair bg-cream/85 backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-cream/70 lg:block">
