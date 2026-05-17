@@ -5,6 +5,14 @@ import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const PAYMENT_METHODS = new Set(["cash", "card", "transfer"]);
+const EXPENSE_CATEGORIES = new Set([
+  "supplies",
+  "rent",
+  "marketing",
+  "education",
+  "equipment",
+  "other",
+]);
 const MAX_AMOUNT_CENTS = 1_000_000_00;
 const MAX_NOTE = 200;
 
@@ -68,6 +76,43 @@ export async function createIncomeEntry(formData: FormData) {
       service_id: serviceId,
       service_name: serviceName,
       payment_method: paymentMethod,
+      occurred_at: todayDateString(),
+      note,
+    })
+    .select("id")
+    .single();
+
+  if (error) throw new Error(`Nepavyko išsaugoti: ${error.message}`);
+
+  revalidatePath("/dashboard");
+  revalidatePath("/activity");
+  revalidatePath("/insights");
+}
+
+export async function createExpenseEntry(formData: FormData) {
+  const amountCents = parseAmountCents(formData.get("amount"));
+  const categoryRaw = String(formData.get("category") ?? "").trim();
+  if (!EXPENSE_CATEGORIES.has(categoryRaw)) {
+    throw new Error("Pasirink kategoriją.");
+  }
+  const noteRaw = String(formData.get("note") ?? "").trim();
+  const note = noteRaw.length > 0 ? noteRaw.slice(0, MAX_NOTE) : null;
+
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+    error: userErr,
+  } = await supabase.auth.getUser();
+
+  if (userErr) throw new Error("Nepavyko nustatyti vartotojo.");
+  if (!user) redirect("/login");
+
+  const { error } = await supabase
+    .from("expense_entries")
+    .insert({
+      user_id: user.id,
+      amount_cents: amountCents,
+      category: categoryRaw,
       occurred_at: todayDateString(),
       note,
     })

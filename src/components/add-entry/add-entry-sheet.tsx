@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ModalSheet } from "@/components/ui/modal-sheet";
+import { ExpenseForm } from "./expense-form";
 import { IncomeForm, type ServiceChip } from "./income-form";
 
 const OPEN_INCOME_EVENT = "monivo:open-income-entry";
@@ -62,7 +63,7 @@ export function AddEntrySheet({
         {mode === "income" ? (
           <IncomeForm services={services} onAdded={onAdded} />
         ) : mode === "expense" ? (
-          <ExpensePlaceholder />
+          <ExpenseForm onAdded={onAdded} />
         ) : null}
       </ModalSheet>
 
@@ -78,20 +79,3 @@ export function AddEntrySheet({
   );
 }
 
-function ExpensePlaceholder() {
-  return (
-    <div className="flex flex-col gap-4">
-      <h2 className="text-[20px] font-semibold tracking-[-0.022em] text-ink-900/90">
-        Pridėti išlaidą
-      </h2>
-      <div className="flex flex-col items-center rounded-[18px] border border-hair bg-cream px-6 py-10 text-center">
-        <span className="inline-flex items-center gap-2 rounded-full bg-accent/[0.08] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-accent">
-          Greitai
-        </span>
-        <p className="mt-3 max-w-[280px] text-[14px] leading-[1.55] text-ink-500">
-          Išlaidų pridėjimas bus paruoštas kitame žingsnyje.
-        </p>
-      </div>
-    </div>
-  );
-}
