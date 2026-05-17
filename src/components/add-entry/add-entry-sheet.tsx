@@ -55,7 +55,7 @@ export function AddEntrySheet({
   };
 
   const ariaLabel =
-    mode === "expense" ? "Pridėti išlaidą" : "Pridėti pajamas";
+    mode === "expense" ? "Pridėti išlaidas" : "Pridėti pajamas";
 
   return (
     <>

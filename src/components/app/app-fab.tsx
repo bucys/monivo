@@ -74,7 +74,7 @@ export function AppFab() {
           tabIndex={showMenu ? 0 : -1}
           onClick={() => choose("expense")}
           tone="expense"
-          label="Įvesti išlaidą"
+          label="Įvesti išlaidas"
         />
       </div>
 
