@@ -3,6 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import {
+  dispatchOpenExpenseEntry,
+  dispatchOpenIncomeEntry,
+} from "@/components/add-entry/add-entry-sheet";
 
 type NavGroup = {
   eyebrow: string;
@@ -32,13 +36,6 @@ function isActive(pathname: string | null, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function noopAdd(kind: "income" | "expense") {
-  if (typeof window !== "undefined") {
-    // eslint-disable-next-line no-console
-    console.log(`[sidebar] add-${kind} tap (Phase 9 wires the modal)`);
-  }
-}
-
 export function AppSidebar() {
   const pathname = usePathname();
 
@@ -63,7 +60,7 @@ export function AppSidebar() {
       <div className="flex flex-col gap-2">
         <button
           type="button"
-          onClick={() => noopAdd("income")}
+          onClick={dispatchOpenIncomeEntry}
           className="flex items-center gap-2.5 rounded-[14px] bg-accent px-3.5 py-3 text-[14px] font-semibold text-white shadow-fab transition-transform active:scale-[0.98]"
         >
           <span
@@ -76,7 +73,7 @@ export function AppSidebar() {
         </button>
         <button
           type="button"
-          onClick={() => noopAdd("expense")}
+          onClick={dispatchOpenExpenseEntry}
           className="flex items-center gap-2.5 rounded-[14px] border border-hair bg-white px-3.5 py-3 text-[14px] font-medium text-ink-900/90"
         >
           <span

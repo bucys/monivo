@@ -4,14 +4,20 @@ import { useEffect, useState } from "react";
 import { ModalSheet } from "@/components/ui/modal-sheet";
 import { IncomeForm, type ServiceChip } from "./income-form";
 
-const OPEN_EVENT = "monivo:open-add-entry";
+const OPEN_INCOME_EVENT = "monivo:open-income-entry";
+const OPEN_EXPENSE_EVENT = "monivo:open-expense-entry";
 
-export function dispatchOpenAddEntry() {
+export function dispatchOpenIncomeEntry() {
   if (typeof window === "undefined") return;
-  window.dispatchEvent(new CustomEvent(OPEN_EVENT));
+  window.dispatchEvent(new CustomEvent(OPEN_INCOME_EVENT));
 }
 
-type Tab = "income" | "expense";
+export function dispatchOpenExpenseEntry() {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent(OPEN_EXPENSE_EVENT));
+}
+
+type Mode = "income" | "expense" | null;
 
 export function AddEntrySheet({
   services,
@@ -20,18 +26,19 @@ export function AddEntrySheet({
   services: ReadonlyArray<ServiceChip>;
   canWrite: boolean;
 }) {
-  const [open, setOpen] = useState(false);
-  const [tab, setTab] = useState<Tab>("income");
+  const [mode, setMode] = useState<Mode>(null);
   const [justAdded, setJustAdded] = useState(false);
 
   useEffect(() => {
     if (!canWrite) return;
-    const handler = () => {
-      setTab("income");
-      setOpen(true);
+    const openIncome = () => setMode("income");
+    const openExpense = () => setMode("expense");
+    window.addEventListener(OPEN_INCOME_EVENT, openIncome);
+    window.addEventListener(OPEN_EXPENSE_EVENT, openExpense);
+    return () => {
+      window.removeEventListener(OPEN_INCOME_EVENT, openIncome);
+      window.removeEventListener(OPEN_EXPENSE_EVENT, openExpense);
     };
-    window.addEventListener(OPEN_EVENT, handler);
-    return () => window.removeEventListener(OPEN_EVENT, handler);
   }, [canWrite]);
 
   useEffect(() => {
@@ -40,37 +47,23 @@ export function AddEntrySheet({
     return () => window.clearTimeout(t);
   }, [justAdded]);
 
-  const close = () => setOpen(false);
+  const close = () => setMode(null);
   const onAdded = () => {
-    setOpen(false);
+    setMode(null);
     setJustAdded(true);
   };
 
+  const ariaLabel =
+    mode === "expense" ? "Pridėti išlaidą" : "Pridėti pajamas";
+
   return (
     <>
-      <ModalSheet open={open} onClose={close} ariaLabel="Pridėti įrašą">
-        <div className="flex flex-col gap-5">
-          <div className="flex rounded-[14px] bg-ink-100 p-1">
-            <TabButton
-              active={tab === "income"}
-              onClick={() => setTab("income")}
-            >
-              Pajamos
-            </TabButton>
-            <TabButton
-              active={tab === "expense"}
-              onClick={() => setTab("expense")}
-            >
-              Išlaidos
-            </TabButton>
-          </div>
-
-          {tab === "income" ? (
-            <IncomeForm services={services} onAdded={onAdded} />
-          ) : (
-            <ExpensePlaceholder />
-          )}
-        </div>
+      <ModalSheet open={mode !== null} onClose={close} ariaLabel={ariaLabel}>
+        {mode === "income" ? (
+          <IncomeForm services={services} onAdded={onAdded} />
+        ) : mode === "expense" ? (
+          <ExpensePlaceholder />
+        ) : null}
       </ModalSheet>
 
       {justAdded ? (
@@ -85,40 +78,20 @@ export function AddEntrySheet({
   );
 }
 
-function TabButton({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={`flex-1 rounded-[10px] px-3 py-2 text-[14px] font-medium transition-colors ${
-        active
-          ? "bg-white text-ink-900/90 shadow-card"
-          : "text-ink-500 hover:text-ink-900/90"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
-
 function ExpensePlaceholder() {
   return (
-    <div className="flex flex-col items-center rounded-[18px] border border-hair bg-cream px-6 py-10 text-center">
-      <span className="inline-flex items-center gap-2 rounded-full bg-accent/[0.08] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-accent">
-        Greitai
-      </span>
-      <p className="mt-3 max-w-[280px] text-[14px] leading-[1.55] text-ink-500">
-        Išlaidų pridėjimas bus paruoštas kitame žingsnyje.
-      </p>
+    <div className="flex flex-col gap-4">
+      <h2 className="text-[20px] font-semibold tracking-[-0.022em] text-ink-900/90">
+        Pridėti išlaidą
+      </h2>
+      <div className="flex flex-col items-center rounded-[18px] border border-hair bg-cream px-6 py-10 text-center">
+        <span className="inline-flex items-center gap-2 rounded-full bg-accent/[0.08] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-accent">
+          Greitai
+        </span>
+        <p className="mt-3 max-w-[280px] text-[14px] leading-[1.55] text-ink-500">
+          Išlaidų pridėjimas bus paruoštas kitame žingsnyje.
+        </p>
+      </div>
     </div>
   );
 }
