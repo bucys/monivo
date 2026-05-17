@@ -7,7 +7,7 @@ const meta: Record<string, AppRouteMeta> = {
   "/dashboard": { title: "Apžvalga", sub: "Šis mėnuo" },
   "/activity": { title: "Veikla", sub: "Šis mėnuo" },
   "/insights": { title: "Įžvalgos", sub: "Šis mėnuo" },
-  "/services": { title: "Paslaugos", sub: "Tavo presetai" },
+  "/services": { title: "Paslaugos", sub: "Tavo" },
   "/settings": { title: "Nustatymai", sub: "Paskyra" },
 };
 
