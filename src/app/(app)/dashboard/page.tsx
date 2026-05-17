@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { AppScreen } from "@/components/app/app-screen";
 import { TodayEmpty } from "@/components/dashboard/empty-prompt";
+import { MobileQuickActions } from "@/components/dashboard/mobile-quick-actions";
+import { MonthlyStats } from "@/components/dashboard/monthly-stats";
 import { NotificationBell } from "@/components/dashboard/notification-bell";
 import {
   QuickActions,
@@ -13,6 +15,7 @@ import {
   type RecentEntry,
 } from "@/components/dashboard/recent-activity";
 import { SpendableHero } from "@/components/dashboard/spendable-card";
+import { MobileTodayList } from "@/components/dashboard/today-list";
 import { WeeklyEarnings } from "@/components/dashboard/weekly-earnings";
 import { monthRange } from "@/lib/format";
 import { canWriteProfile } from "@/lib/profile";
@@ -140,21 +143,19 @@ export default async function DashboardPage() {
 
   return (
     <AppScreen>
-      <header className="mb-7 flex items-start justify-between gap-4 lg:mb-9">
+      <header className="mb-5 flex items-start justify-between gap-4 lg:mb-9">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-500">
+          <p className="text-[13px] font-medium tracking-[0.01em] text-ink-500 lg:text-[11px] lg:font-semibold lg:uppercase lg:tracking-[0.1em]">
             {label}
           </p>
-          <h1 className="mt-1.5 text-[26px] font-semibold tracking-[-0.025em] text-ink-900/90 lg:text-[30px]">
+          <h1 className="mt-0.5 text-[28px] font-semibold leading-tight tracking-[-0.028em] text-ink-900/95 lg:mt-1.5 lg:text-[30px] lg:tracking-[-0.025em] lg:text-ink-900/90">
             {greeting}
           </h1>
         </div>
-        <div className="hidden lg:block">
-          <NotificationBell />
-        </div>
+        <NotificationBell />
       </header>
 
-      <div className="flex flex-col gap-[22px]">
+      <div className="flex flex-col gap-[18px] lg:gap-[22px]">
         <SpendableHero
           spendableCents={spendableCents}
           incomeCents={incomeCents}
@@ -162,6 +163,14 @@ export default async function DashboardPage() {
           taxReserveCents={taxReserveCents}
           heroSub={heroSub}
         />
+
+        <MonthlyStats
+          incomeCents={incomeCents}
+          expenseCents={expenseCents}
+          taxReserveCents={taxReserveCents}
+        />
+
+        <MobileQuickActions services={serviceList} canWrite={canWrite} />
 
         <div className="hidden grid-cols-[1.5fr_1fr] items-stretch gap-[22px] lg:grid">
           <WeeklyEarnings
@@ -172,18 +181,22 @@ export default async function DashboardPage() {
           <QuickActions services={serviceList} canWrite={canWrite} />
         </div>
 
-        {todayEntries.length > 0 ? (
-          <TodayCard
-            entries={todayEntries}
-            incomeCents={todayIncomeCents}
-            expenseCents={todayExpenseCents}
-          />
-        ) : (
-          <TodayEmpty
-            incomeCents={todayIncomeCents}
-            expenseCents={todayExpenseCents}
-          />
-        )}
+        <div className="hidden lg:block">
+          {todayEntries.length > 0 ? (
+            <TodayCard
+              entries={todayEntries}
+              incomeCents={todayIncomeCents}
+              expenseCents={todayExpenseCents}
+            />
+          ) : (
+            <TodayEmpty
+              incomeCents={todayIncomeCents}
+              expenseCents={todayExpenseCents}
+            />
+          )}
+        </div>
+
+        <MobileTodayList entries={todayEntries} />
       </div>
     </AppScreen>
   );

@@ -18,38 +18,38 @@ export function SpendableHero({
   const expSeg = Math.max(0, expenseCents);
   const taxSeg = Math.max(0, taxReserveCents);
   const total = free + expSeg + taxSeg;
-  const pct = (n: number) =>
-    total > 0 ? `${(n / total) * 100}%` : "0%";
+  const pct = (n: number) => (total > 0 ? `${(n / total) * 100}%` : "0%");
+  const incomeText = formatEur(incomeCents).replace(/\s?€/, "");
 
   return (
     <section
       aria-label="Mėnesio apžvalga"
-      className="relative overflow-hidden rounded-[28px] p-7 text-white shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_20px_50px_-10px_rgba(31,122,107,0.18)] sm:p-8 lg:p-[30px]"
+      className="relative overflow-hidden rounded-[28px] px-[22px] pb-[22px] pt-6 text-white shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_20px_50px_-10px_rgba(31,122,107,0.18)] sm:p-7 lg:p-[30px]"
       style={{
         background:
-          "linear-gradient(140deg, #2E8E7D 0%, #1F7A6B 50%, #185E53 100%)",
+          "linear-gradient(155deg, #2E8E7D 0%, #1F7A6B 55%, #185E53 100%)",
       }}
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-10 -top-20 h-[320px] w-[320px] rounded-full"
+        className="pointer-events-none absolute -right-10 -top-[60px] h-[220px] w-[220px] rounded-full lg:-right-10 lg:-top-20 lg:h-[320px] lg:w-[320px]"
         style={{
           background:
-            "radial-gradient(circle, rgba(255,255,255,0.16), transparent 60%)",
+            "radial-gradient(circle, rgba(255,255,255,0.18), transparent 60%)",
         }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -bottom-[120px] left-[40%] h-[280px] w-[280px] rounded-full"
+        className="pointer-events-none absolute -bottom-20 -left-10 h-[180px] w-[180px] rounded-full lg:-bottom-[120px] lg:left-[40%] lg:h-[280px] lg:w-[280px]"
         style={{
           background:
-            "radial-gradient(circle, rgba(221,244,236,0.18), transparent 60%)",
+            "radial-gradient(circle, rgba(221,244,236,0.20), transparent 60%)",
         }}
       />
 
       <div className="relative grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-[30px]">
         <div>
-          <div className="inline-flex items-center gap-1.5 text-[13px] font-medium tracking-tight opacity-90">
+          <div className="inline-flex items-center gap-1.5 text-[13px] font-medium tracking-tight opacity-85">
             <svg
               width="12"
               height="12"
@@ -61,18 +61,45 @@ export function SpendableHero({
             </svg>
             Kiek galiu išleisti
           </div>
-          <div className="mt-4 flex items-baseline gap-1.5 whitespace-nowrap text-[64px] font-semibold leading-none tracking-[-0.03em] tabular-nums sm:text-[72px] lg:text-[84px]">
+          <div className="mt-3 flex items-baseline gap-1 whitespace-nowrap text-[56px] font-semibold leading-none tracking-[-0.027em] tabular-nums sm:mt-4 sm:gap-1.5 sm:text-[64px] lg:text-[84px] lg:tracking-[-0.03em]">
             <span>{formatEur(display).replace(/\s?€/, "")}</span>
             <span className="text-[28px] font-normal opacity-70 lg:text-[36px]">
               €
             </span>
           </div>
-          <p className="mt-3.5 max-w-[320px] text-[14px] leading-[1.45] opacity-80">
+          <p className="mt-2.5 max-w-[320px] text-[13px] leading-[1.45] opacity-75 lg:mt-3.5 lg:text-[14px] lg:opacity-80">
             {heroSub}
           </p>
+
+          {/* mobile-only stacked bar + caption */}
+          <div className="mt-[18px] lg:hidden">
+            <div
+              className="flex h-1.5 overflow-hidden rounded-full"
+              style={{ background: "rgba(255,255,255,0.18)" }}
+            >
+              <div style={{ width: pct(free), background: "#DDF4EC" }} />
+              <div
+                style={{
+                  width: pct(expSeg),
+                  background: "rgba(255,231,231,0.85)",
+                }}
+              />
+              <div
+                style={{
+                  width: pct(taxSeg),
+                  background: "rgba(255,242,217,0.9)",
+                }}
+              />
+            </div>
+            <div className="mt-2.5 flex items-center justify-between text-[11px] opacity-75 tabular-nums">
+              <span>Šio mėnesio pajamos</span>
+              <span>{incomeText} € </span>
+            </div>
+          </div>
         </div>
 
-        <div>
+        {/* desktop-only breakdown panel */}
+        <div className="hidden lg:block">
           <div className="mb-3.5 text-[11px] font-semibold uppercase tracking-[0.08em] opacity-70">
             Mėnesio sudėtis
           </div>
