@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation";
-import { AppShell } from "@/components/app/app-shell";
+import type { ReactNode } from "react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export default async function AppLayout({
+export default async function OnboardingLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const supabase = await createSupabaseServerClient();
   const {
@@ -13,7 +13,7 @@ export default async function AppLayout({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/login");
+    redirect("/login?next=/onboarding");
   }
 
   const { data: profile } = await supabase
@@ -22,9 +22,13 @@ export default async function AppLayout({
     .eq("id", user.id)
     .maybeSingle();
 
-  if (!profile?.onboarding_completed_at) {
-    redirect("/onboarding");
+  if (profile?.onboarding_completed_at) {
+    redirect("/dashboard");
   }
 
-  return <AppShell>{children}</AppShell>;
+  return (
+    <main className="flex min-h-dvh items-center justify-center bg-cream px-5 py-12 sm:px-8">
+      {children}
+    </main>
+  );
 }
