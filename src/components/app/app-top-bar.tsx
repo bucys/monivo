@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { NotificationBell } from "@/components/dashboard/notification-bell";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 import { getAppRouteMeta } from "./app-route-meta";
 
 export function AppTopBar() {

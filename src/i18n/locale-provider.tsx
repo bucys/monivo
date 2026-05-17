@@ -73,3 +73,8 @@ export function useLocale(): Ctx {
   }
   return ctx;
 }
+
+/** Convenience hook — returns just the dictionary for the active locale. */
+export function useT(): Dictionary {
+  return useLocale().t;
+}

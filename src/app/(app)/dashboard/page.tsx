@@ -3,7 +3,7 @@ import { AppScreen } from "@/components/app/app-screen";
 import { TodayEmpty } from "@/components/dashboard/empty-prompt";
 import { MobileQuickActions } from "@/components/dashboard/mobile-quick-actions";
 import { MonthlyStats } from "@/components/dashboard/monthly-stats";
-import { NotificationBell } from "@/components/dashboard/notification-bell";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 import {
   QuickActions,
   type QuickService,
