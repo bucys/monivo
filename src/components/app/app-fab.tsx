@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { dispatchOpenAddService } from "@/app/(app)/services/services-client";
+import { dispatchOpenAddEntry } from "@/components/add-entry/add-entry-sheet";
 
 export function AppFab() {
   const pathname = usePathname();
@@ -12,10 +13,7 @@ export function AppFab() {
       dispatchOpenAddService();
       return;
     }
-    if (typeof window !== "undefined") {
-      // eslint-disable-next-line no-console
-      console.log("[fab] add-entry tap (Phase 10 wires the income/expense sheet)");
-    }
+    dispatchOpenAddEntry();
   };
 
   return (

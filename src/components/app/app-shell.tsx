@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { AddEntryMount } from "@/components/add-entry/add-entry-mount";
 import { AppBottomNav } from "./app-bottom-nav";
 import { AppDesktopTopBar } from "./app-desktop-topbar";
 import { AppFab } from "./app-fab";
@@ -16,6 +17,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </div>
       <AppBottomNav />
       <AppFab />
+      <AddEntryMount />
     </div>
   );
 }

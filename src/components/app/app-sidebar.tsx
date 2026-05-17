@@ -85,7 +85,7 @@ export function AppSidebar() {
           >
             −
           </span>
-          Pridėti išlaidą
+          Pridėti išlaidas
         </button>
       </div>
 

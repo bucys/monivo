@@ -106,7 +106,7 @@ Rules:
 - Tab switching does **not** clear the amount — let the user fix a tab mistake instantly.
 - No date picker by default — entry is dated *today*. Long-press the date label to change.
 - Category is optional and never required.
-- Cash vs. transfer is **not** tracked in MVP. (Future consideration only.)
+- Payment method (`Grynais · Kortele · Pavedimu`) **is** tracked in MVP, defaulting to `Grynais`. Stored on `income_entries.payment_method`.
 
 ---
 
