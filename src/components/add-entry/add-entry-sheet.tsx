@@ -8,9 +8,13 @@ import { IncomeForm, type ServiceChip } from "./income-form";
 const OPEN_INCOME_EVENT = "monivo:open-income-entry";
 const OPEN_EXPENSE_EVENT = "monivo:open-expense-entry";
 
-export function dispatchOpenIncomeEntry() {
+export function dispatchOpenIncomeEntry(serviceId?: string) {
   if (typeof window === "undefined") return;
-  window.dispatchEvent(new CustomEvent(OPEN_INCOME_EVENT));
+  window.dispatchEvent(
+    new CustomEvent(OPEN_INCOME_EVENT, {
+      detail: serviceId ? { serviceId } : undefined,
+    }),
+  );
 }
 
 export function dispatchOpenExpenseEntry() {
@@ -28,12 +32,20 @@ export function AddEntrySheet({
   canWrite: boolean;
 }) {
   const [mode, setMode] = useState<Mode>(null);
+  const [presetServiceId, setPresetServiceId] = useState<string | null>(null);
   const [justAdded, setJustAdded] = useState(false);
 
   useEffect(() => {
     if (!canWrite) return;
-    const openIncome = () => setMode("income");
-    const openExpense = () => setMode("expense");
+    const openIncome = (e: Event) => {
+      const detail = (e as CustomEvent<{ serviceId?: string }>).detail;
+      setPresetServiceId(detail?.serviceId ?? null);
+      setMode("income");
+    };
+    const openExpense = () => {
+      setPresetServiceId(null);
+      setMode("expense");
+    };
     window.addEventListener(OPEN_INCOME_EVENT, openIncome);
     window.addEventListener(OPEN_EXPENSE_EVENT, openExpense);
     return () => {
@@ -61,7 +73,12 @@ export function AddEntrySheet({
     <>
       <ModalSheet open={mode !== null} onClose={close} ariaLabel={ariaLabel}>
         {mode === "income" ? (
-          <IncomeForm services={services} onAdded={onAdded} />
+          <IncomeForm
+            key={presetServiceId ?? "no-preset"}
+            services={services}
+            onAdded={onAdded}
+            initialServiceId={presetServiceId}
+          />
         ) : mode === "expense" ? (
           <ExpenseForm onAdded={onAdded} />
         ) : null}

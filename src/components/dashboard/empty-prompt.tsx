@@ -1,45 +1,58 @@
-"use client";
-
-import { dispatchOpenIncomeEntry } from "@/components/add-entry/add-entry-sheet";
-
-export function EmptyPrompt({ canWrite }: { canWrite: boolean }) {
+export function TodayEmpty({
+  incomeCents,
+  expenseCents,
+}: {
+  incomeCents: number;
+  expenseCents: number;
+}) {
   return (
-    <section className="flex flex-col items-center rounded-[24px] border border-hair bg-white/70 px-6 py-12 text-center sm:py-14">
-      <span
-        aria-hidden
-        className="flex h-12 w-12 items-center justify-center rounded-full bg-accent-soft text-accent-deep"
-      >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
+    <section
+      aria-label="Šios dienos įrašai"
+      className="overflow-hidden rounded-[20px] bg-white shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]"
+    >
+      <div className="flex items-center justify-between border-b border-hair px-6 py-5">
+        <div>
+          <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">
+            Šiandien
+          </div>
+          <div className="mt-1 text-[18px] font-semibold tracking-[-0.018em] text-ink-900/90">
+            0 įrašų
+          </div>
+        </div>
+        <div className="text-[12px] font-medium text-ink-500">
+          <span className="font-semibold text-[#1F7A4B]">+0</span>
+          <span className="mx-1.5">·</span>
+          <span className="font-semibold text-expense">−0</span>
+          <span className="ml-1.5">€</span>
+        </div>
+      </div>
+      <div className="flex flex-col items-center px-6 py-12 text-center">
+        <span
+          aria-hidden
+          className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-accent-soft text-accent-deep"
         >
-          <path d="M12 6v12M6 12h12" />
-        </svg>
-      </span>
-      <h2 className="mt-5 text-[18px] font-semibold tracking-[-0.018em] text-ink-900/90">
-        Dar tuščia.
-      </h2>
-      <p className="mt-2 max-w-[320px] text-[13px] leading-[1.55] text-ink-500">
-        Pridėk pirmas pajamas — pamatysi, kiek lieka po mokesčių.
-      </p>
-      {canWrite ? (
-        <button
-          type="button"
-          onClick={() => dispatchOpenIncomeEntry()}
-          className="mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-[13px] font-semibold text-white shadow-fab transition-colors hover:bg-accent-deep"
-        >
-          Pridėti pajamas
-        </button>
-      ) : (
-        <p className="mt-6 rounded-[12px] bg-accent-soft/60 px-3.5 py-2.5 text-[12px] text-accent-deep">
-          Įrašyti naujus pajamas galėsi, kai prenumerata bus aktyvi.
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <rect x="4" y="5" width="16" height="15" rx="3" />
+            <path d="M8 3v4M16 3v4M4 10h16" />
+          </svg>
+        </span>
+        <h3 className="mt-4 text-[15px] font-semibold tracking-[-0.012em] text-ink-900/90">
+          Šiandien dar nieko neužregistruota.
+        </h3>
+        <p className="mt-1.5 max-w-[320px] text-[13px] leading-[1.5] text-ink-500">
+          Pridėk pajamas ar išlaidas — pamatysi jas čia.
         </p>
-      )}
+        {incomeCents > 0 || expenseCents > 0 ? null : null}
+      </div>
     </section>
   );
 }

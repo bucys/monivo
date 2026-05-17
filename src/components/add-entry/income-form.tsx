@@ -40,13 +40,22 @@ function cleanAmount(raw: string) {
 export function IncomeForm({
   services,
   onAdded,
+  initialServiceId = null,
 }: {
   services: ReadonlyArray<ServiceChip>;
   onAdded: () => void;
+  initialServiceId?: string | null;
 }) {
   const router = useRouter();
-  const [amount, setAmount] = useState("");
-  const [serviceId, setServiceId] = useState<string | null>(null);
+  const initialService = initialServiceId
+    ? (services.find((s) => s.id === initialServiceId) ?? null)
+    : null;
+  const [amount, setAmount] = useState(
+    initialService ? centsToInput(initialService.price_cents) : "",
+  );
+  const [serviceId, setServiceId] = useState<string | null>(
+    initialService ? initialService.id : null,
+  );
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
   const [noteOpen, setNoteOpen] = useState(false);
   const [note, setNote] = useState("");

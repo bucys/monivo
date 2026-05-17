@@ -1,54 +1,131 @@
 "use client";
 
-import {
-  dispatchOpenExpenseEntry,
-  dispatchOpenIncomeEntry,
-} from "@/components/add-entry/add-entry-sheet";
+import Link from "next/link";
+import { dispatchOpenIncomeEntry } from "@/components/add-entry/add-entry-sheet";
 
-export function QuickActions({ canWrite }: { canWrite: boolean }) {
+export type QuickService = {
+  id: string;
+  name: string;
+  price_cents: number;
+};
+
+const TONE_PALETTE = [
+  "#DDF4EC",
+  "#FFE7E7",
+  "#FFF2D9",
+  "#E5E0F4",
+  "#F4E5DC",
+];
+
+function toneFor(id: string, index: number) {
+  const fallback = TONE_PALETTE[index % TONE_PALETTE.length]!;
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) | 0;
+  return TONE_PALETTE[Math.abs(hash) % TONE_PALETTE.length] ?? fallback;
+}
+
+export function QuickActions({
+  services,
+  canWrite,
+}: {
+  services: ReadonlyArray<QuickService>;
+  canWrite: boolean;
+}) {
+  const top = services.slice(0, 5);
+
   return (
     <section
       aria-label="Greiti veiksmai"
-      className="flex h-full flex-col rounded-[24px] border border-hair bg-white p-6 lg:p-7"
+      className="flex h-full flex-col rounded-[20px] bg-white p-6 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]"
     >
-      <h2 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">
-        Greiti veiksmai
-      </h2>
-      <div className="mt-4 flex flex-col gap-2.5">
-        <button
-          type="button"
-          onClick={() => dispatchOpenIncomeEntry()}
-          disabled={!canWrite}
-          className="flex items-center gap-2.5 rounded-[14px] bg-accent px-4 py-3 text-[14px] font-semibold text-white shadow-fab transition-transform active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          <span
-            aria-hidden
-            className="flex h-[22px] w-[22px] items-center justify-center rounded-full bg-white/20 text-[14px] font-bold"
-          >
-            +
-          </span>
-          Pridėti pajamas
-        </button>
-        <button
-          type="button"
-          onClick={() => dispatchOpenExpenseEntry()}
-          disabled={!canWrite}
-          className="flex items-center gap-2.5 rounded-[14px] border border-hair bg-white px-4 py-3 text-[14px] font-semibold text-ink-900/90 transition-colors hover:border-expense/40 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          <span
-            aria-hidden
-            className="flex h-[22px] w-[22px] items-center justify-center rounded-full bg-expense-bg text-[14px] font-bold text-expense"
-          >
-            −
-          </span>
-          Pridėti išlaidas
-        </button>
+      <div className="mb-3.5 flex items-baseline justify-between gap-3">
+        <h2 className="text-[14px] font-semibold tracking-[-0.012em] text-ink-900/90">
+          Greiti veiksmai
+        </h2>
+        <span className="text-[11px] font-medium text-ink-500">
+          Spustelėk — pridėk
+        </span>
       </div>
-      {!canWrite ? (
-        <p className="mt-4 text-[12px] text-ink-500">
-          Įrašyti galėsi, kai prenumerata bus aktyvi.
-        </p>
-      ) : null}
+
+      {top.length === 0 ? (
+        <EmptyState canWrite={canWrite} />
+      ) : (
+        <ul className="flex flex-col gap-2">
+          {top.map((s, i) => (
+            <li key={s.id}>
+              <button
+                type="button"
+                onClick={() => canWrite && dispatchOpenIncomeEntry(s.id)}
+                disabled={!canWrite}
+                className="group flex w-full items-center gap-3 rounded-[14px] border border-hair bg-cream px-3.5 py-[11px] text-left transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-cream"
+              >
+                <span
+                  aria-hidden
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] text-[12px] font-bold tracking-[-0.012em] text-ink-900/90"
+                  style={{ background: toneFor(s.id, i) }}
+                >
+                  +{Math.round(s.price_cents / 100)}
+                </span>
+                <span className="flex-1 truncate text-[14px] font-medium tracking-[-0.006em] text-ink-900/90">
+                  {s.name}
+                </span>
+                <Chevron />
+              </button>
+            </li>
+          ))}
+          <li>
+            <Link
+              href="/services"
+              className="flex items-center justify-between rounded-[14px] px-3.5 py-2.5 text-[12px] font-medium text-ink-500 transition-colors hover:text-ink-900/90"
+            >
+              Žiūrėti visas paslaugas
+              <Chevron />
+            </Link>
+          </li>
+        </ul>
+      )}
     </section>
+  );
+}
+
+function EmptyState({ canWrite }: { canWrite: boolean }) {
+  return (
+    <div className="flex flex-1 flex-col items-start justify-center gap-4 rounded-[14px] bg-cream/60 p-5">
+      <div>
+        <p className="text-[13px] font-medium text-ink-900/90">
+          Dar nėra paslaugų greitam įvedimui.
+        </p>
+        <p className="mt-1 text-[12px] leading-[1.5] text-ink-500">
+          Pridėk dažniausias paslaugas — pajamas įvesi vienu paliestimu.
+        </p>
+      </div>
+      {canWrite ? (
+        <Link
+          href="/services"
+          className="rounded-full bg-accent px-4 py-2 text-[12px] font-semibold text-white shadow-fab transition-colors hover:bg-accent-deep"
+        >
+          Pridėti paslaugą
+        </Link>
+      ) : null}
+    </div>
+  );
+}
+
+function Chevron() {
+  return (
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="text-ink-500"
+      aria-hidden
+    >
+      <path d="M9 6l6 6-6 6" />
+    </svg>
   );
 }

@@ -60,7 +60,7 @@ export function AppSidebar() {
       <div className="flex flex-col gap-2">
         <button
           type="button"
-          onClick={dispatchOpenIncomeEntry}
+          onClick={() => dispatchOpenIncomeEntry()}
           className="flex items-center gap-2.5 rounded-[14px] bg-accent px-3.5 py-3 text-[14px] font-semibold text-white shadow-fab transition-transform active:scale-[0.98]"
         >
           <span

@@ -1,14 +1,20 @@
 import { redirect } from "next/navigation";
 import { AppScreen } from "@/components/app/app-screen";
-import { EmptyPrompt } from "@/components/dashboard/empty-prompt";
-import { QuickActions } from "@/components/dashboard/quick-actions";
+import { TodayEmpty } from "@/components/dashboard/empty-prompt";
+import { NotificationBell } from "@/components/dashboard/notification-bell";
 import {
-  RecentActivity,
+  QuickActions,
+  type QuickService,
+} from "@/components/dashboard/quick-actions";
+import {
+  TodayCard,
   expenseLabel,
+  type PaymentMethod,
   type RecentEntry,
 } from "@/components/dashboard/recent-activity";
 import { SpendableHero } from "@/components/dashboard/spendable-card";
-import { formatEur, monthRange } from "@/lib/format";
+import { WeeklyEarnings } from "@/components/dashboard/weekly-earnings";
+import { monthRange } from "@/lib/format";
 import { canWriteProfile } from "@/lib/profile";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -18,6 +24,11 @@ function todayIso() {
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
   return `${y}-${m}-${day}`;
+}
+
+function weekBucket(isoDate: string) {
+  const dayOfMonth = Number(isoDate.slice(8, 10));
+  return Math.min(3, Math.floor((dayOfMonth - 1) / 7));
 }
 
 export default async function DashboardPage() {
@@ -30,31 +41,45 @@ export default async function DashboardPage() {
   const { monthStart, nextMonthStart, label } = monthRange();
   const today = todayIso();
 
-  const [{ data: profile }, { data: incomeRows }, { data: expenseRows }] =
-    await Promise.all([
-      supabase
-        .from("profiles")
-        .select(
-          "display_name, tax_rate, subscription_status, trial_ends_at, past_due_since",
-        )
-        .eq("id", user.id)
-        .maybeSingle(),
-      supabase
-        .from("income_entries")
-        .select("id, amount_cents, service_name, occurred_at, created_at")
-        .eq("user_id", user.id)
-        .gte("occurred_at", monthStart)
-        .lt("occurred_at", nextMonthStart),
-      supabase
-        .from("expense_entries")
-        .select("id, amount_cents, category, occurred_at, created_at")
-        .eq("user_id", user.id)
-        .gte("occurred_at", monthStart)
-        .lt("occurred_at", nextMonthStart),
-    ]);
+  const [
+    { data: profile },
+    { data: services },
+    { data: incomeRows },
+    { data: expenseRows },
+  ] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select(
+        "display_name, tax_rate, subscription_status, trial_ends_at, past_due_since",
+      )
+      .eq("id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("services")
+      .select("id, name, price_cents")
+      .eq("user_id", user.id)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true })
+      .limit(8),
+    supabase
+      .from("income_entries")
+      .select(
+        "id, amount_cents, service_name, payment_method, note, occurred_at, created_at",
+      )
+      .eq("user_id", user.id)
+      .gte("occurred_at", monthStart)
+      .lt("occurred_at", nextMonthStart),
+    supabase
+      .from("expense_entries")
+      .select("id, amount_cents, category, note, occurred_at, created_at")
+      .eq("user_id", user.id)
+      .gte("occurred_at", monthStart)
+      .lt("occurred_at", nextMonthStart),
+  ]);
 
   const incomes = incomeRows ?? [];
   const expenses = expenseRows ?? [];
+  const serviceList: ReadonlyArray<QuickService> = services ?? [];
   const taxRate = Number(profile?.tax_rate ?? 0);
   const canWrite = canWriteProfile(profile);
   const displayName = profile?.display_name?.trim() ?? "";
@@ -67,18 +92,30 @@ export default async function DashboardPage() {
   );
   const taxReserveCents = Math.round(incomeCents * taxRate);
   const spendableCents = incomeCents - expenseCents - taxReserveCents;
+  const wentNegative = spendableCents < 0;
 
-  const hasAnyEntries = incomes.length + expenses.length > 0;
-  const taxPercent = Math.round(taxRate * 100);
+  const heroSub = wentNegative
+    ? "Šį mėnesį išlaidos viršija pajamas."
+    : "Lieka po mokesčių rezervo ir išlaidų.";
 
-  const allEntries: ReadonlyArray<RecentEntry> = [
+  const weeks: [number, number, number, number] = [0, 0, 0, 0];
+  for (const r of incomes) {
+    const b = weekBucket(r.occurred_at);
+    weeks[b as 0 | 1 | 2 | 3] += r.amount_cents ?? 0;
+  }
+  const currentWeekIndex = weekBucket(today);
+
+  const todayEntries: ReadonlyArray<RecentEntry> = [
     ...incomes.map<RecentEntry>((r) => ({
       id: `i_${r.id}`,
       kind: "income",
       label: r.service_name ?? "Pajamos",
       amountCents: r.amount_cents,
       occurredAt: r.occurred_at,
+      createdAt: r.created_at,
       sortKey: r.created_at,
+      paymentMethod: (r.payment_method ?? null) as PaymentMethod | null,
+      note: r.note,
     })),
     ...expenses.map<RecentEntry>((r) => ({
       id: `e_${r.id}`,
@@ -86,102 +123,68 @@ export default async function DashboardPage() {
       label: expenseLabel(r.category),
       amountCents: r.amount_cents,
       occurredAt: r.occurred_at,
+      createdAt: r.created_at,
       sortKey: r.created_at,
+      note: r.note,
     })),
-  ].sort((a, b) => (a.sortKey < b.sortKey ? 1 : -1));
+  ]
+    .filter((e) => e.occurredAt === today)
+    .sort((a, b) => (a.sortKey < b.sortKey ? 1 : -1));
 
-  const todayEntries = allEntries.filter((e) => e.occurredAt === today);
+  const todayIncomeCents = todayEntries
+    .filter((e) => e.kind === "income")
+    .reduce((acc, e) => acc + e.amountCents, 0);
+  const todayExpenseCents = todayEntries
+    .filter((e) => e.kind === "expense")
+    .reduce((acc, e) => acc + e.amountCents, 0);
 
   return (
     <AppScreen>
-      <header className="mb-7 lg:mb-10">
-        <p className="text-[12px] font-medium uppercase tracking-[0.08em] text-ink-500">
-          {label}
-        </p>
-        <h1 className="mt-2 text-[28px] font-semibold tracking-[-0.025em] text-ink-900/90 lg:text-[34px]">
-          {greeting}
-        </h1>
+      <header className="mb-7 flex items-start justify-between gap-4 lg:mb-9">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-500">
+            {label}
+          </p>
+          <h1 className="mt-1.5 text-[26px] font-semibold tracking-[-0.025em] text-ink-900/90 lg:text-[30px]">
+            {greeting}
+          </h1>
+        </div>
+        <div className="hidden lg:block">
+          <NotificationBell />
+        </div>
       </header>
 
-      <div className="flex flex-col gap-7 lg:gap-9">
+      <div className="flex flex-col gap-[22px]">
         <SpendableHero
           spendableCents={spendableCents}
           incomeCents={incomeCents}
           expenseCents={expenseCents}
           taxReserveCents={taxReserveCents}
+          heroSub={heroSub}
         />
 
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-7">
-          <EarningsCard
-            incomeCents={incomeCents}
-            taxReserveCents={taxReserveCents}
-            taxPercent={taxPercent}
-            entryCount={incomes.length}
-            empty={!hasAnyEntries}
+        <div className="hidden grid-cols-[1.5fr_1fr] items-stretch gap-[22px] lg:grid">
+          <WeeklyEarnings
+            weeks={weeks}
+            totalCents={incomeCents}
+            currentWeekIndex={currentWeekIndex}
           />
-          <div className="hidden lg:block">
-            <QuickActions canWrite={canWrite} />
-          </div>
+          <QuickActions services={serviceList} canWrite={canWrite} />
         </div>
 
-        <section aria-label="Šios dienos įrašai" className="flex flex-col">
-          <h2 className="px-1 pb-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">
-            Šios dienos įrašai
-          </h2>
-          {todayEntries.length > 0 ? (
-            <RecentActivity entries={todayEntries} />
-          ) : hasAnyEntries ? (
-            <p className="rounded-[20px] border border-hair bg-white/70 px-5 py-7 text-center text-[13px] text-ink-500">
-              Šiandien dar nieko.
-            </p>
-          ) : (
-            <EmptyPrompt canWrite={canWrite} />
-          )}
-        </section>
+        {todayEntries.length > 0 ? (
+          <TodayCard
+            entries={todayEntries}
+            incomeCents={todayIncomeCents}
+            expenseCents={todayExpenseCents}
+          />
+        ) : (
+          <TodayEmpty
+            incomeCents={todayIncomeCents}
+            expenseCents={todayExpenseCents}
+          />
+        )}
       </div>
     </AppScreen>
-  );
-}
-
-function EarningsCard({
-  incomeCents,
-  taxReserveCents,
-  taxPercent,
-  entryCount,
-  empty,
-}: {
-  incomeCents: number;
-  taxReserveCents: number;
-  taxPercent: number;
-  entryCount: number;
-  empty: boolean;
-}) {
-  return (
-    <section
-      aria-label="Uždarbis šį mėnesį"
-      className="flex h-full flex-col rounded-[24px] border border-hair bg-white p-6 lg:p-7"
-    >
-      <h2 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">
-        Uždarbis šį mėnesį
-      </h2>
-      <div className="mt-3 text-[36px] font-semibold leading-[1] tracking-[-0.028em] tabular-nums text-ink-900/90 lg:text-[40px]">
-        {empty ? "—" : formatEur(incomeCents)}
-      </div>
-      <p className="mt-2 text-[12px] text-ink-500">
-        {empty
-          ? "Dar nepridėjai pajamų."
-          : `${entryCount} ${entryCount === 1 ? "įrašas" : entryCount < 10 ? "įrašai" : "įrašų"}`}
-      </p>
-      {!empty ? (
-        <div className="mt-auto border-t border-hair pt-4">
-          <div className="flex items-baseline justify-between gap-3 text-[12px] text-ink-500">
-            <span>Atidėta mokesčiams ({taxPercent}%)</span>
-            <span className="text-[14px] font-semibold tabular-nums text-ink-900/90">
-              {formatEur(taxReserveCents)}
-            </span>
-          </div>
-        </div>
-      ) : null}
-    </section>
   );
 }
