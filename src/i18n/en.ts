@@ -175,6 +175,37 @@ export const en: Dictionary = {
       ariaLabel: "Edit",
     },
   },
+  services: {
+    countOne: "service",
+    countFew: "services",
+    countMany: "services",
+    averagePrefix: "avg.",
+    emptyTitle: "No services yet.",
+    emptyBody:
+      "Add the services you offer most often — you'll add income in one tap.",
+    addFirst: "Add your first service",
+    addCta: "+ Add",
+    addSheetTitle: "Add service",
+    editSheetTitle: "Edit service",
+    readOnly: "Managing services unlocks once your subscription is active.",
+    form: {
+      name: "Name",
+      namePlaceholder: "e.g. Manicure",
+      price: "Price",
+      pricePlaceholder: "e.g. 25.00",
+      saveAdd: "Save",
+      saveEdit: "Save changes",
+      cancel: "Cancel",
+    },
+    delete: {
+      trigger: "Delete service",
+      confirmBody: "Delete this service?",
+      confirm: "Delete",
+      confirmPending: "Deleting…",
+      cancel: "Cancel",
+    },
+    errors: { generic: "Something went wrong" },
+  },
   addEntry: {
     income: {
       sheetTitle: "Add income",

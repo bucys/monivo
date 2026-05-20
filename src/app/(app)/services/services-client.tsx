@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { ModalSheet } from "@/components/ui/modal-sheet";
+import { useT } from "@/i18n/locale-provider";
+import type { Dictionary } from "@/i18n";
 import { createService, deleteService, updateService } from "./actions";
 
 export type ServiceRow = {
@@ -35,6 +37,12 @@ type SheetMode =
   | { kind: "add" }
   | { kind: "edit"; service: ServiceRow };
 
+function countLabel(n: number, t: Dictionary) {
+  if (n === 1) return t.services.countOne;
+  if (n > 1 && n < 10) return t.services.countFew;
+  return t.services.countMany;
+}
+
 export function ServicesClient({
   services,
   canWrite,
@@ -42,6 +50,7 @@ export function ServicesClient({
   services: ReadonlyArray<ServiceRow>;
   canWrite: boolean;
 }) {
+  const t = useT();
   const [mode, setMode] = useState<SheetMode>({ kind: "closed" });
 
   useEffect(() => {
@@ -76,13 +85,9 @@ export function ServicesClient({
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between rounded-[16px] border border-hair bg-white px-4 py-3">
         <span className="text-[13px] text-ink-500">
-          {services.length}{" "}
-          {services.length === 1
-            ? "paslauga"
-            : services.length < 10
-              ? "paslaugos"
-              : "paslaugų"}
-          {" · vid. "}
+          {services.length} {countLabel(services.length, t)}
+          {" · "}
+          {t.services.averagePrefix}{" "}
           <span className="font-medium tabular-nums text-ink-900/90">
             {formatEur(avg)}
           </span>
@@ -93,7 +98,7 @@ export function ServicesClient({
             onClick={() => setMode({ kind: "add" })}
             className="hidden rounded-[10px] bg-accent px-3 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-deep lg:inline-flex"
           >
-            + Pridėti
+            {t.services.addCta}
           </button>
         ) : null}
       </div>
@@ -136,14 +141,14 @@ function EmptyState({
   canWrite: boolean;
   onAdd: () => void;
 }) {
+  const t = useT();
   return (
     <div className="flex flex-col items-center rounded-[24px] border border-hair bg-white px-6 py-12 text-center">
       <h2 className="text-[20px] font-semibold tracking-[-0.022em] text-ink-900/90">
-        Dar nepridėjai paslaugų.
+        {t.services.emptyTitle}
       </h2>
       <p className="mt-2 max-w-[320px] text-[14px] leading-[1.55] text-ink-500">
-        Pridėk dažniausiai teikiamas paslaugas — jas vienu paliestimu pridėsi
-        prie pajamų.
+        {t.services.emptyBody}
       </p>
       {canWrite ? (
         <Button
@@ -152,7 +157,7 @@ function EmptyState({
           onClick={onAdd}
           className="mt-6 !h-auto !w-auto !rounded-[14px] !px-5 !py-3 !text-[14px]"
         >
-          Pridėti pirmą paslaugą
+          {t.services.addFirst}
         </Button>
       ) : null}
     </div>
@@ -160,9 +165,10 @@ function EmptyState({
 }
 
 function ReadOnlyNotice() {
+  const t = useT();
   return (
     <p className="rounded-[12px] bg-accent-soft/60 px-3.5 py-2.5 text-[13px] text-accent-deep">
-      Tvarkyti paslaugas galėsi, kai prenumerata bus aktyvi.
+      {t.services.readOnly}
     </p>
   );
 }
@@ -174,13 +180,18 @@ function ServiceSheet({
   mode: SheetMode;
   onClose: () => void;
 }) {
+  const t = useT();
   const open = mode.kind !== "closed";
 
   return (
     <ModalSheet
       open={open}
       onClose={onClose}
-      ariaLabel={mode.kind === "edit" ? "Redaguoti paslaugą" : "Pridėti paslaugą"}
+      ariaLabel={
+        mode.kind === "edit"
+          ? t.services.editSheetTitle
+          : t.services.addSheetTitle
+      }
     >
       {mode.kind === "add" ? (
         <ServiceForm key="add" mode={mode} onDone={onClose} />
@@ -198,6 +209,7 @@ function ServiceForm({
   mode: Exclude<SheetMode, { kind: "closed" }>;
   onDone: () => void;
 }) {
+  const t = useT();
   const initial =
     mode.kind === "edit"
       ? { name: mode.service.name, price: centsToInput(mode.service.price_cents) }
@@ -210,8 +222,12 @@ function ServiceForm({
   const [pending, startTransition] = useTransition();
   const [deletePending, startDeleteTransition] = useTransition();
 
-  const title = mode.kind === "edit" ? "Redaguoti paslaugą" : "Pridėti paslaugą";
-  const cta = mode.kind === "edit" ? "Išsaugoti pakeitimus" : "Išsaugoti";
+  const title =
+    mode.kind === "edit"
+      ? t.services.editSheetTitle
+      : t.services.addSheetTitle;
+  const cta =
+    mode.kind === "edit" ? t.services.form.saveEdit : t.services.form.saveAdd;
 
   const submit = () => {
     setError(null);
@@ -227,7 +243,7 @@ function ServiceForm({
         }
         onDone();
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Įvyko klaida");
+        setError(e instanceof Error ? e.message : t.services.errors.generic);
       }
     });
   };
@@ -240,7 +256,7 @@ function ServiceForm({
         await deleteService(mode.service.id);
         onDone();
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Įvyko klaida");
+        setError(e instanceof Error ? e.message : t.services.errors.generic);
       }
     });
   };
@@ -258,20 +274,20 @@ function ServiceForm({
       </h2>
 
       <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
-        Pavadinimas
+        {t.services.form.name}
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           maxLength={40}
-          placeholder="Pvz. Manikiūras"
+          placeholder={t.services.form.namePlaceholder}
           autoFocus={mode.kind === "add"}
           className="rounded-[14px] border border-hair bg-white px-3.5 py-2.5 text-[16px] font-medium text-ink-900/90 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
         />
       </label>
 
       <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
-        Kaina
+        {t.services.form.price}
         <div className="flex items-center rounded-[14px] border border-hair bg-white px-3.5 py-2.5 focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/30">
           <input
             type="text"
@@ -287,7 +303,7 @@ function ServiceForm({
                     raw.slice(firstComma + 1).replace(/,/g, "").slice(0, 2);
               setPrice(cleaned);
             }}
-            placeholder="Pvz. 25,00"
+            placeholder={t.services.form.pricePlaceholder}
             className="w-full bg-transparent text-[16px] font-medium tabular-nums text-ink-900/90 placeholder:text-ink-500 focus:outline-none"
           />
           <span aria-hidden className="ml-2 text-[14px] font-medium text-ink-500">
@@ -318,7 +334,7 @@ function ServiceForm({
           disabled={pending || deletePending}
           className="self-center px-2 py-1 text-[13px] text-ink-500 hover:text-ink-900/90 disabled:opacity-50"
         >
-          Atšaukti
+          {t.services.form.cancel}
         </button>
       </div>
 
@@ -331,11 +347,13 @@ function ServiceForm({
               disabled={pending || deletePending}
               className="w-full rounded-[12px] px-3 py-2 text-[13px] font-medium text-expense hover:bg-expense-bg disabled:opacity-50"
             >
-              Ištrinti paslaugą
+              {t.services.delete.trigger}
             </button>
           ) : (
             <div className="flex flex-col gap-2 rounded-[14px] border border-expense/30 bg-expense-bg/60 p-3">
-              <p className="text-[13px] text-ink-900/90">Tikrai ištrinti?</p>
+              <p className="text-[13px] text-ink-900/90">
+                {t.services.delete.confirmBody}
+              </p>
               <div className="flex gap-2">
                 <button
                   type="button"
@@ -343,7 +361,9 @@ function ServiceForm({
                   disabled={deletePending}
                   className="flex-1 rounded-[12px] bg-expense px-3 py-2 text-[13px] font-medium text-white disabled:opacity-50"
                 >
-                  {deletePending ? "Trinama…" : "Trinti"}
+                  {deletePending
+                    ? t.services.delete.confirmPending
+                    : t.services.delete.confirm}
                 </button>
                 <button
                   type="button"
@@ -351,7 +371,7 @@ function ServiceForm({
                   disabled={deletePending}
                   className="flex-1 rounded-[12px] border border-hair bg-white px-3 py-2 text-[13px] font-medium text-ink-700 disabled:opacity-50"
                 >
-                  Atšaukti
+                  {t.services.delete.cancel}
                 </button>
               </div>
             </div>

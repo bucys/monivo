@@ -163,6 +163,36 @@ export type Dictionary = {
     };
     edit: { incomeTitle: string; expenseTitle: string; ariaLabel: string };
   };
+  services: {
+    countOne: string;
+    countFew: string;
+    countMany: string;
+    averagePrefix: string;
+    emptyTitle: string;
+    emptyBody: string;
+    addFirst: string;
+    addCta: string;
+    addSheetTitle: string;
+    editSheetTitle: string;
+    readOnly: string;
+    form: {
+      name: string;
+      namePlaceholder: string;
+      price: string;
+      pricePlaceholder: string;
+      saveAdd: string;
+      saveEdit: string;
+      cancel: string;
+    };
+    delete: {
+      trigger: string;
+      confirmBody: string;
+      confirm: string;
+      confirmPending: string;
+      cancel: string;
+    };
+    errors: { generic: string };
+  };
   addEntry: {
     income: {
       sheetTitle: string;
@@ -376,6 +406,37 @@ export const lt: Dictionary = {
       expenseTitle: "Redaguoti išlaidas",
       ariaLabel: "Redaguoti",
     },
+  },
+  services: {
+    countOne: "paslauga",
+    countFew: "paslaugos",
+    countMany: "paslaugų",
+    averagePrefix: "vid.",
+    emptyTitle: "Dar nepridėjai paslaugų.",
+    emptyBody:
+      "Pridėk dažniausiai teikiamas paslaugas — jas vienu paliestimu pridėsi prie pajamų.",
+    addFirst: "Pridėti pirmą paslaugą",
+    addCta: "+ Pridėti",
+    addSheetTitle: "Pridėti paslaugą",
+    editSheetTitle: "Redaguoti paslaugą",
+    readOnly: "Tvarkyti paslaugas galėsi, kai prenumerata bus aktyvi.",
+    form: {
+      name: "Pavadinimas",
+      namePlaceholder: "Pvz. Manikiūras",
+      price: "Kaina",
+      pricePlaceholder: "Pvz. 25,00",
+      saveAdd: "Išsaugoti",
+      saveEdit: "Išsaugoti pakeitimus",
+      cancel: "Atšaukti",
+    },
+    delete: {
+      trigger: "Ištrinti paslaugą",
+      confirmBody: "Tikrai ištrinti?",
+      confirm: "Trinti",
+      confirmPending: "Trinama…",
+      cancel: "Atšaukti",
+    },
+    errors: { generic: "Įvyko klaida" },
   },
   addEntry: {
     income: {
