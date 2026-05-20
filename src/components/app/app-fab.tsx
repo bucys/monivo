@@ -45,6 +45,9 @@ export function AppFab() {
 
   const showMenu = menuOpen && !onServices;
 
+  // Stacking: topbar z-30 · FAB backdrop z-40 (above topbar when open) ·
+  // FAB button + menu z-50 (above backdrop, but below any open ModalSheet
+  // which mounts at z-50 *later* in DOM and therefore wins by paint order).
   return (
     <div className="lg:hidden">
       <button
@@ -53,13 +56,13 @@ export function AppFab() {
         aria-hidden={!showMenu}
         tabIndex={showMenu ? 0 : -1}
         onClick={() => setMenuOpen(false)}
-        className={`fixed inset-0 z-30 bg-ink-900/40 transition-opacity duration-200 ease-out ${
+        className={`fixed inset-0 z-40 bg-ink-900/40 transition-opacity duration-200 ease-out ${
           showMenu ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       />
 
       <div
-        className={`fixed bottom-[112px] left-1/2 z-40 flex -translate-x-1/2 flex-col items-center gap-2.5 transition-all duration-200 ease-out ${
+        className={`fixed bottom-[112px] left-1/2 z-50 flex -translate-x-1/2 flex-col items-center gap-2.5 transition-all duration-200 ease-out ${
           showMenu
             ? "translate-y-0 opacity-100"
             : "pointer-events-none translate-y-2 opacity-0"
@@ -82,7 +85,10 @@ export function AppFab() {
 
       <button
         type="button"
-        onClick={handleFabClick}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleFabClick();
+        }}
         aria-label={
           onServices
             ? "Pridėti paslaugą"
@@ -91,7 +97,7 @@ export function AppFab() {
               : "Pridėti įrašą"
         }
         aria-expanded={onServices ? undefined : showMenu}
-        className="fixed bottom-[40px] left-1/2 z-40 -translate-x-1/2"
+        className="fixed bottom-[40px] left-1/2 z-50 -translate-x-1/2 touch-manipulation"
       >
         <span className="flex h-[58px] w-[58px] items-center justify-center rounded-full bg-gradient-to-br from-[#2E8E7D] via-accent to-accent-deep text-white shadow-fab transition-transform active:scale-95">
           <svg

@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ModalSheet } from "@/components/ui/modal-sheet";
+import { createPortal } from "react-dom";
 import { format } from "@/i18n";
 import { useT } from "@/i18n/locale-provider";
+import { cn } from "@/lib/cn";
 import { NotificationItem } from "./notification-item";
 import { useNotifications } from "./notifications-provider";
 
@@ -49,7 +50,7 @@ export function NotificationBell() {
         aria-haspopup="dialog"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className="relative inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/60 text-ink-700 ring-1 ring-hair/70 transition-colors hover:bg-white hover:text-ink-900/90"
+        className="relative inline-flex h-10 w-10 touch-manipulation items-center justify-center rounded-full bg-white/60 text-ink-700 ring-1 ring-hair/70 transition-colors hover:bg-white hover:text-ink-900/90"
       >
         <svg
           width="18"
@@ -85,12 +86,13 @@ export function NotificationBell() {
         </div>
       ) : null}
 
-      {/* Mobile bottom sheet */}
-      <div className="lg:hidden">
-        <ModalSheet
-          open={open}
-          onClose={() => setOpen(false)}
+      {/* Mobile top panel — portaled to <body> to escape the topbar's
+          backdrop-filter containing block (iOS Safari). Mounted only when
+          open so the FAB stays unobstructed when closed. */}
+      {open ? (
+        <MobileTopPanel
           ariaLabel={t.notifications.title}
+          onClose={() => setOpen(false)}
         >
           <PanelHeader
             count={visible.length}
@@ -102,9 +104,68 @@ export function NotificationBell() {
             isRead={isRead}
             onItem={onItemActivate}
           />
-        </ModalSheet>
-      </div>
+        </MobileTopPanel>
+      ) : null}
     </div>
+  );
+}
+
+function MobileTopPanel({
+  ariaLabel,
+  onClose,
+  children,
+}: {
+  ariaLabel: string;
+  onClose: () => void;
+  children: React.ReactNode;
+}) {
+  const [entered, setEntered] = useState(false);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setEntered(true));
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      cancelAnimationFrame(id);
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [onClose]);
+
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[60] lg:hidden">
+      <button
+        type="button"
+        aria-label="Uždaryti"
+        onClick={onClose}
+        className={cn(
+          "absolute inset-0 bg-ink-900/40 transition-opacity duration-200 ease-out",
+          entered ? "opacity-100" : "opacity-0",
+        )}
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={ariaLabel}
+        className={cn(
+          "absolute inset-x-0 top-0 max-h-[80dvh] overflow-y-auto rounded-b-[24px] bg-white pt-[env(safe-area-inset-top)] shadow-[0_18px_40px_-12px_rgba(23,33,29,0.25),_0_2px_6px_rgba(23,33,29,0.06)] transition-transform duration-200 ease-out",
+          entered ? "translate-y-0" : "-translate-y-full",
+        )}
+      >
+        <div className="px-3 pb-3 pt-4">{children}</div>
+        <div
+          aria-hidden
+          className="mx-auto mb-2 h-1 w-10 rounded-full bg-ink-300"
+        />
+      </div>
+    </div>,
+    document.body,
   );
 }
 
