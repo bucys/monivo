@@ -175,6 +175,37 @@ export const en: Dictionary = {
       ariaLabel: "Edit",
     },
   },
+  insights: {
+    title: "Insights",
+    earnings: {
+      eyebrow: "Earnings",
+      emptyBody: "Add a few more entries to see earnings by week here.",
+      weekShort: "Wk",
+    },
+    bestDay: {
+      eyebrow: "Best day",
+      emptyBody:
+        "Once you have a few entries, you'll see the day of the week you earn most.",
+      summary: "{amount} € · {count} {label} this month",
+      countOne: "entry",
+      countFew: "entries",
+      countMany: "entries",
+    },
+    clients: {
+      eyebrow: "Services this month",
+      subtitle: "based on income entries",
+      emptyBody:
+        "Start logging income — your monthly service count will show up here.",
+    },
+    topServices: {
+      eyebrow: "Top services",
+      subtitle: "By revenue",
+      emptyBody:
+        "Once you link income entries to services, your top performers will show up here.",
+      share: "{pct}% of income",
+      footer: "See all services",
+    },
+  },
   services: {
     countOne: "service",
     countFew: "services",

@@ -1,11 +1,23 @@
-export function ServicesPerformedCard({ count }: { count: number }) {
+export type ClientsCardLabels = {
+  eyebrow: string;
+  subtitle: string;
+  emptyBody: string;
+};
+
+export function ServicesPerformedCard({
+  count,
+  labels,
+}: {
+  count: number;
+  labels: ClientsCardLabels;
+}) {
   return (
     <section
-      aria-label="Aptarnavimai šį mėnesį"
+      aria-label={labels.eyebrow}
       className="rounded-[22px] bg-white p-6 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] lg:p-[30px]"
     >
       <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">
-        Aptarnavimai šį mėnesį
+        {labels.eyebrow}
       </div>
 
       {count > 0 ? (
@@ -13,13 +25,11 @@ export function ServicesPerformedCard({ count }: { count: number }) {
           <div className="mt-2 text-[40px] font-semibold leading-tight tracking-[-0.028em] tabular-nums text-ink-900/90 lg:text-[44px] lg:tracking-[-0.032em]">
             {count}
           </div>
-          <div className="mt-1 text-[13px] text-ink-500">
-            pagal pajamų įrašus
-          </div>
+          <div className="mt-1 text-[13px] text-ink-500">{labels.subtitle}</div>
         </>
       ) : (
         <p className="mt-2 text-[13px] leading-[1.55] text-ink-500">
-          Pradėk registruoti pajamas — čia matysi mėnesio aptarnavimų skaičių.
+          {labels.emptyBody}
         </p>
       )}
     </section>

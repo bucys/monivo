@@ -1,24 +1,32 @@
 import { formatEur } from "@/lib/format";
 
+export type WeeklyEarningsLabels = {
+  eyebrow: string;
+  emptyBody: string;
+  weekShort: string;
+};
+
 export function WeeklyEarningsCard({
   weeks,
   totalCents,
   currentWeekIndex,
+  labels,
 }: {
   weeks: ReadonlyArray<number>;
   totalCents: number;
   currentWeekIndex: number;
+  labels: WeeklyEarningsLabels;
 }) {
   const hasAny = weeks.some((w) => w > 0);
   const max = Math.max(...weeks, 1);
 
   return (
     <section
-      aria-label="Uždarbis pagal savaites"
+      aria-label={labels.eyebrow}
       className="flex h-full flex-col rounded-[22px] bg-white p-6 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] lg:p-[30px]"
     >
       <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">
-        Uždarbis
+        {labels.eyebrow}
       </div>
       <div className="mt-2 flex items-baseline gap-1.5 whitespace-nowrap tabular-nums text-ink-900/90">
         <span className="text-[32px] font-semibold leading-none tracking-[-0.024em] lg:text-[40px] lg:tracking-[-0.03em]">
@@ -67,7 +75,7 @@ export function WeeklyEarningsCard({
                     active ? "text-ink-900/90" : "text-ink-500"
                   }`}
                 >
-                  sav. {i + 1}
+                  {labels.weekShort} {i + 1}
                 </div>
               </div>
             );
@@ -75,7 +83,7 @@ export function WeeklyEarningsCard({
         </div>
       ) : (
         <p className="mt-8 rounded-[14px] bg-cream/60 px-4 py-6 text-[13px] leading-[1.55] text-ink-500">
-          Kai pridėsi daugiau įrašų, čia matysi pajamas pagal savaites.
+          {labels.emptyBody}
         </p>
       )}
     </section>

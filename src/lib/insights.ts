@@ -60,6 +60,18 @@ export const WEEKDAY_LONG_LT = [
 
 export const WEEKDAY_SHORT_LT = ["P", "A", "T", "K", "Pn", "Š", "S"];
 
+export const WEEKDAY_LONG_EN = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+
+export const WEEKDAY_SHORT_EN = ["M", "T", "W", "T", "F", "S", "S"];
+
 function parseIsoDate(iso: string) {
   const [y, m, d] = iso.split("-").map(Number);
   return new Date(y!, (m ?? 1) - 1, d ?? 1);

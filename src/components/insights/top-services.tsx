@@ -1,6 +1,15 @@
 import Link from "next/link";
+import { format } from "@/i18n";
 import { formatEur } from "@/lib/format";
 import type { ServiceBucket } from "@/lib/insights";
+
+export type TopServicesLabels = {
+  eyebrow: string;
+  subtitle: string;
+  emptyBody: string;
+  share: string;
+  footer: string;
+};
 
 type Tone = {
   square: string;
@@ -29,21 +38,23 @@ function toneFor(key: string, fallbackIndex: number): Tone {
 export function TopServicesCard({
   services,
   totalCents,
+  labels,
 }: {
   services: ReadonlyArray<ServiceBucket>;
   totalCents: number;
+  labels: TopServicesLabels;
 }) {
   if (services.length === 0) {
     return (
       <section
-        aria-label="Populiariausios paslaugos"
+        aria-label={labels.eyebrow}
         className="rounded-[22px] bg-white p-6 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] lg:p-[30px]"
       >
-        <Header />
+        <Header labels={labels} />
         <p className="mt-3 text-[13px] leading-[1.55] text-ink-500">
-          Kai pridėsi įrašų prie paslaugų, čia matysi populiariausias.
+          {labels.emptyBody}
         </p>
-        <FooterLink />
+        <FooterLink label={labels.footer} />
       </section>
     );
   }
@@ -53,10 +64,10 @@ export function TopServicesCard({
 
   return (
     <section
-      aria-label="Populiariausios paslaugos"
+      aria-label={labels.eyebrow}
       className="rounded-[22px] bg-white p-6 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] lg:p-[30px]"
     >
-      <Header />
+      <Header labels={labels} />
 
       {/* Mobile: horizontal snap scroll. Desktop: equal 5-col grid. */}
       <div className="-mx-6 mt-5 overflow-x-auto px-6 pb-2 [scrollbar-width:none] lg:mx-0 lg:mt-7 lg:overflow-visible lg:px-0 [&::-webkit-scrollbar]:hidden">
@@ -69,37 +80,38 @@ export function TopServicesCard({
               rank={i}
               barRatio={s.totalCents / max}
               sharePct={Math.round((s.totalCents / safeTotal) * 100)}
+              shareTemplate={labels.share}
             />
           ))}
         </div>
       </div>
 
-      <FooterLink />
+      <FooterLink label={labels.footer} />
     </section>
   );
 }
 
-function Header() {
+function Header({ labels }: { labels: TopServicesLabels }) {
   return (
     <div>
       <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">
-        Populiariausios paslaugos
+        {labels.eyebrow}
       </div>
       <div className="mt-1 text-[16px] font-semibold tracking-[-0.018em] text-ink-900/90 lg:text-[18px]">
-        Pagal pajamas
+        {labels.subtitle}
       </div>
     </div>
   );
 }
 
-function FooterLink() {
+function FooterLink({ label }: { label: string }) {
   return (
     <div className="mt-6 flex justify-center border-t border-hair pt-4 lg:justify-start">
       <Link
         href="/services"
         className="inline-flex items-center gap-1.5 text-[13px] font-medium text-accent transition-colors hover:text-accent-deep"
       >
-        Žiūrėti visas paslaugas
+        {label}
         <svg
           width="12"
           height="12"
@@ -126,12 +138,14 @@ function ServiceTile({
   rank,
   barRatio,
   sharePct,
+  shareTemplate,
 }: {
   service: ServiceBucket;
   tone: Tone;
   rank: number;
   barRatio: number;
   sharePct: number;
+  shareTemplate: string;
 }) {
   const initial = service.name.trim().slice(0, 1).toUpperCase() || "·";
   const isZero = service.totalCents === 0;
@@ -181,7 +195,7 @@ function ServiceTile({
       </div>
 
       <div className="mt-1.5 text-[11px] font-medium uppercase tracking-[0.04em] text-ink-500 tabular-nums">
-        {sharePct}% pajamų
+        {format(shareTemplate, { pct: sharePct })}
       </div>
 
       <div className="mt-4 h-[6px] overflow-hidden rounded-full bg-[#EEEAE0]">

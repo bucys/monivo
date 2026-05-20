@@ -163,6 +163,34 @@ export type Dictionary = {
     };
     edit: { incomeTitle: string; expenseTitle: string; ariaLabel: string };
   };
+  insights: {
+    title: string;
+    earnings: {
+      eyebrow: string;
+      emptyBody: string;
+      weekShort: string;
+    };
+    bestDay: {
+      eyebrow: string;
+      emptyBody: string;
+      summary: string;
+      countOne: string;
+      countFew: string;
+      countMany: string;
+    };
+    clients: {
+      eyebrow: string;
+      subtitle: string;
+      emptyBody: string;
+    };
+    topServices: {
+      eyebrow: string;
+      subtitle: string;
+      emptyBody: string;
+      share: string;
+      footer: string;
+    };
+  };
   services: {
     countOne: string;
     countFew: string;
@@ -405,6 +433,36 @@ export const lt: Dictionary = {
       incomeTitle: "Redaguoti pajamas",
       expenseTitle: "Redaguoti išlaidas",
       ariaLabel: "Redaguoti",
+    },
+  },
+  insights: {
+    title: "Įžvalgos",
+    earnings: {
+      eyebrow: "Uždarbis",
+      emptyBody: "Kai pridėsi daugiau įrašų, čia matysi pajamas pagal savaites.",
+      weekShort: "sav.",
+    },
+    bestDay: {
+      eyebrow: "Geriausia diena",
+      emptyBody:
+        "Kai pridėsi įrašų, pamatysi savaitės dieną, kurią uždirbi daugiausia.",
+      summary: "{amount} € · {count} {label} šį mėnesį",
+      countOne: "įrašas",
+      countFew: "įrašai",
+      countMany: "įrašų",
+    },
+    clients: {
+      eyebrow: "Aptarnavimai šį mėnesį",
+      subtitle: "pagal pajamų įrašus",
+      emptyBody:
+        "Pradėk registruoti pajamas — čia matysi mėnesio aptarnavimų skaičių.",
+    },
+    topServices: {
+      eyebrow: "Populiariausios paslaugos",
+      subtitle: "Pagal pajamas",
+      emptyBody: "Kai pridėsi įrašų prie paslaugų, čia matysi populiariausias.",
+      share: "{pct}% pajamų",
+      footer: "Žiūrėti visas paslaugas",
     },
   },
   services: {

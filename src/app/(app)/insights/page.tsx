@@ -4,7 +4,8 @@ import { BestDayCard } from "@/components/insights/best-day-card";
 import { ServicesPerformedCard } from "@/components/insights/clients-week-card";
 import { TopServicesCard } from "@/components/insights/top-services";
 import { WeeklyEarningsCard } from "@/components/insights/weekly-earnings-card";
-import { monthRange } from "@/lib/format";
+import { getT } from "@/i18n/server";
+import { formatMonth, monthRange } from "@/lib/format";
 import {
   bestWeekday,
   rankServices,
@@ -30,7 +31,9 @@ export default async function InsightsPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { monthStart, nextMonthStart, label } = monthRange();
+  const { t, locale } = await getT();
+  const { monthStart, nextMonthStart } = monthRange();
+  const monthLabel = formatMonth(new Date(), locale);
 
   const [{ data: serviceRows }, { data: incomeRows }] = await Promise.all([
     supabase.from("services").select("id, name").eq("user_id", user.id),
@@ -60,10 +63,10 @@ export default async function InsightsPage() {
       <div className="flex flex-col gap-[18px] lg:gap-[22px]">
         <div className="lg:hidden">
           <p className="text-[13px] font-medium tracking-[0.01em] text-ink-500">
-            {label}
+            {monthLabel}
           </p>
           <h1 className="mt-0.5 text-[28px] font-semibold leading-tight tracking-[-0.028em] text-ink-900/95">
-            Įžvalgos
+            {t.insights.title}
           </h1>
         </div>
 
@@ -73,17 +76,30 @@ export default async function InsightsPage() {
               weeks={weeks}
               totalCents={incomeCents}
               currentWeekIndex={currentWeekIndex}
+              labels={t.insights.earnings}
             />
           </div>
           <div className="lg:col-start-2 lg:row-start-1">
-            <BestDayCard tallies={weekdayTallies} best={best} />
+            <BestDayCard
+              tallies={weekdayTallies}
+              best={best}
+              labels={t.insights.bestDay}
+              locale={locale}
+            />
           </div>
           <div className="lg:col-start-2 lg:row-start-2">
-            <ServicesPerformedCard count={servicesPerformed} />
+            <ServicesPerformedCard
+              count={servicesPerformed}
+              labels={t.insights.clients}
+            />
           </div>
         </div>
 
-        <TopServicesCard services={rankedServices} totalCents={incomeCents} />
+        <TopServicesCard
+          services={rankedServices}
+          totalCents={incomeCents}
+          labels={t.insights.topServices}
+        />
       </div>
     </AppScreen>
   );

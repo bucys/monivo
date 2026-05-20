@@ -1,44 +1,77 @@
+import { format } from "@/i18n";
+import type { Locale } from "@/i18n";
 import { formatEur } from "@/lib/format";
 import {
+  WEEKDAY_LONG_EN,
   WEEKDAY_LONG_LT,
+  WEEKDAY_SHORT_EN,
   WEEKDAY_SHORT_LT,
   type WeekdayTally,
 } from "@/lib/insights";
 
+export type BestDayLabels = {
+  eyebrow: string;
+  emptyBody: string;
+  summary: string;
+  countOne: string;
+  countFew: string;
+  countMany: string;
+};
+
+function countLabelFor(n: number, labels: BestDayLabels) {
+  if (n === 1) return labels.countOne;
+  if (n % 10 >= 2 && n % 10 <= 9 && (n % 100 < 10 || n % 100 >= 20))
+    return labels.countFew;
+  return labels.countMany;
+}
+
 export function BestDayCard({
   tallies,
   best,
+  labels,
+  locale,
 }: {
   tallies: ReadonlyArray<WeekdayTally>;
   best: WeekdayTally | null;
+  labels: BestDayLabels;
+  locale: Locale;
 }) {
+  const longNames = locale === "en" ? WEEKDAY_LONG_EN : WEEKDAY_LONG_LT;
+  const shortNames = locale === "en" ? WEEKDAY_SHORT_EN : WEEKDAY_SHORT_LT;
   return (
     <section
-      aria-label="Geriausia diena"
+      aria-label={labels.eyebrow}
       className="self-start rounded-[22px] bg-white p-6 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] lg:p-[26px]"
     >
       <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">
-        Geriausia diena
+        {labels.eyebrow}
       </div>
 
       {best ? (
         <>
           <div className="mt-2 text-[24px] font-semibold leading-tight tracking-[-0.022em] text-ink-900/90 lg:text-[26px]">
-            {WEEKDAY_LONG_LT[best.index]}
+            {longNames[best.index]}
           </div>
           <div className="mt-1 text-[13px] text-ink-500 tabular-nums">
-            {formatEur(best.totalCents).replace(/\s?€/, "")} € · {best.count}{" "}
-            {countLabel(best.count)} šį mėnesį
+            {format(labels.summary, {
+              amount: formatEur(best.totalCents).replace(/\s?€/, ""),
+              count: best.count,
+              label: countLabelFor(best.count, labels),
+            })}
           </div>
         </>
       ) : (
         <p className="mt-2 text-[13px] leading-[1.55] text-ink-500">
-          Kai pridėsi įrašų, pamatysi savaitės dieną, kurią uždirbi daugiausia.
+          {labels.emptyBody}
         </p>
       )}
 
       <div className="mt-5">
-        <DayBars tallies={tallies} bestIndex={best?.index ?? null} />
+        <DayBars
+          tallies={tallies}
+          bestIndex={best?.index ?? null}
+          shortNames={shortNames}
+        />
       </div>
     </section>
   );
@@ -47,9 +80,11 @@ export function BestDayCard({
 function DayBars({
   tallies,
   bestIndex,
+  shortNames,
 }: {
   tallies: ReadonlyArray<WeekdayTally>;
   bestIndex: number | null;
+  shortNames: ReadonlyArray<string>;
 }) {
   const max = Math.max(...tallies.map((t) => t.totalCents), 1);
   return (
@@ -77,18 +112,11 @@ function DayBars({
                 active ? "text-accent-deep" : "text-ink-500"
               }`}
             >
-              {WEEKDAY_SHORT_LT[t.index]}
+              {shortNames[t.index]}
             </div>
           </div>
         );
       })}
     </div>
   );
-}
-
-function countLabel(n: number) {
-  if (n === 1) return "įrašas";
-  if (n % 10 >= 2 && n % 10 <= 9 && (n % 100 < 10 || n % 100 >= 20))
-    return "įrašai";
-  return "įrašų";
 }
