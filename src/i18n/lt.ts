@@ -124,6 +124,82 @@ export type Dictionary = {
       logout: string;
     };
   };
+  activity: {
+    title: string;
+    monthLabel: string;
+    filters: { all: string; income: string; expense: string };
+    period: {
+      week: string;
+      month: string;
+      choose: string;
+      ariaLabel: string;
+      modalTitle: string;
+    };
+    day: { today: string; yesterday: string };
+    empty: {
+      week: string;
+      month: string;
+      custom: string;
+      normalBody: string;
+      filtered: string;
+      filteredBody: string;
+      resetCta: string;
+    };
+    paymentMethods: {
+      cash: string;
+      card: string;
+      transfer: string;
+      expense: string;
+    };
+    row: { actionsAria: string };
+    actions: { edit: string; delete: string; menuAria: string };
+    delete: {
+      title: string;
+      body: string;
+      cancel: string;
+      confirm: string;
+      ariaLabel: string;
+      genericError: string;
+    };
+    edit: { incomeTitle: string; expenseTitle: string; ariaLabel: string };
+  };
+  addEntry: {
+    income: {
+      sheetTitle: string;
+      editTitle: string;
+      amount: string;
+      service: string;
+      paymentMethod: string;
+      addNote: string;
+      noteLabel: string;
+      notePlaceholder: string;
+      noServicesHint: string;
+      manageServicesLink: string;
+      cta: string;
+      editCta: string;
+    };
+    expense: {
+      sheetTitle: string;
+      editTitle: string;
+      amount: string;
+      category: string;
+      addNote: string;
+      noteLabel: string;
+      notePlaceholder: string;
+      cta: string;
+      editCta: string;
+      categories: {
+        supplies: string;
+        rent: string;
+        marketing: string;
+        education: string;
+        equipment: string;
+        other: string;
+      };
+    };
+    fab: { addedToast: string; openIncomeAria: string; openExpenseAria: string };
+    errors: { generic: string };
+  };
 };
 
 export const lt: Dictionary = {
@@ -253,5 +329,93 @@ export const lt: Dictionary = {
       account: "Paskyra",
       logout: "Atsijungti",
     },
+  },
+  activity: {
+    title: "Veikla",
+    monthLabel: "Šis mėnuo",
+    filters: { all: "Visi", income: "Pajamos", expense: "Išlaidos" },
+    period: {
+      week: "Ši savaitė",
+      month: "Šis mėnuo",
+      choose: "Pasirinkti",
+      ariaLabel: "Periodas",
+      modalTitle: "Pasirinkti mėnesį",
+    },
+    day: { today: "Šiandien", yesterday: "Vakar" },
+    empty: {
+      week: "Šią savaitę įrašų nėra.",
+      month: "Šį mėnesį įrašų nėra.",
+      custom: "Pasirinktą mėnesį įrašų nėra.",
+      normalBody: "Pridėk pirmą įrašą — pamatysi jį čia.",
+      filtered: "Pagal šį filtrą įrašų nėra.",
+      filteredBody: "Pakeisk filtrą arba pridėk naują įrašą.",
+      resetCta: "Rodyti visus",
+    },
+    paymentMethods: {
+      cash: "Grynais",
+      card: "Kortele",
+      transfer: "Pavedimu",
+      expense: "Išlaidos",
+    },
+    row: { actionsAria: "Veiksmai" },
+    actions: {
+      edit: "Redaguoti",
+      delete: "Ištrinti",
+      menuAria: "Įrašo veiksmai",
+    },
+    delete: {
+      title: "Ištrinti įrašą?",
+      body: "Šio veiksmo atšaukti nepavyks.",
+      cancel: "Atšaukti",
+      confirm: "Ištrinti",
+      ariaLabel: "Ištrinti įrašą",
+      genericError: "Įvyko klaida",
+    },
+    edit: {
+      incomeTitle: "Redaguoti pajamas",
+      expenseTitle: "Redaguoti išlaidas",
+      ariaLabel: "Redaguoti",
+    },
+  },
+  addEntry: {
+    income: {
+      sheetTitle: "Pridėti pajamas",
+      editTitle: "Redaguoti pajamas",
+      amount: "Suma",
+      service: "Paslauga",
+      paymentMethod: "Apmokėjimo būdas",
+      addNote: "+ Pridėti pastabą",
+      noteLabel: "Pastaba",
+      notePlaceholder: "Nebūtina",
+      noServicesHint: "Dar nepridėjai paslaugų.",
+      manageServicesLink: "Tvarkyti paslaugas →",
+      cta: "Pridėti",
+      editCta: "Išsaugoti",
+    },
+    expense: {
+      sheetTitle: "Pridėti išlaidas",
+      editTitle: "Redaguoti išlaidas",
+      amount: "Suma",
+      category: "Kategorija",
+      addNote: "+ Pridėti pastabą",
+      noteLabel: "Pastaba",
+      notePlaceholder: "Nebūtina",
+      cta: "Pridėti išlaidas",
+      editCta: "Išsaugoti",
+      categories: {
+        supplies: "Priemonės",
+        rent: "Nuoma",
+        marketing: "Marketingas",
+        education: "Mokymai",
+        equipment: "Įranga",
+        other: "Kita",
+      },
+    },
+    fab: {
+      addedToast: "Pridėta ✓",
+      openIncomeAria: "Pridėti pajamas",
+      openExpenseAria: "Pridėti išlaidas",
+    },
+    errors: { generic: "Įvyko klaida" },
   },
 };

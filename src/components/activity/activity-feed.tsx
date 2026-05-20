@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import type { ServiceChip } from "@/components/add-entry/income-form";
 import type { RecentEntry } from "@/components/dashboard/recent-activity";
+import { useLocale } from "@/i18n/locale-provider";
 import {
   dayLabel,
   filterEntries,
@@ -35,6 +36,7 @@ export function ActivityFeed({
   canWrite: boolean;
 }) {
   const router = useRouter();
+  const { t, locale } = useLocale();
   const [kind, setKind] = useState<ActivityKind>("all");
   const [actionsEntry, setActionsEntry] = useState<RecentEntry | null>(null);
   const [editingEntry, setEditingEntry] = useState<RecentEntry | null>(null);
@@ -85,7 +87,7 @@ export function ActivityFeed({
           {periodLabel}
         </p>
         <h1 className="mt-0.5 text-[28px] font-semibold leading-tight tracking-[-0.028em] text-ink-900/95">
-          Veikla
+          {t.activity.title}
         </h1>
       </div>
 
@@ -105,7 +107,7 @@ export function ActivityFeed({
           <ActivityDayGroup
             key={group.date}
             group={group}
-            label={dayLabel(group.date)}
+            label={dayLabel(group.date, locale, t.activity.day)}
             onActions={openActions}
           />
         ))

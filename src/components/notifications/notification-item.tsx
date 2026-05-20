@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import type { AppNotification, NotificationTone } from "@/lib/notifications";
 
 const TONE_BG: Record<NotificationTone, string> = {
@@ -62,6 +63,14 @@ function relativeTime(iso: string) {
   });
 }
 
+function useHasMounted() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  return mounted;
+}
+
 export function NotificationItem({
   notification,
   unread,
@@ -71,6 +80,8 @@ export function NotificationItem({
   unread: boolean;
   onActivate: () => void;
 }) {
+  const mounted = useHasMounted();
+  const timeLabel = mounted ? relativeTime(notification.occurredAt) : "";
   const inner = (
     <div className="flex items-start gap-3">
       <span
@@ -95,7 +106,7 @@ export function NotificationItem({
           {notification.body}
         </p>
         <div className="mt-1 text-[11px] font-medium uppercase tracking-[0.04em] text-ink-500">
-          {relativeTime(notification.occurredAt)}
+          {timeLabel}
         </div>
       </div>
     </div>

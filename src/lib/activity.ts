@@ -53,14 +53,28 @@ function toIsoDate(date: Date) {
   return `${y}-${m}-${d}`;
 }
 
-export function dayLabel(isoDate: string, now: Date = new Date()): string {
+const EN_DATE_FORMAT = new Intl.DateTimeFormat("en-US", {
+  day: "numeric",
+  month: "long",
+});
+
+export function dayLabel(
+  isoDate: string,
+  locale: "lt" | "en" = "lt",
+  labels: { today: string; yesterday: string } = {
+    today: "Šiandien",
+    yesterday: "Vakar",
+  },
+  now: Date = new Date(),
+): string {
   const today = toIsoDate(now);
   const yest = new Date(now);
   yest.setDate(yest.getDate() - 1);
   const yesterday = toIsoDate(yest);
-  if (isoDate === today) return "Šiandien";
-  if (isoDate === yesterday) return "Vakar";
+  if (isoDate === today) return labels.today;
+  if (isoDate === yesterday) return labels.yesterday;
   const d = parseIsoDate(isoDate);
+  if (locale === "en") return EN_DATE_FORMAT.format(d);
   return `${d.getDate()} ${LT_MONTH_GENITIVE[d.getMonth()]}`;
 }
 
