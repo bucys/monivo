@@ -1,5 +1,6 @@
 "use client";
 
+import { useT } from "@/i18n/locale-provider";
 import { ModalSheet } from "@/components/ui/modal-sheet";
 
 export function ActivityRowActions({
@@ -13,8 +14,9 @@ export function ActivityRowActions({
   onEdit: () => void;
   onDelete: () => void;
 }) {
+  const t = useT();
   return (
-    <ModalSheet open={open} onClose={onClose} ariaLabel="Įrašo veiksmai">
+    <ModalSheet open={open} onClose={onClose} ariaLabel={t.activity.actions.menuAria}>
       <ul className="flex flex-col pb-1">
         <li>
           <button
@@ -23,7 +25,7 @@ export function ActivityRowActions({
             className="flex w-full items-center gap-3 rounded-[12px] px-3 py-3.5 text-left text-[15px] font-medium tracking-[-0.012em] text-ink-900/90 transition-colors hover:bg-cream/60"
           >
             <PencilIcon />
-            Redaguoti
+            {t.activity.actions.edit}
           </button>
         </li>
         <li>
@@ -33,7 +35,7 @@ export function ActivityRowActions({
             className="flex w-full items-center gap-3 rounded-[12px] px-3 py-3.5 text-left text-[15px] font-medium tracking-[-0.012em] text-expense transition-colors hover:bg-expense-bg/60"
           >
             <TrashIcon />
-            Ištrinti
+            {t.activity.actions.delete}
           </button>
         </li>
       </ul>

@@ -1,14 +1,11 @@
+"use client";
+
+import { useT } from "@/i18n/locale-provider";
 import { formatEur } from "@/lib/format";
 import type {
   PaymentMethod,
   RecentEntry,
 } from "@/components/dashboard/recent-activity";
-
-const PAY_LABEL: Record<PaymentMethod, string> = {
-  cash: "Grynais",
-  card: "Kortele",
-  transfer: "Pavedimu",
-};
 
 export function DesktopActivityRow({
   entry,
@@ -19,13 +16,21 @@ export function DesktopActivityRow({
   last: boolean;
   onActions?: (entry: RecentEntry) => void;
 }) {
+  const t = useT();
   const isIncome = entry.kind === "income";
   const sign = isIncome ? "+" : "−";
   const amount = formatEur(entry.amountCents).replace(/\s?€/, "").replace("−", "");
   const time = formatTime(entry.createdAt);
-  const rightLabel = isIncome && entry.paymentMethod
-    ? PAY_LABEL[entry.paymentMethod]
-    : "Išlaidos";
+  const payLabel = entry.paymentMethod ? t.activity.paymentMethods[entry.paymentMethod] : null;
+  const categories = t.addEntry.expense.categories;
+  const displayLabel = entry.label
+    ? entry.label
+    : isIncome
+      ? t.common.income
+      : entry.categorySlug && entry.categorySlug in categories
+        ? categories[entry.categorySlug as keyof typeof categories]
+        : t.common.expense;
+  const rightLabel = isIncome && payLabel ? payLabel : t.activity.paymentMethods.expense;
 
   return (
     <div
@@ -45,7 +50,7 @@ export function DesktopActivityRow({
       </span>
       <div className="min-w-0 flex-1">
         <div className="truncate text-[15px] font-medium tracking-[-0.012em] text-ink-900/90">
-          {entry.label}
+          {displayLabel}
           {entry.note ? (
             <span className="font-normal text-ink-500"> · {entry.note}</span>
           ) : null}
@@ -54,7 +59,7 @@ export function DesktopActivityRow({
           {isIncome && entry.paymentMethod ? (
             <>
               <PayIcon pay={entry.paymentMethod} />
-              <span>{PAY_LABEL[entry.paymentMethod]}</span>
+              <span>{payLabel}</span>
               <span aria-hidden>·</span>
             </>
           ) : null}
@@ -75,7 +80,7 @@ export function DesktopActivityRow({
       {onActions ? (
         <button
           type="button"
-          aria-label="Veiksmai"
+          aria-label={t.activity.row.actionsAria}
           onClick={() => onActions(entry)}
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink-500 opacity-0 transition-opacity hover:bg-cream/60 hover:text-ink-900/90 focus-visible:opacity-100 group-hover:opacity-100"
         >

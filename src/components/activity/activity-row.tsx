@@ -1,14 +1,11 @@
+"use client";
+
+import { useT } from "@/i18n/locale-provider";
 import { formatEur } from "@/lib/format";
 import type {
   PaymentMethod,
   RecentEntry,
 } from "@/components/dashboard/recent-activity";
-
-const PAY_LABEL: Record<PaymentMethod, string> = {
-  cash: "Grynais",
-  card: "Kortele",
-  transfer: "Pavedimu",
-};
 
 export function MobileActivityRow({
   entry,
@@ -19,10 +16,20 @@ export function MobileActivityRow({
   last: boolean;
   onActions?: (entry: RecentEntry) => void;
 }) {
+  const t = useT();
   const isIncome = entry.kind === "income";
   const sign = isIncome ? "+" : "−";
   const amount = formatEur(entry.amountCents).replace(/\s?€/, "").replace("−", "");
   const time = formatTime(entry.createdAt);
+  const payLabel = entry.paymentMethod ? t.activity.paymentMethods[entry.paymentMethod] : null;
+  const categories = t.addEntry.expense.categories;
+  const displayLabel = entry.label
+    ? entry.label
+    : isIncome
+      ? t.common.income
+      : entry.categorySlug && entry.categorySlug in categories
+        ? categories[entry.categorySlug as keyof typeof categories]
+        : t.common.expense;
   return (
     <div
       className={`flex items-center gap-3.5 px-5 py-3.5 ${
@@ -41,7 +48,7 @@ export function MobileActivityRow({
       </span>
       <div className="min-w-0 flex-1">
         <div className="truncate text-[15px] font-medium tracking-[-0.008em] text-ink-900/90">
-          {entry.label}
+          {displayLabel}
           {entry.note ? (
             <span className="font-normal text-ink-500"> · {entry.note}</span>
           ) : null}
@@ -50,7 +57,7 @@ export function MobileActivityRow({
           {isIncome && entry.paymentMethod ? (
             <>
               <PayIcon pay={entry.paymentMethod} />
-              <span>{PAY_LABEL[entry.paymentMethod]}</span>
+              <span>{payLabel}</span>
               <span aria-hidden>·</span>
             </>
           ) : null}
@@ -68,7 +75,7 @@ export function MobileActivityRow({
       {onActions ? (
         <button
           type="button"
-          aria-label="Veiksmai"
+          aria-label={t.activity.row.actionsAria}
           onClick={() => onActions(entry)}
           className="-mr-1.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink-500 transition-colors hover:bg-cream/60 hover:text-ink-900/90"
         >

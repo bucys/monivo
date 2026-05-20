@@ -7,6 +7,7 @@ import {
   updateExpenseEntry,
 } from "@/app/(app)/entries/actions";
 import { Button } from "@/components/ui/button";
+import { useT } from "@/i18n/locale-provider";
 
 type CategorySlug =
   | "supplies"
@@ -16,16 +17,13 @@ type CategorySlug =
   | "equipment"
   | "other";
 
-export const EXPENSE_CATEGORIES: ReadonlyArray<{
-  slug: CategorySlug;
-  label: string;
-}> = [
-  { slug: "supplies", label: "Priemonės" },
-  { slug: "rent", label: "Nuoma" },
-  { slug: "marketing", label: "Marketingas" },
-  { slug: "education", label: "Mokymai" },
-  { slug: "equipment", label: "Įranga" },
-  { slug: "other", label: "Kita" },
+export const EXPENSE_CATEGORY_SLUGS: ReadonlyArray<CategorySlug> = [
+  "supplies",
+  "rent",
+  "marketing",
+  "education",
+  "equipment",
+  "other",
 ];
 
 export type ExpenseInitial = {
@@ -60,6 +58,12 @@ export function ExpenseForm({
   initial?: ExpenseInitial;
 }) {
   const router = useRouter();
+  const t = useT();
+  const tx = t.addEntry.expense;
+  const categoryItems = EXPENSE_CATEGORY_SLUGS.map((slug) => ({
+    slug,
+    label: tx.categories[slug],
+  }));
   const [amount, setAmount] = useState(
     initial ? centsToInput(initial.amountCents) : "",
   );
@@ -101,7 +105,7 @@ export function ExpenseForm({
         router.refresh();
         onAdded();
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Įvyko klaida");
+        setError(e instanceof Error ? e.message : t.addEntry.errors.generic);
       }
     });
   };
@@ -115,11 +119,11 @@ export function ExpenseForm({
       className="flex flex-col gap-5"
     >
       <h2 className="text-[20px] font-semibold tracking-[-0.022em] text-ink-900/90">
-        {mode === "edit" ? "Redaguoti išlaidas" : "Pridėti išlaidas"}
+        {mode === "edit" ? tx.editTitle : tx.sheetTitle}
       </h2>
 
       <label className="flex flex-col gap-2">
-        <span className="text-[12px] font-medium text-ink-500">Suma</span>
+        <span className="text-[12px] font-medium text-ink-500">{tx.amount}</span>
         <div className="flex items-baseline rounded-[16px] border border-hair bg-white px-4 py-3 focus-within:border-expense focus-within:ring-2 focus-within:ring-expense/20">
           <input
             type="text"
@@ -135,9 +139,9 @@ export function ExpenseForm({
       </label>
 
       <div className="flex flex-col gap-2">
-        <span className="text-[12px] font-medium text-ink-500">Kategorija</span>
+        <span className="text-[12px] font-medium text-ink-500">{tx.category}</span>
         <div className="grid grid-cols-2 gap-2">
-          {EXPENSE_CATEGORIES.map((c) => {
+          {categoryItems.map((c) => {
             const active = category === c.slug;
             return (
               <button
@@ -160,13 +164,13 @@ export function ExpenseForm({
 
       {noteOpen ? (
         <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
-          Pastaba
+          {tx.noteLabel}
           <input
             type="text"
             value={note}
             onChange={(e) => setNote(e.target.value)}
             maxLength={200}
-            placeholder="Nebūtina"
+            placeholder={tx.notePlaceholder}
             className="rounded-[14px] border border-hair bg-white px-3.5 py-2.5 text-[14px] text-ink-900/90 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
           />
         </label>
@@ -176,7 +180,7 @@ export function ExpenseForm({
           onClick={() => setNoteOpen(true)}
           className="self-start rounded-[10px] px-2 py-1 text-[13px] font-medium text-ink-500 hover:text-ink-900/90"
         >
-          + Pridėti pastabą
+          {tx.addNote}
         </button>
       )}
 
@@ -193,7 +197,7 @@ export function ExpenseForm({
         disabled={submitDisabled}
         className="!h-auto !rounded-[14px] !px-5 !py-3 !text-[14px]"
       >
-        {mode === "edit" ? "Išsaugoti" : "Pridėti išlaidas"}
+        {mode === "edit" ? tx.editCta : tx.cta}
       </Button>
     </form>
   );

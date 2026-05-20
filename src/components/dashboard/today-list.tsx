@@ -83,7 +83,7 @@ function Row({
       </span>
       <div className="min-w-0 flex-1">
         <div className="truncate text-[15px] font-medium tracking-[-0.008em] text-ink-900/90">
-          {entry.label}
+          {entry.label ?? ""}
           {entry.note ? (
             <span className="font-normal text-ink-500"> · {entry.note}</span>
           ) : null}

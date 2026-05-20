@@ -7,7 +7,8 @@ export type RecentEntry = {
   /** raw uuid without the `i_` / `e_` prefix — used by edit/delete actions */
   rawId: string;
   kind: "income" | "expense";
-  label: string;
+  /** Server-provided display label (service name or expense category). Null when the row should fall back to a dictionary-translated default. */
+  label: string | null;
   amountCents: number;
   occurredAt: string;
   createdAt: string;
@@ -138,7 +139,7 @@ function TodayRow({
       </span>
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="truncate text-[15px] font-medium tracking-[-0.008em] text-ink-900/90">
-          {entry.label}
+          {entry.label ?? ""}
           {entry.note ? (
             <span className="font-normal text-ink-500"> · {entry.note}</span>
           ) : null}

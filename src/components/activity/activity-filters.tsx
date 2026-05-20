@@ -1,14 +1,11 @@
 "use client";
 
+import { useT } from "@/i18n/locale-provider";
 import type { ActivityKind } from "@/lib/activity";
 
 export type PillCounts = Record<ActivityKind, number>;
 
-const ITEMS: ReadonlyArray<{ id: ActivityKind; label: string }> = [
-  { id: "all", label: "Visi" },
-  { id: "income", label: "Pajamos" },
-  { id: "expense", label: "Išlaidos" },
-];
+const ITEM_IDS: ReadonlyArray<ActivityKind> = ["all", "income", "expense"];
 
 export function ActivityFilters({
   value,
@@ -19,9 +16,11 @@ export function ActivityFilters({
   onChange: (k: ActivityKind) => void;
   counts: PillCounts;
 }) {
+  const t = useT();
+  const items = ITEM_IDS.map((id) => ({ id, label: t.activity.filters[id] }));
   return (
     <div className="flex flex-wrap items-center gap-2 lg:gap-2.5">
-      {ITEMS.map((item) => {
+      {items.map((item) => {
         const active = item.id === value;
         return (
           <button

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ModalSheet } from "@/components/ui/modal-sheet";
+import { useT } from "@/i18n/locale-provider";
 import { ExpenseForm } from "./expense-form";
 import { IncomeForm, type ServiceChip } from "./income-form";
 
@@ -31,6 +32,7 @@ export function AddEntrySheet({
   services: ReadonlyArray<ServiceChip>;
   canWrite: boolean;
 }) {
+  const t = useT();
   const [mode, setMode] = useState<Mode>(null);
   const [presetServiceId, setPresetServiceId] = useState<string | null>(null);
   const [justAdded, setJustAdded] = useState(false);
@@ -67,7 +69,9 @@ export function AddEntrySheet({
   };
 
   const ariaLabel =
-    mode === "expense" ? "Pridėti išlaidas" : "Pridėti pajamas";
+    mode === "expense"
+      ? t.addEntry.expense.sheetTitle
+      : t.addEntry.income.sheetTitle;
 
   return (
     <>
@@ -89,7 +93,7 @@ export function AddEntrySheet({
           role="status"
           className="pointer-events-none fixed bottom-[112px] left-1/2 z-50 -translate-x-1/2 rounded-full bg-ink-900/90 px-4 py-2 text-[13px] font-medium text-white shadow-card lg:bottom-8"
         >
-          Pridėta ✓
+          {t.addEntry.fab.addedToast}
         </div>
       ) : null}
     </>

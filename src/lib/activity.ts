@@ -1,6 +1,18 @@
 import type { RecentEntry } from "@/components/dashboard/recent-activity";
 import { formatMonth } from "@/lib/format";
 
+type SupportedLocale = "lt" | "en";
+
+export type PeriodLabels = {
+  week: string;
+  month: string;
+};
+
+const DEFAULT_PERIOD_LABELS: PeriodLabels = {
+  week: "Ši savaitė",
+  month: "Šis mėnuo",
+};
+
 export type ActivityKind = "all" | "income" | "expense";
 
 export type PeriodMode = "week" | "month" | "custom";
@@ -117,13 +129,11 @@ function startOfMonth(now: Date) {
   return new Date(now.getFullYear(), now.getMonth(), 1);
 }
 
-function formatMonthYear(d: Date) {
-  return formatMonth(d);
-}
-
 export function resolvePeriod(
   raw: string | undefined,
   now: Date = new Date(),
+  labels: PeriodLabels = DEFAULT_PERIOD_LABELS,
+  locale: SupportedLocale = "lt",
 ): ResolvedPeriod {
   if (raw === "week") {
     const start = startOfIsoWeek(now);
@@ -133,7 +143,7 @@ export function resolvePeriod(
       mode: "week",
       startDate: isoDate(start),
       endDate: isoDate(end),
-      label: "Ši savaitė",
+      label: labels.week,
     };
   }
   const monthMatch = raw?.match(/^(\d{4})-(\d{2})$/);
@@ -149,7 +159,7 @@ export function resolvePeriod(
         mode: isCurrent ? "month" : "custom",
         startDate: isoDate(start),
         endDate: isoDate(end),
-        label: isCurrent ? "Šis mėnuo" : formatMonthYear(start),
+        label: isCurrent ? labels.month : formatMonth(start, locale),
         monthValue: `${year}-${String(month + 1).padStart(2, "0")}`,
       };
     }
@@ -160,16 +170,19 @@ export function resolvePeriod(
     mode: "month",
     startDate: isoDate(start),
     endDate: isoDate(end),
-    label: "Šis mėnuo",
+    label: labels.month,
   };
 }
 
-export function lastTwelveMonths(now: Date = new Date()): MonthOption[] {
+export function lastTwelveMonths(
+  now: Date = new Date(),
+  locale: SupportedLocale = "lt",
+): MonthOption[] {
   const out: MonthOption[] = [];
   for (let i = 0; i < 12; i++) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-    out.push({ value, label: formatMonthYear(d) });
+    out.push({ value, label: formatMonth(d, locale) });
   }
   return out;
 }

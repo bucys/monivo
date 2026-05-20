@@ -1,10 +1,7 @@
-import type { PeriodMode } from "@/lib/activity";
+"use client";
 
-const EMPTY_TITLE: Record<PeriodMode, string> = {
-  week: "Šią savaitę įrašų nėra.",
-  month: "Šį mėnesį įrašų nėra.",
-  custom: "Pasirinktą mėnesį įrašų nėra.",
-};
+import { useT } from "@/i18n/locale-provider";
+import type { PeriodMode } from "@/lib/activity";
 
 export function ActivityEmpty({
   onReset,
@@ -15,6 +12,12 @@ export function ActivityEmpty({
   filtered: boolean;
   periodMode: PeriodMode;
 }) {
+  const t = useT();
+  const emptyTitle: Record<PeriodMode, string> = {
+    week: t.activity.empty.week,
+    month: t.activity.empty.month,
+    custom: t.activity.empty.custom,
+  };
   return (
     <div className="flex flex-col items-center rounded-[22px] bg-white px-6 py-12 text-center shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
       <span
@@ -36,12 +39,10 @@ export function ActivityEmpty({
         </svg>
       </span>
       <h3 className="mt-4 text-[15px] font-semibold tracking-[-0.012em] text-ink-900/90">
-        {filtered ? "Pagal šį filtrą įrašų nėra." : EMPTY_TITLE[periodMode]}
+        {filtered ? t.activity.empty.filtered : emptyTitle[periodMode]}
       </h3>
       <p className="mt-1.5 max-w-[300px] text-[13px] leading-[1.5] text-ink-500">
-        {filtered
-          ? "Pakeisk filtrą arba pridėk naują įrašą."
-          : "Pridėk pirmą įrašą — pamatysi jį čia."}
+        {filtered ? t.activity.empty.filteredBody : t.activity.empty.normalBody}
       </p>
       {filtered && onReset ? (
         <button
@@ -49,7 +50,7 @@ export function ActivityEmpty({
           onClick={onReset}
           className="mt-4 text-[13px] font-medium text-accent transition-colors hover:text-accent-deep"
         >
-          Rodyti visus
+          {t.activity.empty.resetCta}
         </button>
       ) : null}
     </div>

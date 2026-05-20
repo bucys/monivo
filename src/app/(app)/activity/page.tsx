@@ -2,11 +2,11 @@ import { redirect } from "next/navigation";
 import { AppScreen } from "@/components/app/app-screen";
 import { ActivityFeed } from "@/components/activity/activity-feed";
 import type { ServiceChip } from "@/components/add-entry/income-form";
-import {
-  expenseLabel,
-  type PaymentMethod,
-  type RecentEntry,
+import type {
+  PaymentMethod,
+  RecentEntry,
 } from "@/components/dashboard/recent-activity";
+import { getT } from "@/i18n/server";
 import { resolvePeriod } from "@/lib/activity";
 import { canWriteProfile } from "@/lib/profile";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -23,7 +23,13 @@ export default async function ActivityPage({
   if (!user) redirect("/login");
 
   const { period: periodParam } = await searchParams;
-  const period = resolvePeriod(periodParam);
+  const { t, locale } = await getT();
+  const period = resolvePeriod(
+    periodParam,
+    new Date(),
+    { week: t.activity.period.week, month: t.activity.period.month },
+    locale,
+  );
 
   const [
     { data: profile },
@@ -75,7 +81,7 @@ export default async function ActivityPage({
       id: `i_${r.id}`,
       rawId: String(r.id),
       kind: "income",
-      label: r.service_name ?? "Pajamos",
+      label: r.service_name ?? null,
       amountCents: r.amount_cents,
       occurredAt: r.occurred_at,
       createdAt: r.created_at,
@@ -88,7 +94,7 @@ export default async function ActivityPage({
       id: `e_${r.id}`,
       rawId: String(r.id),
       kind: "expense",
-      label: expenseLabel(r.category),
+      label: null,
       amountCents: r.amount_cents,
       occurredAt: r.occurred_at,
       createdAt: r.created_at,

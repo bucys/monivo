@@ -1,9 +1,10 @@
 "use client";
 
+import { useT } from "@/i18n/locale-provider";
 import { ModalSheet } from "@/components/ui/modal-sheet";
 import {
   ExpenseForm,
-  EXPENSE_CATEGORIES,
+  EXPENSE_CATEGORY_SLUGS,
   type ExpenseInitial,
 } from "@/components/add-entry/expense-form";
 import {
@@ -15,9 +16,7 @@ import type { RecentEntry } from "@/components/dashboard/recent-activity";
 
 type CategorySlug = ExpenseInitial["category"];
 
-const VALID_CATEGORIES = new Set<string>(
-  EXPENSE_CATEGORIES.map((c) => c.slug),
-);
+const VALID_CATEGORIES = new Set<string>(EXPENSE_CATEGORY_SLUGS);
 
 export function ActivityEditSheet({
   entry,
@@ -30,15 +29,18 @@ export function ActivityEditSheet({
   onClose: () => void;
   onSaved: () => void;
 }) {
+  const t = useT();
   const ariaLabel =
-    entry?.kind === "expense" ? "Redaguoti išlaidas" : "Redaguoti pajamas";
+    entry?.kind === "expense"
+      ? t.activity.edit.expenseTitle
+      : t.activity.edit.incomeTitle;
 
   return (
     <ModalSheet open={entry !== null} onClose={onClose} ariaLabel={ariaLabel}>
       {entry?.kind === "income" ? (
         <div className="flex flex-col gap-4 pb-1">
           <h2 className="text-[20px] font-semibold tracking-[-0.022em] text-ink-900/90">
-            Redaguoti pajamas
+            {t.activity.edit.incomeTitle}
           </h2>
           <IncomeForm
             key={entry.id}

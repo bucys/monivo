@@ -8,6 +8,7 @@ import {
   updateIncomeEntry,
 } from "@/app/(app)/entries/actions";
 import { Button } from "@/components/ui/button";
+import { useT } from "@/i18n/locale-provider";
 
 export type ServiceChip = {
   id: string;
@@ -17,13 +18,10 @@ export type ServiceChip = {
 
 type PaymentMethod = "cash" | "card" | "transfer";
 
-const PAYMENT_OPTIONS: ReadonlyArray<{
-  id: PaymentMethod;
-  label: string;
-}> = [
-  { id: "cash", label: "Grynais" },
-  { id: "card", label: "Kortele" },
-  { id: "transfer", label: "Pavedimu" },
+const PAYMENT_METHOD_IDS: ReadonlyArray<PaymentMethod> = [
+  "cash",
+  "card",
+  "transfer",
 ];
 
 function centsToInput(cents: number) {
@@ -63,6 +61,12 @@ export function IncomeForm({
   initial?: IncomeInitial;
 }) {
   const router = useRouter();
+  const t = useT();
+  const tx = t.addEntry.income;
+  const paymentOptions = PAYMENT_METHOD_IDS.map((id) => ({
+    id,
+    label: t.activity.paymentMethods[id],
+  }));
   const initialService = initialServiceId
     ? (services.find((s) => s.id === initialServiceId) ?? null)
     : null;
@@ -121,7 +125,7 @@ export function IncomeForm({
         router.refresh();
         onAdded();
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Įvyko klaida");
+        setError(e instanceof Error ? e.message : t.addEntry.errors.generic);
       }
     });
   };
@@ -135,7 +139,7 @@ export function IncomeForm({
       className="flex flex-col gap-5"
     >
       <label className="flex flex-col gap-2">
-        <span className="text-[12px] font-medium text-ink-500">Suma</span>
+        <span className="text-[12px] font-medium text-ink-500">{tx.amount}</span>
         <div className="flex items-baseline rounded-[16px] border border-hair bg-white px-4 py-3 focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/30">
           <input
             type="text"
@@ -152,7 +156,7 @@ export function IncomeForm({
 
       {services.length > 0 ? (
         <div className="flex flex-col gap-2">
-          <span className="text-[12px] font-medium text-ink-500">Paslauga</span>
+          <span className="text-[12px] font-medium text-ink-500">{tx.service}</span>
           <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
             {services.map((s) => {
               const active = serviceId === s.id;
@@ -185,22 +189,22 @@ export function IncomeForm({
         </div>
       ) : (
         <p className="rounded-[12px] border border-dashed border-hair bg-cream px-3.5 py-2.5 text-[12px] text-ink-500">
-          Dar nepridėjai paslaugų.{" "}
+          {tx.noServicesHint}{" "}
           <Link
             href="/services"
             className="font-medium text-accent hover:text-accent-deep"
           >
-            Tvarkyti paslaugas →
+            {tx.manageServicesLink}
           </Link>
         </p>
       )}
 
       <div className="flex flex-col gap-2">
         <span className="text-[12px] font-medium text-ink-500">
-          Apmokėjimo būdas
+          {tx.paymentMethod}
         </span>
         <div className="grid grid-cols-3 gap-2">
-          {PAYMENT_OPTIONS.map((p) => {
+          {paymentOptions.map((p) => {
             const active = paymentMethod === p.id;
             return (
               <button
@@ -223,13 +227,13 @@ export function IncomeForm({
 
       {noteOpen ? (
         <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
-          Pastaba
+          {tx.noteLabel}
           <input
             type="text"
             value={note}
             onChange={(e) => setNote(e.target.value)}
             maxLength={200}
-            placeholder="Nebūtina"
+            placeholder={tx.notePlaceholder}
             className="rounded-[14px] border border-hair bg-white px-3.5 py-2.5 text-[14px] text-ink-900/90 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
           />
         </label>
@@ -239,7 +243,7 @@ export function IncomeForm({
           onClick={() => setNoteOpen(true)}
           className="self-start rounded-[10px] px-2 py-1 text-[13px] font-medium text-ink-500 hover:text-ink-900/90"
         >
-          + Pridėti pastabą
+          {tx.addNote}
         </button>
       )}
 
@@ -256,7 +260,7 @@ export function IncomeForm({
         disabled={submitDisabled}
         className="!h-auto !rounded-[14px] !px-5 !py-3 !text-[14px]"
       >
-        {mode === "edit" ? "Išsaugoti" : "Pridėti"}
+        {mode === "edit" ? tx.editCta : tx.cta}
       </Button>
     </form>
   );

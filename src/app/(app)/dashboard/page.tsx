@@ -10,7 +10,6 @@ import {
 } from "@/components/dashboard/quick-actions";
 import {
   TodayCard,
-  expenseLabel,
   type PaymentMethod,
   type RecentEntry,
 } from "@/components/dashboard/recent-activity";
@@ -156,12 +155,21 @@ export default async function DashboardPage() {
   }
   const currentWeekIndex = weekBucket(today);
 
+  const categoryLabels = t.addEntry.expense.categories;
+  const expenseFallback = t.common.expense;
+  const expenseLabelFor = (slug: string): string => {
+    if (slug && slug in categoryLabels) {
+      return categoryLabels[slug as keyof typeof categoryLabels];
+    }
+    return expenseFallback;
+  };
+
   const todayEntries: ReadonlyArray<RecentEntry> = [
     ...incomes.map<RecentEntry>((r) => ({
       id: `i_${r.id}`,
       rawId: String(r.id),
       kind: "income",
-      label: r.service_name ?? "Pajamos",
+      label: r.service_name ?? t.common.income,
       amountCents: r.amount_cents,
       occurredAt: r.occurred_at,
       createdAt: r.created_at,
@@ -173,7 +181,7 @@ export default async function DashboardPage() {
       id: `e_${r.id}`,
       rawId: String(r.id),
       kind: "expense",
-      label: expenseLabel(r.category),
+      label: expenseLabelFor(r.category),
       amountCents: r.amount_cents,
       occurredAt: r.occurred_at,
       createdAt: r.created_at,

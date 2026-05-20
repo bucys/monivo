@@ -8,6 +8,7 @@ import {
   deleteIncomeEntry,
 } from "@/app/(app)/entries/actions";
 import type { RecentEntry } from "@/components/dashboard/recent-activity";
+import { useT } from "@/i18n/locale-provider";
 
 export function ActivityDeleteConfirm({
   entry,
@@ -18,6 +19,7 @@ export function ActivityDeleteConfirm({
   onClose: () => void;
   onDeleted: () => void;
 }) {
+  const t = useT();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,7 +32,7 @@ export function ActivityDeleteConfirm({
       else await deleteExpenseEntry(entry.rawId);
       onDeleted();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Įvyko klaida");
+      setError(e instanceof Error ? e.message : t.activity.delete.genericError);
     } finally {
       setPending(false);
     }
@@ -40,15 +42,15 @@ export function ActivityDeleteConfirm({
     <ModalSheet
       open={entry !== null}
       onClose={pending ? () => {} : onClose}
-      ariaLabel="Ištrinti įrašą"
+      ariaLabel={t.activity.delete.ariaLabel}
     >
       <div className="flex flex-col gap-4 pb-1">
         <div>
           <h2 className="text-[18px] font-semibold tracking-[-0.018em] text-ink-900/90">
-            Ištrinti įrašą?
+            {t.activity.delete.title}
           </h2>
           <p className="mt-1.5 text-[13px] leading-[1.5] text-ink-500">
-            Šio veiksmo atšaukti nepavyks.
+            {t.activity.delete.body}
           </p>
         </div>
         {error ? (
@@ -64,7 +66,7 @@ export function ActivityDeleteConfirm({
             disabled={pending}
             className="!h-auto !flex-1 !rounded-[14px] !px-5 !py-3 !text-[14px]"
           >
-            Atšaukti
+            {t.activity.delete.cancel}
           </Button>
           <Button
             type="button"
@@ -73,7 +75,7 @@ export function ActivityDeleteConfirm({
             isLoading={pending}
             className="!h-auto !flex-1 !rounded-[14px] !px-5 !py-3 !text-[14px]"
           >
-            Ištrinti
+            {t.activity.delete.confirm}
           </Button>
         </div>
       </div>

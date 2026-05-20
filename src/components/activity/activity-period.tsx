@@ -3,16 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { ModalSheet } from "@/components/ui/modal-sheet";
+import { useLocale } from "@/i18n/locale-provider";
 import {
   lastTwelveMonths,
   type PeriodMode,
 } from "@/lib/activity";
-
-const ITEMS: ReadonlyArray<{ mode: PeriodMode; label: string }> = [
-  { mode: "week", label: "Ši savaitė" },
-  { mode: "month", label: "Šis mėnuo" },
-  { mode: "custom", label: "Pasirinkti" },
-];
 
 export function ActivityPeriod({
   mode,
@@ -22,9 +17,15 @@ export function ActivityPeriod({
   monthValue?: string;
 }) {
   const router = useRouter();
+  const { t, locale } = useLocale();
   const [pending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
-  const months = lastTwelveMonths();
+  const months = lastTwelveMonths(new Date(), locale);
+  const items: ReadonlyArray<{ mode: PeriodMode; label: string }> = [
+    { mode: "week", label: t.activity.period.week },
+    { mode: "month", label: t.activity.period.month },
+    { mode: "custom", label: t.activity.period.choose },
+  ];
 
   const navigate = (search: string) => {
     startTransition(() => {
@@ -48,17 +49,17 @@ export function ActivityPeriod({
 
   const customLabel =
     mode === "custom" && monthValue
-      ? months.find((m) => m.value === monthValue)?.label ?? "Pasirinkti"
-      : "Pasirinkti";
+      ? months.find((m) => m.value === monthValue)?.label ?? t.activity.period.choose
+      : t.activity.period.choose;
 
   return (
     <div data-testid="activity-period-wrapper" className="flex">
       <div
         role="tablist"
-        aria-label="Periodas"
+        aria-label={t.activity.period.ariaLabel}
         className="inline-flex max-w-full items-center gap-1 rounded-full bg-white p-1 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] ring-1 ring-hair"
       >
-        {ITEMS.map((item) => {
+        {items.map((item) => {
           const active = item.mode === mode;
           const label = item.mode === "custom" ? customLabel : item.label;
           return (
@@ -84,6 +85,7 @@ export function ActivityPeriod({
         <MonthPicker
           monthValue={monthValue}
           months={months}
+          title={t.activity.period.modalTitle}
           onClose={() => setOpen(false)}
           onPick={handleMonthPick}
         />
@@ -95,18 +97,20 @@ export function ActivityPeriod({
 function MonthPicker({
   monthValue,
   months,
+  title,
   onClose,
   onPick,
 }: {
   monthValue?: string;
   months: ReadonlyArray<{ value: string; label: string }>;
+  title: string;
   onClose: () => void;
   onPick: (value: string) => void;
 }) {
   return (
-    <ModalSheet open onClose={onClose} ariaLabel="Pasirinkti mėnesį">
+    <ModalSheet open onClose={onClose} ariaLabel={title}>
       <h2 className="px-1 pb-3 text-[15px] font-semibold tracking-[-0.012em] text-ink-900/90">
-        Pasirinkti mėnesį
+        {title}
       </h2>
       <ul className="flex flex-col pb-2">
         {months.map((m) => {
