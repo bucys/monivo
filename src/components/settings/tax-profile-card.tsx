@@ -60,7 +60,10 @@ export function TaxProfileCard({ initial }: { initial: TaxProfile }) {
   };
 
   return (
-    <section className="rounded-[22px] border border-hair bg-white p-5 shadow-card sm:p-6">
+    <section
+      id="tax-mode"
+      className="scroll-mt-20 rounded-[22px] border border-hair bg-white p-5 shadow-card sm:p-6"
+    >
       <header className="flex flex-col gap-1">
         <h3 className="text-[15px] font-semibold tracking-[-0.012em] text-ink-900/90">
           {tx.sectionTitle}

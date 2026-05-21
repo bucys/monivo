@@ -88,6 +88,36 @@ function parseIsoDate(raw: unknown): string | null {
   return s;
 }
 
+const ALLOWED_PROFESSIONS = new Set([
+  "hair",
+  "nails",
+  "cosmetology",
+  "lashes",
+  "other",
+] as const);
+
+export async function updateProfession(formData: FormData) {
+  const raw = String(formData.get("profession") ?? "");
+  if (!(ALLOWED_PROFESSIONS as Set<string>).has(raw)) {
+    throw new Error("Neteisinga veiklos sritis.");
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({ profession: raw })
+    .eq("id", user.id);
+  if (error) throw new Error(`Nepavyko išsaugoti: ${error.message}`);
+
+  revalidatePath("/settings");
+  revalidatePath("/dashboard");
+}
+
 export async function updateTaxProfile(formData: FormData) {
   const mode = String(formData.get("tax_mode") ?? "");
   if (mode !== "iv" && mode !== "vl" && mode !== "custom") {

@@ -131,10 +131,15 @@ export type Dictionary = {
       businessType: string;
       individualActivity: string;
     };
+    profession: {
+      sheetTitle: string;
+      ariaLabel: string;
+    };
     business: {
       services: string;
       taxRate: string;
       activityType: string;
+      activityForm: string;
     };
     tax: {
       sectionTitle: string;
@@ -705,10 +710,15 @@ export const lt: Dictionary = {
       businessType: "Veiklos rūšis",
       individualActivity: "Individuali veikla",
     },
+    profession: {
+      sheetTitle: "Pasirink veiklos sritį",
+      ariaLabel: "Veiklos sritis",
+    },
     business: {
       services: "Paslaugos ir kainos",
       taxRate: "Mokesčių rezervas",
       activityType: "Veiklos rūšis",
+      activityForm: "Veiklos forma",
     },
     tax: {
       sectionTitle: "Mokesčių rezervas",

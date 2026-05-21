@@ -45,15 +45,22 @@ export function calculateIvReserve(
   profile: TaxProfile,
   input: ReserveInputs,
 ): ReserveBreakdown {
-  const taxable =
+  // Taxable profit: lump-sum (30% costs) or actual logged expenses.
+  const taxableProfit =
     profile.ivExpenseMode === "fixed_30"
       ? input.incomeCents * (1 - IV_RATES.fixedCostsRatio)
       : nonNeg(input.incomeCents - input.expenseCents);
 
-  const gpmCents = roundCents(taxable * IV_RATES.gpm);
-  const vsdCents = roundCents(taxable * IV_RATES.vsd);
+  // Sodra (VSD + PSD) is computed on 90% of taxable profit.
+  const sodraBase = taxableProfit * IV_RATES.sodraBaseRatio;
+
+  const gpmCents = roundCents(taxableProfit * IV_RATES.gpm);
+  const vsdCents = roundCents(sodraBase * IV_RATES.vsd);
   const psdCents = profile.includePsd
-    ? roundCents(taxable * IV_RATES.psd)
+    ? Math.max(
+        roundCents(sodraBase * IV_RATES.psd),
+        IV_RATES.minMonthlyPsdCents,
+      )
     : 0;
 
   return {

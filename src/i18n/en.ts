@@ -156,10 +156,15 @@ export const en: Dictionary = {
       businessType: "Business type",
       individualActivity: "Individual activity",
     },
+    profession: {
+      sheetTitle: "Pick your field",
+      ariaLabel: "Field",
+    },
     business: {
       services: "Services & prices",
       taxRate: "Tax reserve",
       activityType: "Business type",
+      activityForm: "Activity form",
     },
     tax: {
       sectionTitle: "Tax reserve",

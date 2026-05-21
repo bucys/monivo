@@ -11,8 +11,8 @@ import {
   IconExport,
   IconGlobe,
   IconList,
-  IconNote,
   IconPerson,
+  IconReceipt,
   IconSparkle,
 } from "@/components/settings/settings-icons";
 import { LanguageToggle } from "@/components/settings/language-toggle";
@@ -47,7 +47,7 @@ export default async function SettingsPage() {
     supabase
       .from("profiles")
       .select(
-        `display_name, tax_rate, subscription_status, trial_ends_at, past_due_since, ${TAX_PROFILE_COLUMNS}`,
+        `display_name, profession, tax_rate, subscription_status, trial_ends_at, past_due_since, ${TAX_PROFILE_COLUMNS}`,
       )
       .eq("id", user.id)
       .maybeSingle(),
@@ -113,9 +113,10 @@ export default async function SettingsPage() {
             href="/services"
           />
           <SettingsRow
-            icon={<IconNote />}
-            label={t.settings.business.activityType}
-            detail={t.settings.profile.individualActivity}
+            icon={<IconReceipt />}
+            label={t.settings.business.activityForm}
+            detail={t.settings.tax.modes[taxProfile.taxMode]}
+            href="#tax-mode"
             last
           />
         </SettingsSection>
