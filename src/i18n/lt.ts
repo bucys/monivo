@@ -63,6 +63,12 @@ export type Dictionary = {
     statsIncome: string;
     statsExpense: string;
     statsTaxReserve: string;
+    reservePlannedTitle: string;
+    reserveAboutPrefix: string;
+    reserveBreakdownGpm: string;
+    reserveBreakdownVsd: string;
+    reserveBreakdownPsd: string;
+    reserveBreakdownVl: string;
     weeklyTitle: string;
     weeklyWeekShort: string;
     quickActions: string;
@@ -129,6 +135,37 @@ export type Dictionary = {
       services: string;
       taxRate: string;
       activityType: string;
+    };
+    tax: {
+      sectionTitle: string;
+      sectionHint: string;
+      modeLabel: string;
+      modes: { iv: string; vl: string; custom: string };
+      iv: {
+        expenseModeLabel: string;
+        fixed30: string;
+        fixed30Helper: string;
+        actual: string;
+        actualHelper: string;
+        psdToggle: string;
+        psdHelper: string;
+      };
+      vl: {
+        yearlyCostLabel: string;
+        yearlyCostPlaceholder: string;
+        validUntilLabel: string;
+        psdToggle: string;
+        psdHelper: string;
+        emptyHint: string;
+      };
+      custom: {
+        percentLabel: string;
+        percentPlaceholder: string;
+        helper: string;
+      };
+      saveCta: string;
+      savedToast: string;
+      disclaimer: string;
     };
     app: {
       appearance: string;
@@ -577,6 +614,12 @@ export const lt: Dictionary = {
     statsIncome: "Pajamos",
     statsExpense: "Išlaidos",
     statsTaxReserve: "Atidėta",
+    reservePlannedTitle: "Planuojamas mokesčių rezervas",
+    reserveAboutPrefix: "apie",
+    reserveBreakdownGpm: "GPM",
+    reserveBreakdownVsd: "VSD",
+    reserveBreakdownPsd: "PSD",
+    reserveBreakdownVl: "Verslo liudijimas",
     weeklyTitle: "Uždarbis šį mėnesį",
     weeklyWeekShort: "sav.",
     quickActions: "Greiti veiksmai",
@@ -666,6 +709,46 @@ export const lt: Dictionary = {
       services: "Paslaugos ir kainos",
       taxRate: "Mokesčių rezervas",
       activityType: "Veiklos rūšis",
+    },
+    tax: {
+      sectionTitle: "Mokesčių rezervas",
+      sectionHint:
+        "Skaičiavimai yra orientaciniai — padeda planuoti, kiek atsidėti.",
+      modeLabel: "Veiklos forma",
+      modes: {
+        iv: "Individuali veikla",
+        vl: "Verslo liudijimas",
+        custom: "Pasirinktinis %",
+      },
+      iv: {
+        expenseModeLabel: "Išlaidų metodas",
+        fixed30: "30% išlaidų metodas",
+        fixed30Helper:
+          "Paprastesnis variantas — išlaidos skaičiuojamos automatiškai.",
+        actual: "Faktinės išlaidos",
+        actualHelper:
+          "Mokesčiai planuojami pagal tavo pridėtas išlaidas.",
+        psdToggle: "Įtraukti PSD į rezervą",
+        psdHelper: "Išjunk jei PSD moka darbdavys ar kita veikla.",
+      },
+      vl: {
+        yearlyCostLabel: "Verslo liudijimo kaina per metus",
+        yearlyCostPlaceholder: "Pvz. 420",
+        validUntilLabel: "Galioja iki",
+        psdToggle: "Įtraukti PSD į rezervą",
+        psdHelper: "Išjunk jei PSD moka darbdavys ar kita veikla.",
+        emptyHint:
+          "Įvesk metinę VL kainą — paskaičiuosime, kiek atsidėti per mėnesį.",
+      },
+      custom: {
+        percentLabel: "Procentas nuo pajamų",
+        percentPlaceholder: "Pvz. 20",
+        helper: "Naudok, jei tvarkai mokesčius kitu būdu.",
+      },
+      saveCta: "Išsaugoti",
+      savedToast: "Išsaugota",
+      disclaimer:
+        "Tai planavimo įrankis, ne oficiali apskaita. Tikslius mokesčius patvirtina VMI.",
     },
     app: {
       appearance: "Išvaizda",

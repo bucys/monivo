@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { TaxProfile } from "@/lib/tax";
 
 export type ProfileWriteFields = {
   subscription_status:
@@ -10,6 +11,33 @@ export type ProfileWriteFields = {
   trial_ends_at: string;
   past_due_since: string | null;
 };
+
+/** Columns selected from `profiles` to build a TaxProfile. */
+export type ProfileTaxFields = {
+  tax_mode: "iv" | "vl" | "custom" | null;
+  iv_expense_mode: "fixed_30" | "actual" | null;
+  include_psd: boolean | null;
+  custom_tax_percent: number | string | null;
+  vl_yearly_cost_cents: number | null;
+  vl_valid_until: string | null;
+};
+
+export const TAX_PROFILE_COLUMNS =
+  "tax_mode, iv_expense_mode, include_psd, custom_tax_percent, vl_yearly_cost_cents, vl_valid_until";
+
+export function toTaxProfile(row: ProfileTaxFields | null | undefined): TaxProfile {
+  return {
+    taxMode: row?.tax_mode ?? "custom",
+    ivExpenseMode: row?.iv_expense_mode ?? "fixed_30",
+    includePsd: row?.include_psd ?? true,
+    customTaxPercent:
+      row?.custom_tax_percent === null || row?.custom_tax_percent === undefined
+        ? null
+        : Number(row.custom_tax_percent),
+    vlYearlyCostCents: row?.vl_yearly_cost_cents ?? null,
+    vlValidUntil: row?.vl_valid_until ?? null,
+  };
+}
 
 const GRACE_DAYS = 7;
 

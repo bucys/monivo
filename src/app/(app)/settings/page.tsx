@@ -13,13 +13,17 @@ import {
   IconList,
   IconNote,
   IconPerson,
-  IconReceipt,
   IconSparkle,
 } from "@/components/settings/settings-icons";
 import { LanguageToggle } from "@/components/settings/language-toggle";
-import { TaxRatePill } from "@/components/settings/profile-form";
+import { TaxProfileCard } from "@/components/settings/tax-profile-card";
 import { getDictionary } from "@/i18n";
 import { getServerLocale } from "@/i18n/server";
+import {
+  TAX_PROFILE_COLUMNS,
+  toTaxProfile,
+  type ProfileTaxFields,
+} from "@/lib/profile";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 function trialDaysLeft(trialEndsAt: string | null): number | null {
@@ -43,7 +47,7 @@ export default async function SettingsPage() {
     supabase
       .from("profiles")
       .select(
-        "display_name, tax_rate, subscription_status, trial_ends_at, past_due_since",
+        `display_name, tax_rate, subscription_status, trial_ends_at, past_due_since, ${TAX_PROFILE_COLUMNS}`,
       )
       .eq("id", user.id)
       .maybeSingle(),
@@ -55,7 +59,7 @@ export default async function SettingsPage() {
   const serviceCount = servicesCount.count ?? 0;
 
   const displayName = profile?.display_name ?? "";
-  const taxPercent = Math.round(Number(profile?.tax_rate ?? 0) * 100);
+  const taxProfile = toTaxProfile(profile as ProfileTaxFields | null);
   const status = profile?.subscription_status ?? "trialing";
   const daysLeft = trialDaysLeft(profile?.trial_ends_at ?? null);
 
@@ -109,18 +113,14 @@ export default async function SettingsPage() {
             href="/services"
           />
           <SettingsRow
-            icon={<IconReceipt />}
-            label={t.settings.business.taxRate}
-            right={<TaxRatePill initialPercent={taxPercent} />}
-            chevron={false}
-          />
-          <SettingsRow
             icon={<IconNote />}
             label={t.settings.business.activityType}
             detail={t.settings.profile.individualActivity}
             last
           />
         </SettingsSection>
+
+        <TaxProfileCard initial={taxProfile} />
 
         <SettingsSection label={t.settings.sections.app}>
           <SettingsRow

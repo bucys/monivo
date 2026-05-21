@@ -65,6 +65,12 @@ export const en: Dictionary = {
     statsIncome: "Income",
     statsExpense: "Expenses",
     statsTaxReserve: "Reserved",
+    reservePlannedTitle: "Planned tax reserve",
+    reserveAboutPrefix: "about",
+    reserveBreakdownGpm: "Income tax",
+    reserveBreakdownVsd: "Social (VSD)",
+    reserveBreakdownPsd: "Health (PSD)",
+    reserveBreakdownVl: "Business licence",
     weeklyTitle: "Earnings this month",
     weeklyWeekShort: "Wk",
     quickActions: "Quick actions",
@@ -154,6 +160,44 @@ export const en: Dictionary = {
       services: "Services & prices",
       taxRate: "Tax reserve",
       activityType: "Business type",
+    },
+    tax: {
+      sectionTitle: "Tax reserve",
+      sectionHint:
+        "These figures are estimates — they help you plan how much to set aside.",
+      modeLabel: "Business form",
+      modes: {
+        iv: "Self-Employed",
+        vl: "Business Certificate",
+        custom: "Custom %",
+      },
+      iv: {
+        expenseModeLabel: "Expense method",
+        fixed30: "30% deduction method",
+        fixed30Helper: "Simpler option — expenses are estimated automatically.",
+        actual: "Actual expenses",
+        actualHelper: "Taxes are estimated using your tracked expenses.",
+        psdToggle: "Include PSD in reserve",
+        psdHelper: "Turn off if PSD is paid by your employer or another role.",
+      },
+      vl: {
+        yearlyCostLabel: "Business licence yearly cost",
+        yearlyCostPlaceholder: "e.g. 420",
+        validUntilLabel: "Valid until",
+        psdToggle: "Include PSD in reserve",
+        psdHelper: "Turn off if PSD is paid by your employer or another role.",
+        emptyHint:
+          "Enter the yearly licence cost — we'll work out a monthly reserve.",
+      },
+      custom: {
+        percentLabel: "Percent of income",
+        percentPlaceholder: "e.g. 20",
+        helper: "Use this if you handle taxes a different way.",
+      },
+      saveCta: "Save",
+      savedToast: "Saved",
+      disclaimer:
+        "This is a planning tool, not official accounting. Final figures are set by the tax authority.",
     },
     app: {
       appearance: "Appearance",

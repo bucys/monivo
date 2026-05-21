@@ -17,10 +17,17 @@ import { SpendableHero } from "@/components/dashboard/spendable-card";
 import { MobileTodayList } from "@/components/dashboard/today-list";
 import { WeeklyEarnings } from "@/components/dashboard/weekly-earnings";
 import { format } from "@/i18n";
+import type { Dictionary } from "@/i18n";
 import { getT } from "@/i18n/server";
-import { monthRange } from "@/lib/format";
-import { canWriteProfile } from "@/lib/profile";
+import { formatEur, monthRange } from "@/lib/format";
+import {
+  TAX_PROFILE_COLUMNS,
+  canWriteProfile,
+  toTaxProfile,
+  type ProfileTaxFields,
+} from "@/lib/profile";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { calculateTaxReserve, type ReserveBreakdown } from "@/lib/tax";
 
 function todayIso() {
   const d = new Date();
@@ -55,7 +62,7 @@ export default async function DashboardPage() {
     supabase
       .from("profiles")
       .select(
-        "display_name, tax_rate, subscription_status, trial_ends_at, past_due_since",
+        `display_name, tax_rate, subscription_status, trial_ends_at, past_due_since, ${TAX_PROFILE_COLUMNS}`,
       )
       .eq("id", user.id)
       .maybeSingle(),
@@ -85,7 +92,7 @@ export default async function DashboardPage() {
   const incomes = incomeRows ?? [];
   const expenses = expenseRows ?? [];
   const serviceList: ReadonlyArray<QuickService> = services ?? [];
-  const taxRate = Number(profile?.tax_rate ?? 0);
+  const taxProfile = toTaxProfile(profile as ProfileTaxFields | null);
   const canWrite = canWriteProfile(profile);
   const displayName = profile?.display_name?.trim() ?? "";
   const greeting = displayName
@@ -97,7 +104,11 @@ export default async function DashboardPage() {
     (acc, r) => acc + (r.amount_cents ?? 0),
     0,
   );
-  const taxReserveCents = Math.round(incomeCents * taxRate);
+  const reserve = calculateTaxReserve(taxProfile, {
+    incomeCents,
+    expenseCents,
+  });
+  const taxReserveCents = reserve.totalCents;
   const spendableCents = incomeCents - expenseCents - taxReserveCents;
   const wentNegative = spendableCents < 0;
 
@@ -234,6 +245,10 @@ export default async function DashboardPage() {
           labels={statLabels}
         />
 
+        {taxReserveCents > 0 ? (
+          <ReserveBreakdownCard reserve={reserve} t={t} />
+        ) : null}
+
         <MobileQuickActions services={serviceList} canWrite={canWrite} />
 
         <div className="hidden grid-cols-[1.5fr_1fr] items-stretch gap-[22px] lg:grid">
@@ -268,4 +283,65 @@ export default async function DashboardPage() {
       </div>
     </AppScreen>
   );
+}
+
+function ReserveBreakdownCard({
+  reserve,
+  t,
+}: {
+  reserve: ReserveBreakdown;
+  t: Dictionary;
+}) {
+  const lines: ReadonlyArray<{ label: string; cents: number }> = [
+    reserve.vlCents !== undefined
+      ? { label: t.dashboard.reserveBreakdownVl, cents: reserve.vlCents }
+      : null,
+    reserve.gpmCents !== undefined
+      ? { label: t.dashboard.reserveBreakdownGpm, cents: reserve.gpmCents }
+      : null,
+    reserve.vsdCents !== undefined
+      ? { label: t.dashboard.reserveBreakdownVsd, cents: reserve.vsdCents }
+      : null,
+    reserve.psdCents !== undefined
+      ? { label: t.dashboard.reserveBreakdownPsd, cents: reserve.psdCents }
+      : null,
+  ].filter((x): x is { label: string; cents: number } => x !== null);
+
+  return (
+    <section className="rounded-[22px] bg-white p-5 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] sm:p-6">
+      <div className="text-[11px] font-semibold uppercase tracking-[0.06em] text-ink-500">
+        {t.dashboard.reservePlannedTitle}
+      </div>
+      <div className="mt-1.5 flex items-baseline gap-1.5 tabular-nums text-ink-900/90">
+        <span className="text-[13px] font-medium text-ink-500">
+          {t.dashboard.reserveAboutPrefix}
+        </span>
+        <span className="text-[28px] font-semibold leading-none tracking-[-0.025em]">
+          {formatEur(roundToEuro(reserve.totalCents))}
+        </span>
+      </div>
+      {lines.length > 0 ? (
+        <ul className="mt-4 flex flex-col gap-2 border-t border-hair pt-3">
+          {lines.map((line) => (
+            <li
+              key={line.label}
+              className="flex items-baseline justify-between text-[13px]"
+            >
+              <span className="text-ink-500">{line.label}</span>
+              <span className="font-medium tabular-nums text-ink-900/90">
+                {t.dashboard.reserveAboutPrefix}{" "}
+                {formatEur(roundToEuro(line.cents))}
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </section>
+  );
+}
+
+/** Rounds to the nearest whole euro so reserve numbers read as friendly
+ *  estimates ("apie 312 €") instead of precise figures ("312,47 €"). */
+function roundToEuro(cents: number) {
+  return Math.round(cents / 100) * 100;
 }
