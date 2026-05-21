@@ -86,6 +86,7 @@ export function ActivityPeriod({
           monthValue={monthValue}
           months={months}
           title={t.activity.period.modalTitle}
+          closeLabel={t.common.close}
           onClose={() => setOpen(false)}
           onPick={handleMonthPick}
         />
@@ -98,17 +99,19 @@ function MonthPicker({
   monthValue,
   months,
   title,
+  closeLabel,
   onClose,
   onPick,
 }: {
   monthValue?: string;
   months: ReadonlyArray<{ value: string; label: string }>;
   title: string;
+  closeLabel: string;
   onClose: () => void;
   onPick: (value: string) => void;
 }) {
   return (
-    <ModalSheet open onClose={onClose} ariaLabel={title}>
+    <ModalSheet open onClose={onClose} ariaLabel={title} closeLabel={closeLabel}>
       <h2 className="px-1 pb-3 text-[15px] font-semibold tracking-[-0.012em] text-ink-900/90">
         {title}
       </h2>

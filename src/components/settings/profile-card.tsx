@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ModalSheet } from "@/components/ui/modal-sheet";
+import { useT } from "@/i18n/locale-provider";
 import { DisplayNameField } from "./profile-form";
 import { IconChevron } from "./settings-icons";
 
@@ -23,6 +24,7 @@ export function ProfileCard({
   subline: string;
   editLabel: string;
 }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const visibleName = displayName.trim() || "—";
 
@@ -53,7 +55,12 @@ export function ProfileCard({
         </span>
       </button>
 
-      <ModalSheet open={open} onClose={() => setOpen(false)} ariaLabel={editLabel}>
+      <ModalSheet
+        open={open}
+        onClose={() => setOpen(false)}
+        ariaLabel={editLabel}
+        closeLabel={t.common.close}
+      >
         <h2 className="px-1 pb-3 text-[15px] font-semibold tracking-[-0.012em] text-ink-900/90">
           {editLabel}
         </h2>

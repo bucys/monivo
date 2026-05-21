@@ -36,7 +36,12 @@ export function ActivityEditSheet({
       : t.activity.edit.incomeTitle;
 
   return (
-    <ModalSheet open={entry !== null} onClose={onClose} ariaLabel={ariaLabel}>
+    <ModalSheet
+      open={entry !== null}
+      onClose={onClose}
+      ariaLabel={ariaLabel}
+      closeLabel={t.common.close}
+    >
       {entry?.kind === "income" ? (
         <div className="flex flex-col gap-4 pb-1">
           <h2 className="text-[20px] font-semibold tracking-[-0.022em] text-ink-900/90">

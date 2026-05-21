@@ -43,6 +43,7 @@ export function ActivityDeleteConfirm({
       open={entry !== null}
       onClose={pending ? () => {} : onClose}
       ariaLabel={t.activity.delete.ariaLabel}
+      closeLabel={t.common.close}
     >
       <div className="flex flex-col gap-4 pb-1">
         <div>

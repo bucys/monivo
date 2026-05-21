@@ -192,6 +192,7 @@ function ServiceSheet({
           ? t.services.editSheetTitle
           : t.services.addSheetTitle
       }
+      closeLabel={t.common.close}
     >
       {mode.kind === "add" ? (
         <ServiceForm key="add" mode={mode} onDone={onClose} />
@@ -334,7 +335,7 @@ function ServiceForm({
           disabled={pending || deletePending}
           className="self-center px-2 py-1 text-[13px] text-ink-500 hover:text-ink-900/90 disabled:opacity-50"
         >
-          Atšaukti
+          {t.services.form.cancel}
         </button>
       </div>
 
@@ -347,11 +348,13 @@ function ServiceForm({
               disabled={pending || deletePending}
               className="w-full rounded-[12px] px-3 py-2 text-[13px] font-medium text-expense hover:bg-expense-bg disabled:opacity-50"
             >
-              Ištrinti paslaugą
+              {t.services.delete.trigger}
             </button>
           ) : (
             <div className="flex flex-col gap-2 rounded-[14px] border border-expense/30 bg-expense-bg/60 p-3">
-              <p className="text-[13px] text-ink-900/90">Tikrai ištrinti?</p>
+              <p className="text-[13px] text-ink-900/90">
+                {t.services.delete.confirmBody}
+              </p>
               <div className="flex gap-2">
                 <button
                   type="button"
@@ -359,7 +362,9 @@ function ServiceForm({
                   disabled={deletePending}
                   className="flex-1 rounded-[12px] bg-expense px-3 py-2 text-[13px] font-medium text-white disabled:opacity-50"
                 >
-                  {deletePending ? "Trinama…" : "Trinti"}
+                  {deletePending
+                    ? t.services.delete.confirmPending
+                    : t.services.delete.confirm}
                 </button>
                 <button
                   type="button"
@@ -367,7 +372,7 @@ function ServiceForm({
                   disabled={deletePending}
                   className="flex-1 rounded-[12px] border border-hair bg-white px-3 py-2 text-[13px] font-medium text-ink-700 disabled:opacity-50"
                 >
-                  Atšaukti
+                  {t.services.delete.cancel}
                 </button>
               </div>
             </div>

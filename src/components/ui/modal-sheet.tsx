@@ -7,10 +7,17 @@ export type ModalSheetProps = {
   open: boolean;
   onClose: () => void;
   ariaLabel: string;
+  closeLabel: string;
   children: ReactNode;
 };
 
-export function ModalSheet({ open, onClose, ariaLabel, children }: ModalSheetProps) {
+export function ModalSheet({
+  open,
+  onClose,
+  ariaLabel,
+  closeLabel,
+  children,
+}: ModalSheetProps) {
   useEffect(() => {
     if (!open) return;
     const handleKey = (event: KeyboardEvent) => {
@@ -35,7 +42,7 @@ export function ModalSheet({ open, onClose, ariaLabel, children }: ModalSheetPro
     >
       <button
         type="button"
-        aria-label="Uždaryti"
+        aria-label={closeLabel}
         tabIndex={open ? 0 : -1}
         onClick={onClose}
         className={cn(

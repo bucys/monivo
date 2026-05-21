@@ -14,6 +14,7 @@ export function SpendableHero({
   taxReserveCents: number;
   heroSub: string;
   labels: {
+    aria: string;
     title: string;
     monthlyComposition: string;
     incomeRemainder: string;
@@ -33,7 +34,7 @@ export function SpendableHero({
 
   return (
     <section
-      aria-label="Mėnesio apžvalga"
+      aria-label={labels.aria}
       className="relative overflow-hidden rounded-[28px] px-[22px] pb-[22px] pt-6 text-white shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_20px_50px_-10px_rgba(31,122,107,0.18)] sm:p-7 lg:p-[30px]"
       style={{
         background:

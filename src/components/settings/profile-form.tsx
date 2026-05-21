@@ -28,7 +28,7 @@ export function DisplayNameField({
         router.refresh();
         onDone?.();
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Įvyko klaida");
+        setError(e instanceof Error ? e.message : t.common.genericError);
       }
     });
   };
@@ -92,7 +92,7 @@ export function TaxRatePill({ initialPercent }: { initialPercent: number }) {
         setEditing(false);
         router.refresh();
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Įvyko klaida");
+        setError(e instanceof Error ? e.message : t.common.genericError);
       }
     });
   };

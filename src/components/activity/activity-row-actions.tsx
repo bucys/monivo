@@ -16,7 +16,12 @@ export function ActivityRowActions({
 }) {
   const t = useT();
   return (
-    <ModalSheet open={open} onClose={onClose} ariaLabel={t.activity.actions.menuAria}>
+    <ModalSheet
+      open={open}
+      onClose={onClose}
+      ariaLabel={t.activity.actions.menuAria}
+      closeLabel={t.common.close}
+    >
       <ul className="flex flex-col pb-1">
         <li>
           <button

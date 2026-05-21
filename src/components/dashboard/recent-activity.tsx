@@ -21,19 +21,6 @@ export type RecentEntry = {
   categorySlug?: string | null;
 };
 
-const EXPENSE_LABELS: Record<string, string> = {
-  supplies: "Priemonės",
-  rent: "Nuoma",
-  marketing: "Marketingas",
-  education: "Mokymai",
-  equipment: "Įranga",
-  other: "Kita",
-};
-
-export function expenseLabel(slug: string) {
-  return EXPENSE_LABELS[slug] ?? "Išlaidos";
-}
-
 export type TodayLabels = {
   aria: string;
   title: string;

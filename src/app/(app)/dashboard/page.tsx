@@ -106,6 +106,7 @@ export default async function DashboardPage() {
     : t.dashboard.spendableSubPositive;
 
   const heroLabels = {
+    aria: t.dashboard.spendableAria,
     title: t.dashboard.spendableTitle,
     monthlyComposition: t.dashboard.monthlyComposition,
     incomeRemainder: t.dashboard.incomeRemainderLabel,

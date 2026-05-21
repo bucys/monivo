@@ -5,6 +5,7 @@ export type Dictionary = {
     edit: string;
     delete: string;
     close: string;
+    genericError: string;
     loading: string;
     soon: string;
     saved: string;
@@ -43,6 +44,7 @@ export type Dictionary = {
   dashboard: {
     greeting: string;
     greetingNamed: string;
+    spendableAria: string;
     spendableTitle: string;
     spendableSubPositive: string;
     spendableSubNegative: string;
@@ -336,7 +338,13 @@ export type Dictionary = {
         other: string;
       };
     };
-    fab: { addedToast: string; openIncomeAria: string; openExpenseAria: string };
+    fab: {
+      addedToast: string;
+      openIncomeAria: string;
+      openExpenseAria: string;
+      openMenuAria: string;
+      closeMenuAria: string;
+    };
     errors: { generic: string };
   };
 };
@@ -348,6 +356,7 @@ export const lt: Dictionary = {
     edit: "Keisti",
     delete: "Ištrinti",
     close: "Uždaryti",
+    genericError: "Įvyko klaida",
     loading: "Įkeliama…",
     soon: "Greitai",
     saved: "Išsaugota",
@@ -386,6 +395,7 @@ export const lt: Dictionary = {
   dashboard: {
     greeting: "Labas",
     greetingNamed: "Labas, {name}",
+    spendableAria: "Mėnesio apžvalga",
     spendableTitle: "Kiek galiu išleisti",
     spendableSubPositive: "Lieka po mokesčių rezervo ir išlaidų.",
     spendableSubNegative: "Šį mėnesį išlaidos viršija pajamas.",
@@ -732,6 +742,8 @@ export const lt: Dictionary = {
       addedToast: "Pridėta ✓",
       openIncomeAria: "Pridėti pajamas",
       openExpenseAria: "Pridėti išlaidas",
+      openMenuAria: "Pridėti įrašą",
+      closeMenuAria: "Uždaryti pridėjimo meniu",
     },
     errors: { generic: "Įvyko klaida" },
   },

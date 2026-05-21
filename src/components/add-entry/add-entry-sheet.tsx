@@ -75,7 +75,12 @@ export function AddEntrySheet({
 
   return (
     <>
-      <ModalSheet open={mode !== null} onClose={close} ariaLabel={ariaLabel}>
+      <ModalSheet
+        open={mode !== null}
+        onClose={close}
+        ariaLabel={ariaLabel}
+        closeLabel={t.common.close}
+      >
         {mode === "income" ? (
           <IncomeForm
             key={presetServiceId ?? "no-preset"}

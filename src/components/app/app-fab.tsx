@@ -52,7 +52,7 @@ export function AppFab() {
     <div className="lg:hidden">
       <button
         type="button"
-        aria-label="Uždaryti meniu"
+        aria-label={t.addEntry.fab.closeMenuAria}
         aria-hidden={!showMenu}
         tabIndex={showMenu ? 0 : -1}
         onClick={() => setMenuOpen(false)}
@@ -91,10 +91,10 @@ export function AppFab() {
         }}
         aria-label={
           onServices
-            ? "Pridėti paslaugą"
+            ? t.services.addSheetTitle
             : showMenu
-              ? "Uždaryti pridėjimo meniu"
-              : "Pridėti įrašą"
+              ? t.addEntry.fab.closeMenuAria
+              : t.addEntry.fab.openMenuAria
         }
         aria-expanded={onServices ? undefined : showMenu}
         className="fixed bottom-[40px] left-1/2 z-50 -translate-x-1/2 touch-manipulation"
