@@ -2,33 +2,10 @@
 
 import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
+import { useT } from "@/i18n/locale-provider";
+import type { Dictionary } from "@/i18n";
 import { LandingContainer } from "./landing-container";
 import { LandingSection } from "./landing-section";
-
-type Faq = { q: string; a: string };
-
-const faqs: ReadonlyArray<Faq> = [
-  {
-    q: "Ar Monivo tinka dirbant su individualia veikla?",
-    a: "Taip. Monivo sukurta būtent individualiai dirbantiems grožio specialistams — kai pajamos ateina dalimis (grynais, pavedimu, kortele), o mokesčius už save tvarkaisi pats.",
-  },
-  {
-    q: "Ar reikia buhalterinių žinių?",
-    a: "Ne. Monivo nėra apskaitos programa. Visa kalba — paprasta: paslauga, pajamos, išlaidos, mokesčių rezervas. Be sąskaitų plano, be kategorijų medžio.",
-  },
-  {
-    q: "Ar galiu naudoti telefone?",
-    a: "Taip. Monivo pirmiausia sukurta telefonui — greitam ir patogiam naudojimui kasdien. Jei patogiau, gali naudoti ir naršyklėje kompiuteryje.",
-  },
-  {
-    q: "Kaip veikia mokesčių rezervas?",
-    a: "Tu pasirenki procentą, kurį nori atsidėti mokesčiams. Monivo paskaičiuoja ir parodo, kiek verta atsidėti — pinigai lieka tavo banko sąskaitoje, tu pats sprendi, kada juos perkelti.",
-  },
-  {
-    q: "Ar galiu eksportuoti savo duomenis?",
-    a: "Taip. Bet kada gali atsisiųsti savo pajamų ir išlaidų suvestinę CSV formatu — galėsi perduoti buhalteriui arba pasilikti archyvui.",
-  },
-];
 
 const ChevronIcon = (
   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
@@ -48,7 +25,7 @@ function FaqItem({
   onToggle,
   isLast,
 }: {
-  faq: Faq;
+  faq: { q: string; a: string };
   open: boolean;
   onToggle: () => void;
   isLast: boolean;
@@ -88,7 +65,8 @@ function FaqItem({
   );
 }
 
-function ContactCard() {
+function ContactCard({ t }: { t: Dictionary }) {
+  const c = t.landing.faq.contact;
   const [submitted, setSubmitted] = useState(false);
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -99,43 +77,41 @@ function ContactCard() {
   return (
     <article className="flex flex-col rounded-[24px] border border-hair bg-white p-7 shadow-card sm:p-8">
       <h3 className="text-[20px] font-semibold tracking-[-0.022em] text-ink-900">
-        Vis dar turi klausimų?
+        {c.title}
       </h3>
-      <p className="mt-2 text-[14px] leading-[1.55] text-ink-500">
-        Parašyk mums.
-      </p>
+      <p className="mt-2 text-[14px] leading-[1.55] text-ink-500">{c.body}</p>
 
       {submitted ? (
         <p className="mt-6 rounded-[14px] bg-accent-soft px-4 py-3 text-[13px] text-accent-deep">
-          Ačiū — susisieksime greitai.
+          {c.sent}
         </p>
       ) : (
         <form onSubmit={onSubmit} className="mt-6 flex flex-col gap-3">
           <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
-            Vardas
+            {c.name}
             <input
               type="text"
               required
               className="rounded-[12px] border border-hair bg-cream px-3.5 py-2.5 text-[14px] text-ink-900 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
-              placeholder="Vardas"
+              placeholder={c.namePlaceholder}
             />
           </label>
           <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
-            El. paštas
+            {c.email}
             <input
               type="email"
               required
               className="rounded-[12px] border border-hair bg-cream px-3.5 py-2.5 text-[14px] text-ink-900 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
-              placeholder="vardas@pastas.lt"
+              placeholder={c.emailPlaceholder}
             />
           </label>
           <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
-            Klausimas
+            {c.question}
             <textarea
               required
               rows={3}
               className="resize-none rounded-[12px] border border-hair bg-cream px-3.5 py-2.5 text-[14px] text-ink-900 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
-              placeholder="Apie ką norėtum sužinoti?"
+              placeholder={c.questionPlaceholder}
             />
           </label>
           <Button
@@ -143,7 +119,7 @@ function ContactCard() {
             type="submit"
             className="!mt-2 !h-auto !rounded-[14px] !px-5 !py-3 !text-[14px]"
           >
-            Susisiekti →
+            {c.submit}
           </Button>
         </form>
       )}
@@ -152,6 +128,8 @@ function ContactCard() {
 }
 
 export function LandingFaq() {
+  const t = useT();
+  const f = t.landing.faq;
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
@@ -161,19 +139,19 @@ export function LandingFaq() {
           <div className="mb-12 flex flex-col items-center text-center">
             <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-accent/[0.08] px-3 py-1.5 text-eyebrow text-accent">
               <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-accent" />
-              Dažniausi klausimai
+              {f.eyebrow}
             </span>
             <h2 className="mt-5 text-[32px] font-semibold leading-[1.05] tracking-[-0.033em] text-ink-900 text-balance sm:text-[44px]">
-              Viskas aiškiau prieš pradedant.
+              {f.title}
             </h2>
           </div>
 
           <div className="grid gap-6 md:grid-cols-[1fr_1.4fr] md:gap-10">
             <div className="order-2 md:order-1">
-              <ContactCard />
+              <ContactCard t={t} />
             </div>
             <div className="order-1 overflow-hidden rounded-[24px] border border-hair bg-white shadow-card md:order-2">
-              {faqs.map((faq, i) => (
+              {f.items.map((faq, i) => (
                 <FaqItem
                   key={faq.q}
                   faq={faq}
@@ -181,7 +159,7 @@ export function LandingFaq() {
                   onToggle={() =>
                     setOpenIndex((current) => (current === i ? null : i))
                   }
-                  isLast={i === faqs.length - 1}
+                  isLast={i === f.items.length - 1}
                 />
               ))}
             </div>

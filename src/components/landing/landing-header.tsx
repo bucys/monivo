@@ -1,16 +1,16 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { getT } from "@/i18n/server";
+import { LandingLanguageToggle } from "./landing-language-toggle";
 
-type NavLink = { href: string; label: string };
-
-const navLinks: ReadonlyArray<NavLink> = [
-  { href: "#galimybes", label: "Galimybės" },
-  { href: "#kaip-veikia", label: "Kaip veikia" },
-  { href: "#kainos", label: "Kainos" },
-  { href: "#duk", label: "D.U.K." },
-];
-
-export function LandingHeader() {
+export async function LandingHeader() {
+  const { t } = await getT();
+  const navLinks: ReadonlyArray<{ href: string; label: string }> = [
+    { href: "#galimybes", label: t.landing.nav.features },
+    { href: "#kaip-veikia", label: t.landing.nav.howItWorks },
+    { href: "#kainos", label: t.landing.nav.pricing },
+    { href: "#duk", label: t.landing.nav.faq },
+  ];
   return (
     <header className="sticky top-4 z-50 mx-auto mt-0 w-full max-w-[1180px] px-4 sm:px-8">
       <div className="relative overflow-hidden rounded-full border border-hair bg-white/25 shadow-nav ring-1 ring-inset ring-white/40 backdrop-blur-2xl backdrop-saturate-150 supports-[backdrop-filter]:bg-white/5">
@@ -48,19 +48,20 @@ export function LandingHeader() {
         </nav>
 
         <div className="flex items-center gap-1 sm:gap-2">
+          <LandingLanguageToggle />
           <Link
             href="/login"
             className="hidden px-3 py-2 text-[13px] font-medium tracking-tight text-ink-900 sm:inline-block"
           >
-            Prisijungti
+            {t.landing.nav.login}
           </Link>
           <Link href="/register">
             <Button
               variant="primary"
               className="!h-auto !w-auto !rounded-[12px] !px-3.5 !py-2.5 !text-[13px] sm:!px-4 sm:!py-2.5 sm:!text-[13px]"
             >
-              <span className="sm:hidden">Pradėti →</span>
-              <span className="hidden sm:inline">Pradėti nemokamai →</span>
+              <span className="sm:hidden">{t.landing.nav.ctaShort}</span>
+              <span className="hidden sm:inline">{t.landing.nav.ctaFull}</span>
             </Button>
           </Link>
         </div>

@@ -1,16 +1,8 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { getT } from "@/i18n/server";
 import { LandingContainer } from "./landing-container";
 import { LandingSection } from "./landing-section";
-
-const features: ReadonlyArray<string> = [
-  "Pajamos vienu spustelėjimu",
-  "Išlaidos be lentelių",
-  "Mokesčių rezervo skaičiavimas",
-  "Mėnesio įžvalgos ir tendencijos",
-  "Mobile-first patirtis",
-  "Be sutarties — atsisakai bet kada",
-];
 
 const CheckIcon = (
   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
@@ -24,24 +16,23 @@ const CheckIcon = (
   </svg>
 );
 
-export function LandingPricing() {
+export async function LandingPricing() {
+  const { t } = await getT();
+  const p = t.landing.pricing;
   return (
-    <LandingSection
-      id="kainos"
-      className="!pb-20 !pt-10 sm:!pb-24 sm:!pt-14"
-    >
+    <LandingSection id="kainos" className="!pb-20 !pt-10 sm:!pb-24 sm:!pt-14">
       <LandingContainer>
         <div className="mx-auto max-w-[760px]">
           <div className="mb-12 flex flex-col items-center text-center">
             <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-accent/[0.08] px-3 py-1.5 text-eyebrow text-accent">
               <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-accent" />
-              Kainos
+              {p.eyebrow}
             </span>
             <h2 className="mt-5 text-[32px] font-semibold leading-[1.05] tracking-[-0.033em] text-ink-900/90 text-balance sm:text-[44px]">
-              Paprasta kaina. Jokių staigmenų.
+              {p.title}
             </h2>
             <p className="mt-4 max-w-[520px] text-[17px] leading-[1.55] text-ink-500">
-              Monivo sąmoningai paprastas.
+              {p.subtitle}
             </p>
           </div>
 
@@ -52,7 +43,7 @@ export function LandingPricing() {
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-2.5 py-1 text-[11px] font-semibold tracking-tight text-accent-deep">
                 <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-accent" />
-                Pradžios kaina
+                {p.badge}
               </span>
             </div>
 
@@ -61,15 +52,13 @@ export function LandingPricing() {
                 4.90 €
               </span>
               <span className="text-[16px] font-medium tracking-tight text-ink-500">
-                / mėn.
+                {p.perMonth}
               </span>
             </div>
-            <p className="mt-2 text-[13px] text-ink-500">
-              30 dienų nemokamai · Be kortelės. 
-            </p>
+            <p className="mt-2 text-[13px] text-ink-500">{p.trialNote}</p>
 
             <ul className="mt-7 flex flex-col gap-3">
-              {features.map((feature) => (
+              {p.features.map((feature) => (
                 <li
                   key={feature}
                   className="flex items-center gap-3 text-[14px] text-ink-900/90"
@@ -90,13 +79,11 @@ export function LandingPricing() {
                 variant="primary"
                 className="!h-auto !rounded-[14px] !px-5 !py-[14px] !text-[14px]"
               >
-                Pradėti nemokamai →
+                {p.cta}
               </Button>
             </Link>
 
-            <p className="mt-4 text-center text-[12px] text-ink-500">
-              Galėsi atšaukti bet kada.
-            </p>
+            <p className="mt-4 text-center text-[12px] text-ink-500">{p.cancelNote}</p>
           </article>
         </div>
       </LandingContainer>

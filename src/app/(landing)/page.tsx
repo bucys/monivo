@@ -8,8 +8,11 @@ import { LandingHero } from "@/components/landing/landing-hero";
 import { LandingHowItWorks } from "@/components/landing/landing-how-it-works";
 import { LandingPricing } from "@/components/landing/landing-pricing";
 import { LandingProblem } from "@/components/landing/landing-problem";
+import { getT } from "@/i18n/server";
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const { t } = await getT();
+  const fo = t.landing.footer;
   return (
     <>
       <LandingHeader />
@@ -23,17 +26,17 @@ export default function LandingPage() {
         <LandingClosing />
       </main>
       <LandingFooter
-        brand="© Monivo"
+        brand={fo.brand}
         links={
           <>
             <Link href="/privatumas" className="hover:text-ink-700">
-              Privatumas
+              {fo.privacy}
             </Link>
             <Link href="/salygos" className="hover:text-ink-700">
-              Sąlygos
+              {fo.terms}
             </Link>
             <Link href="/kontaktai" className="hover:text-ink-700">
-              Kontaktai
+              {fo.contact}
             </Link>
           </>
         }

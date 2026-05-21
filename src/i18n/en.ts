@@ -215,6 +215,257 @@ export const en: Dictionary = {
       ariaLabel: "Edit",
     },
   },
+  landing: {
+    nav: {
+      features: "Features",
+      howItWorks: "How it works",
+      pricing: "Pricing",
+      faq: "FAQ",
+      login: "Log in",
+      ctaShort: "Start →",
+      ctaFull: "Start free →",
+    },
+    languageToggle: {
+      aria: "Change language",
+      lt: "LT",
+      en: "EN",
+    },
+    hero: {
+      eyebrow: "For beauty pros · in Lithuania",
+      titleStart: "Finally clear",
+      titleAccent: "what's left for you",
+      subtitle:
+        "Track income, expenses, and taxes without the bookkeeping stress. Built for beauty pros.",
+      cta: "Start 30 days free →",
+      trialNote: "30 days free · No card required",
+      reassurances: [
+        "No accounting know-how needed",
+        "Set up in 2 minutes",
+        "Built for mobile",
+      ],
+      footnote:
+        "Built for self-employed pros. No spreadsheets. No accounting jargon. No stress.",
+      imageAlt:
+        "Monivo app preview: €1,350 available to spend, €145 reserved for taxes, today's income and expense list.",
+      badgeServiceLabel: "Manicure · cash",
+      badgeTaxLabel: "Reserved for tax",
+    },
+    problem: {
+      eyebrow: "Problem · Solution",
+      title: "Stop guessing your finances.",
+      pains: [
+        {
+          q: "\"Feels like I earned enough this month…\"",
+          a: "See how much actually remains after expenses and tax reserve.",
+        },
+        {
+          q: "\"I keep forgetting to set aside tax.\"",
+          a: "Instantly see how much to set aside for taxes.",
+        },
+        {
+          q: "\"Accounting apps are too complex for me.\"",
+          a: "Log income in 3 seconds — no tables, no forms.",
+        },
+      ],
+    },
+    howItWorks: {
+      eyebrow: "How it works",
+      title: "Three steps — and it's clear.",
+      recordedBadge: "Saved",
+      heroEyebrow: "Free to spend",
+      heroSubline: "After expenses and tax reserve",
+      services: {
+        manicure: "Manicure",
+        pedicure: "Pedicure",
+        brows: "Brows",
+        lashes: "Lashes",
+      },
+      steps: [
+        {
+          title: "Add your services and prices",
+          body: "Set up your services once — and add them quickly every day.",
+        },
+        {
+          title: "Log income in seconds",
+          body: "Pick the service, confirm — that's it.",
+        },
+        {
+          title: "See a clear balance",
+          body: "After taxes and expenses. No guessing, no bookkeeping.",
+        },
+      ],
+    },
+    features: {
+      eyebrow: "Features",
+      title: "Everything you need — nothing you don't.",
+      subtitle:
+        "Designed to stay simple. No spreadsheets, no category trees, no evenings filling out data.",
+      items: [
+        {
+          title: "Fast income logging",
+          body: "Tap a service — and it's saved. No forms, no keyboard.",
+        },
+        {
+          title: "Expense tracking",
+          body: "Rent, supplies, transport — every expense in one place.",
+        },
+        {
+          title: "Tax reserve",
+          body: "Set a percent — Monivo calculates how much to keep aside for tax.",
+        },
+        {
+          title: "Insights and trends",
+          body: "See your best days, top services, and how the month is going.",
+        },
+        {
+          title: "For beauty pros",
+          body: "From services to income tracking — built for your daily work.",
+        },
+        {
+          title: "Mobile-first",
+          body: "Built for the phone — fast, simple, no extra steps.",
+        },
+      ],
+    },
+    pricing: {
+      eyebrow: "Pricing",
+      title: "Simple pricing. No surprises.",
+      subtitle: "Monivo is intentionally simple.",
+      badge: "Launch price",
+      perMonth: "/ mo.",
+      trialNote: "30 days free · No card required.",
+      cta: "Start free →",
+      cancelNote: "Cancel any time.",
+      features: [
+        "One-tap income",
+        "Expenses without spreadsheets",
+        "Tax reserve calculation",
+        "Monthly insights and trends",
+        "Mobile-first",
+        "No contract — cancel any time",
+      ],
+    },
+    faq: {
+      eyebrow: "Frequently asked",
+      title: "Clear before you start.",
+      items: [
+        {
+          q: "Does Monivo work for self-employed individuals?",
+          a: "Yes. Monivo is built specifically for self-employed beauty pros — when income arrives in pieces (cash, card, transfer) and you handle your own taxes.",
+        },
+        {
+          q: "Do I need bookkeeping knowledge?",
+          a: "No. Monivo is not accounting software. The whole vocabulary stays simple: service, income, expense, tax reserve. No chart of accounts, no category trees.",
+        },
+        {
+          q: "Can I use it on my phone?",
+          a: "Yes. Monivo is built for the phone first — fast and comfortable for daily use. If you prefer, you can also use it in your desktop browser.",
+        },
+        {
+          q: "How does the tax reserve work?",
+          a: "You pick the percent you want to set aside. Monivo calculates and shows how much — the money stays in your bank account; you decide when to move it.",
+        },
+        {
+          q: "Can I export my data?",
+          a: "Yes. You can download a CSV of your income and expenses any time — to share with your accountant or keep for your archive.",
+        },
+      ],
+      contact: {
+        title: "Still have questions?",
+        body: "Write to us.",
+        sent: "Thanks — we'll get back to you soon.",
+        name: "Name",
+        namePlaceholder: "Name",
+        email: "Email",
+        emailPlaceholder: "you@example.com",
+        question: "Question",
+        questionPlaceholder: "What would you like to know?",
+        submit: "Get in touch →",
+      },
+    },
+    closing: {
+      titleStart: "Know what's actually",
+      titleAccent: "yours",
+      body: "No spreadsheets. No accounting jargon. No stress.",
+      cta: "Start free →",
+    },
+    footer: {
+      brand: "© Monivo",
+      privacy: "Privacy",
+      terms: "Terms",
+      contact: "Contact",
+    },
+    legal: {
+      updatedPrefix: "Updated",
+      backLead: "Back to",
+      backLink: "the home page",
+    },
+    privacy: {
+      eyebrow: "Privacy",
+      title: "Privacy policy.",
+      updatedAt: "2026-05-17",
+      intro:
+        "Monivo helps self-employed beauty pros track income, expenses, and tax reserve. This document explains what data we collect, why, and how we store it.",
+      h_what: "What data we collect",
+      p_what:
+        "We only collect data you enter into the Monivo app: services, income and expense entries, your chosen tax percent, and registration details (email and name).",
+      h_why: "How we use the data",
+      p_why:
+        "The data is used only so you can see your financial picture in Monivo. We do not share data with ad platforms and we do not sell it to third parties.",
+      h_storage: "Storage",
+      p_storage:
+        "Data is stored encrypted on servers in the European Union. You can download it as CSV at any time, or request that it be deleted.",
+      h_contact: "Get in touch",
+      p_contactA: "For privacy questions, reach us via the ",
+      p_contactLink: "contact page",
+      p_contactB: ". We reply within a few business days.",
+    },
+    terms: {
+      eyebrow: "Terms",
+      title: "Terms of use.",
+      updatedAt: "2026-05-17",
+      intro:
+        "By using Monivo you agree to the terms below. They're written plainly, without legalese — so it's clear what we expect from each other.",
+      h_what: "What Monivo does",
+      p_what:
+        "Monivo is a tool for tracking income, expenses, and tax reserve. It is not accounting software and does not perform official accounting functions.",
+      h_notWhat: "What Monivo does not do",
+      p_notWhat:
+        "Monivo does not file or submit any declarations to tax authorities. You handle your own taxes, or work with your accountant. Numbers in Monivo are indicative.",
+      h_liability: "Liability",
+      p_liability:
+        "We aim for Monivo to run reliably and accurately, but we do not guarantee uninterrupted operation. We recommend exporting your data periodically.",
+      h_changes: "Changes",
+      p_changesA:
+        "If the terms change meaningfully, we'll notify you before changes take effect. For questions about the terms, reach us via the ",
+      p_changesLink: "contact page",
+      p_changesB: ".",
+    },
+    contact: {
+      eyebrow: "Contact",
+      title: "Write to us.",
+      updatedAt: "2026-05-17",
+      intro:
+        "We built Monivo for self-employed beauty pros. If you have questions, feedback, or suggestions — we'd love to hear from you.",
+      outro:
+        "If you want to share what's missing in your everyday work, just write — no formalities or long explanations.",
+    },
+    contactForm: {
+      sentEyebrow: "Thanks",
+      sentTitle: "We'll be in touch soon.",
+      sentBody: "Your message is in. We reply within a few business days.",
+      name: "Name",
+      namePlaceholder: "Name",
+      email: "Email",
+      emailPlaceholder: "you@example.com",
+      subject: "Subject",
+      subjectPlaceholder: "What would you like to write about?",
+      message: "Message",
+      messagePlaceholder: "Tell us what you need — we'll answer plainly.",
+      footnote: "We reply within a few business days. In English or Lithuanian.",
+      submit: "Send message →",
+    },
+  },
   auth: {
     login: {
       eyebrow: "Log in",

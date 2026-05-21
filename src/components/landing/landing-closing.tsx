@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { getT } from "@/i18n/server";
 import { LandingContainer } from "./landing-container";
 import { LandingSection } from "./landing-section";
 
-export function LandingClosing() {
+export async function LandingClosing() {
+  const { t } = await getT();
+  const c = t.landing.closing;
   return (
     <LandingSection className="!pb-20 !pt-8 sm:!pb-24 sm:!pt-12">
       <LandingContainer>
@@ -22,21 +25,21 @@ export function LandingClosing() {
               ✦ Monivo
             </span>
             <h2 className="mx-auto mt-4 max-w-[14ch] text-[34px] font-semibold leading-[1.04] tracking-[-0.034em] text-balance sm:max-w-none sm:text-[52px]">
-              Žinok, kas iš tikrųjų{" "}
+              {c.titleStart}{" "}
               <span className="inline-block bg-gradient-to-r from-white to-white/90 bg-clip-text pb-1 pr-2 font-medium italic tracking-[-0.038em] text-transparent">
-                tavo
+                {c.titleAccent}
               </span>
               .
             </h2>
             <p className="mx-auto mt-4 max-w-[420px] text-[15px] leading-[1.55] text-white/80 sm:text-[16px]">
-              Be Excel. Be buhalterinės kalbos. Be streso.
+              {c.body}
             </p>
             <Link href="/register" className="mt-7 inline-flex">
               <Button
                 variant="primary"
                 className="!h-auto !w-auto !rounded-[14px] !bg-white !px-[22px] !py-3 !text-[14px] !text-accent-deep"
               >
-                Pradėti nemokamai →
+                {c.cta}
               </Button>
             </Link>
           </div>

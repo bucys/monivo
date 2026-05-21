@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { getT } from "@/i18n/server";
 import { LandingContainer } from "./landing-container";
 import { LandingFooter } from "./landing-footer";
 import { LandingHeader } from "./landing-header";
@@ -11,12 +12,15 @@ export type LandingLegalPageProps = {
   children: ReactNode;
 };
 
-export function LandingLegalPage({
+export async function LandingLegalPage({
   eyebrow,
   title,
   updatedAt,
   children,
 }: LandingLegalPageProps) {
+  const { t } = await getT();
+  const lg = t.landing.legal;
+  const fo = t.landing.footer;
   return (
     <>
       <LandingHeader />
@@ -33,7 +37,7 @@ export function LandingLegalPage({
                   {title}
                 </h1>
                 <p className="text-[13px] text-ink-500">
-                  Atnaujinta {updatedAt}
+                  {lg.updatedPrefix} {updatedAt}
                 </p>
               </div>
 
@@ -42,9 +46,9 @@ export function LandingLegalPage({
               </div>
 
               <p className="mt-12 border-t border-hair pt-6 text-[13px] text-ink-500">
-                Grįžti į{" "}
+                {lg.backLead}{" "}
                 <Link href="/" className="text-accent-deep hover:underline">
-                  pagrindinį puslapį
+                  {lg.backLink}
                 </Link>
                 .
               </p>
@@ -53,17 +57,17 @@ export function LandingLegalPage({
         </section>
       </main>
       <LandingFooter
-        brand="© Monivo"
+        brand={fo.brand}
         links={
           <>
             <Link href="/privatumas" className="hover:text-ink-700">
-              Privatumas
+              {fo.privacy}
             </Link>
             <Link href="/salygos" className="hover:text-ink-700">
-              Sąlygos
+              {fo.terms}
             </Link>
             <Link href="/kontaktai" className="hover:text-ink-700">
-              Kontaktai
+              {fo.contact}
             </Link>
           </>
         }

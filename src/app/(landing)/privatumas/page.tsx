@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LandingLegalPage } from "@/components/landing/landing-legal-page";
+import { getT } from "@/i18n/server";
 
 export const metadata: Metadata = {
   title: "Privatumas",
@@ -8,53 +9,38 @@ export const metadata: Metadata = {
     "Kaip Monivo tvarko ir saugo individualiai dirbančių grožio specialistų duomenis.",
 };
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
+  const { t } = await getT();
+  const p = t.landing.privacy;
   return (
-    <LandingLegalPage eyebrow="Privatumas" title="Privatumo nuostatos." updatedAt="2026-05-17">
-      <p>
-        Monivo padeda individualiai dirbantiems grožio specialistams sekti
-        pajamas, išlaidas ir mokesčių rezervą. Šis dokumentas paaiškina,
-        kokius duomenis renkame, kodėl ir kaip juos saugome.
-      </p>
+    <LandingLegalPage eyebrow={p.eyebrow} title={p.title} updatedAt={p.updatedAt}>
+      <p>{p.intro}</p>
 
       <h2 className="mt-4 text-[20px] font-semibold tracking-[-0.022em] text-ink-900/90">
-        Kokius duomenis renkame
+        {p.h_what}
       </h2>
-      <p>
-        Renkame tik tuos duomenis, kuriuos įvedate Monivo aplikacijoje:
-        paslaugas, pajamų ir išlaidų įrašus, pasirinktą mokesčių procentą bei
-        registracijos duomenis (el. paštą ir vardą).
-      </p>
+      <p>{p.p_what}</p>
 
       <h2 className="mt-4 text-[20px] font-semibold tracking-[-0.022em] text-ink-900/90">
-        Kam naudojame duomenis
+        {p.h_why}
       </h2>
-      <p>
-        Duomenys naudojami tik tam, kad galėtumėte matyti savo finansinį
-        vaizdą Monivo aplikacijoje. Mes nedaliname duomenų reklamos
-        platformoms ir neparduodame jų tretiesiems asmenims.
-      </p>
+      <p>{p.p_why}</p>
 
       <h2 className="mt-4 text-[20px] font-semibold tracking-[-0.022em] text-ink-900/90">
-        Saugojimas
+        {p.h_storage}
       </h2>
-      <p>
-        Duomenys saugomi šifruoti Europos Sąjungos serveriuose. Bet kuriuo
-        metu galite juos atsisiųsti CSV formatu arba paprašyti, kad būtų
-        ištrinti.
-      </p>
+      <p>{p.p_storage}</p>
 
       <h2 className="mt-4 text-[20px] font-semibold tracking-[-0.022em] text-ink-900/90">
-        Susisiekimas
+        {p.h_contact}
       </h2>
       <p>
-        Klausimais dėl privatumo susisiekite per{" "}
+        {p.p_contactA}
         <Link href="/kontaktai" className="text-accent-deep hover:underline">
-          kontaktų puslapį
+          {p.p_contactLink}
         </Link>
-        . Atsakome per kelias darbo dienas.
+        {p.p_contactB}
       </p>
-
     </LandingLegalPage>
   );
 }

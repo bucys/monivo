@@ -1,26 +1,23 @@
 import type { Metadata } from "next";
 import { LandingContactForm } from "@/components/landing/landing-contact-form";
 import { LandingLegalPage } from "@/components/landing/landing-legal-page";
+import { getT } from "@/i18n/server";
 
 export const metadata: Metadata = {
   title: "Kontaktai",
   description: "Kaip susisiekti su Monivo komanda.",
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const { t } = await getT();
+  const c = t.landing.contact;
   return (
-    <LandingLegalPage eyebrow="Kontaktai" title="Parašykite mums." updatedAt="2026-05-17">
-      <p>
-        Sukūrėme Monivo individualiai dirbantiems grožio specialistams. Jei
-        turite klausimų, pastabų ar pasiūlymų — laukiame žinutės.
-      </p>
+    <LandingLegalPage eyebrow={c.eyebrow} title={c.title} updatedAt={c.updatedAt}>
+      <p>{c.intro}</p>
 
       <LandingContactForm />
 
-      <p>
-        Jei norite pasidalinti, ko trūksta kasdienybėje, rašykite paprastai —
-        be formalumų ir ilgų paaiškinimų.
-      </p>
+      <p>{c.outro}</p>
     </LandingLegalPage>
   );
 }

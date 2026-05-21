@@ -1,16 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { getT } from "@/i18n/server";
 import { LandingContainer } from "./landing-container";
 import { LandingSection } from "./landing-section";
 
-const reassurances: ReadonlyArray<string> = [
-  "Be buhalterijos žinių",
-  "Paruošta per 2 min.",
-  "Pritaikyta mobiliam",
-];
-
-export function LandingHero() {
+export async function LandingHero() {
+  const { t } = await getT();
+  const h = t.landing.hero;
   return (
     <LandingSection id="top" className="relative !pb-16 !pt-16 sm:!pb-24 sm:!pt-24">
       <div
@@ -22,20 +19,19 @@ export function LandingHero() {
           <div className="flex flex-col items-center text-center sm:items-start sm:text-left">
             <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-accent/[0.08] px-3 py-1.5 text-eyebrow text-accent">
               <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-accent" />
-              Grožio profesionalams · Lietuvoje
+              {h.eyebrow}
             </span>
 
             <h1 className="mt-5 text-[40px] font-semibold leading-[1.06] tracking-[-0.034em] text-ink-900 text-balance sm:text-display-lg sm:leading-[1.05]">
-              Pagaliau aišku{" "}
+              {h.titleStart}{" "}
               <span className="inline-block bg-gradient-to-r from-accent-deep to-accent bg-clip-text pb-1 pr-2 font-medium italic tracking-[-0.038em] text-transparent">
-                kiek lieka tau
+                {h.titleAccent}
               </span>
               <span className="text-ink-900">.</span>
             </h1>
 
             <p className="mt-5 max-w-[480px] text-[17px] leading-[1.55] text-ink-500 sm:text-body-lg">
-              Sek pajamas, išlaidas ir mokesčius be buhalterijos streso. Sukurta
-              tau — grožio profesionalui.
+              {h.subtitle}
             </p>
 
             <div className="mt-8 flex justify-center sm:justify-start">
@@ -44,17 +40,17 @@ export function LandingHero() {
                   variant="primary"
                   className="!h-auto !w-auto !rounded-[14px] !px-[22px] !py-[13px] !text-[14px]"
                 >
-                  Pradėti 30 d. nemokamai →
+                  {h.cta}
                 </Button>
               </Link>
             </div>
 
             <p className="mt-3 text-[12px] font-medium text-ink-500">
-              30 dienų nemokamai · Be kortelės
+              {h.trialNote}
             </p>
 
             <ul className="mt-5 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[12px] font-medium text-ink-500 sm:justify-start">
-              {reassurances.map((item) => (
+              {h.reassurances.map((item) => (
                 <li key={item} className="flex items-center gap-1.5">
                   <span
                     aria-hidden
@@ -76,8 +72,7 @@ export function LandingHero() {
             </ul>
 
             <p className="mt-9 border-t border-hair pt-6 text-[13px] text-ink-500">
-              Sukurta individualiai dirbantiems.
-              Be Excel. Be buhalterinės kalbos. Be streso.
+              {h.footnote}
             </p>
           </div>
 
@@ -89,7 +84,7 @@ export function LandingHero() {
             <div className="relative z-[2] w-full -rotate-3">
               <Image
                 src="/landing/hero-phone.png"
-                alt="Monivo aplikacijos peržiūra: galiu išleisti €1 350, mokesčiams atidėta €145, šios dienos pajamų ir išlaidų sąrašas."
+                alt={h.imageAlt}
                 width={464}
                 height={538}
                 priority
@@ -107,7 +102,7 @@ export function LandingHero() {
               </span>
               <span className="flex flex-col">
                 <span className="text-[11px] font-medium text-ink-500">
-                  Manikiūras · grynais
+                  {h.badgeServiceLabel}
                 </span>
                 <span className="text-[15px] font-semibold tracking-tight text-income">
                   +35 €
@@ -129,7 +124,7 @@ export function LandingHero() {
               </span>
               <span className="flex flex-col">
                 <span className="text-[11px] font-medium text-ink-500">
-                  Mokesčiams atidėta
+                  {h.badgeTaxLabel}
                 </span>
                 <span className="text-[15px] font-semibold tracking-tight text-tax">
                   145 €

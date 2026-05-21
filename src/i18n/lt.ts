@@ -182,6 +182,154 @@ export type Dictionary = {
     };
     edit: { incomeTitle: string; expenseTitle: string; ariaLabel: string };
   };
+  landing: {
+    nav: {
+      features: string;
+      howItWorks: string;
+      pricing: string;
+      faq: string;
+      login: string;
+      ctaShort: string;
+      ctaFull: string;
+    };
+    languageToggle: {
+      aria: string;
+      lt: string;
+      en: string;
+    };
+    hero: {
+      eyebrow: string;
+      titleStart: string;
+      titleAccent: string;
+      subtitle: string;
+      cta: string;
+      trialNote: string;
+      reassurances: ReadonlyArray<string>;
+      footnote: string;
+      imageAlt: string;
+      badgeServiceLabel: string;
+      badgeTaxLabel: string;
+    };
+    problem: {
+      eyebrow: string;
+      title: string;
+      pains: ReadonlyArray<{ q: string; a: string }>;
+    };
+    howItWorks: {
+      eyebrow: string;
+      title: string;
+      recordedBadge: string;
+      heroEyebrow: string;
+      heroSubline: string;
+      services: { manicure: string; pedicure: string; brows: string; lashes: string };
+      steps: ReadonlyArray<{ title: string; body: string }>;
+    };
+    features: {
+      eyebrow: string;
+      title: string;
+      subtitle: string;
+      items: ReadonlyArray<{ title: string; body: string }>;
+    };
+    pricing: {
+      eyebrow: string;
+      title: string;
+      subtitle: string;
+      badge: string;
+      perMonth: string;
+      trialNote: string;
+      cta: string;
+      cancelNote: string;
+      features: ReadonlyArray<string>;
+    };
+    faq: {
+      eyebrow: string;
+      title: string;
+      items: ReadonlyArray<{ q: string; a: string }>;
+      contact: {
+        title: string;
+        body: string;
+        sent: string;
+        name: string;
+        namePlaceholder: string;
+        email: string;
+        emailPlaceholder: string;
+        question: string;
+        questionPlaceholder: string;
+        submit: string;
+      };
+    };
+    closing: {
+      titleStart: string;
+      titleAccent: string;
+      body: string;
+      cta: string;
+    };
+    footer: {
+      brand: string;
+      privacy: string;
+      terms: string;
+      contact: string;
+    };
+    legal: {
+      updatedPrefix: string;
+      backLead: string;
+      backLink: string;
+    };
+    privacy: {
+      eyebrow: string;
+      title: string;
+      updatedAt: string;
+      intro: string;
+      h_what: string;
+      p_what: string;
+      h_why: string;
+      p_why: string;
+      h_storage: string;
+      p_storage: string;
+      h_contact: string;
+      p_contactA: string;
+      p_contactLink: string;
+      p_contactB: string;
+    };
+    terms: {
+      eyebrow: string;
+      title: string;
+      updatedAt: string;
+      intro: string;
+      h_what: string;
+      p_what: string;
+      h_notWhat: string;
+      p_notWhat: string;
+      h_liability: string;
+      p_liability: string;
+      h_changes: string;
+      p_changesA: string;
+      p_changesLink: string;
+      p_changesB: string;
+    };
+    contact: {
+      eyebrow: string;
+      title: string;
+      updatedAt: string;
+      intro: string;
+      outro: string;
+    };
+    contactForm: {
+      sentEyebrow: string;
+      sentTitle: string;
+      sentBody: string;
+      name: string;
+      namePlaceholder: string;
+      email: string;
+      emailPlaceholder: string;
+      subject: string;
+      subjectPlaceholder: string;
+      message: string;
+      messagePlaceholder: string;
+      footnote: string;
+      submit: string;
+    };
+  };
   auth: {
     login: {
       eyebrow: string;
@@ -562,6 +710,257 @@ export const lt: Dictionary = {
       incomeTitle: "Redaguoti pajamas",
       expenseTitle: "Redaguoti išlaidas",
       ariaLabel: "Redaguoti",
+    },
+  },
+  landing: {
+    nav: {
+      features: "Galimybės",
+      howItWorks: "Kaip veikia",
+      pricing: "Kainos",
+      faq: "D.U.K.",
+      login: "Prisijungti",
+      ctaShort: "Pradėti →",
+      ctaFull: "Pradėti nemokamai →",
+    },
+    languageToggle: {
+      aria: "Pakeisti kalbą",
+      lt: "LT",
+      en: "EN",
+    },
+    hero: {
+      eyebrow: "Grožio profesionalams · Lietuvoje",
+      titleStart: "Pagaliau aišku",
+      titleAccent: "kiek lieka tau",
+      subtitle:
+        "Sek pajamas, išlaidas ir mokesčius be buhalterijos streso. Sukurta tau — grožio profesionalui.",
+      cta: "Pradėti 30 d. nemokamai →",
+      trialNote: "30 dienų nemokamai · Be kortelės",
+      reassurances: [
+        "Be buhalterijos žinių",
+        "Paruošta per 2 min.",
+        "Pritaikyta mobiliam",
+      ],
+      footnote:
+        "Sukurta individualiai dirbantiems. Be Excel. Be buhalterinės kalbos. Be streso.",
+      imageAlt:
+        "Monivo aplikacijos peržiūra: galiu išleisti €1 350, mokesčiams atidėta €145, šios dienos pajamų ir išlaidų sąrašas.",
+      badgeServiceLabel: "Manikiūras · grynais",
+      badgeTaxLabel: "Mokesčiams atidėta",
+    },
+    problem: {
+      eyebrow: "Problema · Sprendimas",
+      title: "Užtenka spėlioti savo finansus.",
+      pains: [
+        {
+          q: "„Atrodo užsidirbau pakankamai šį mėnesį…“",
+          a: "Matai, kiek pinigų lieka po išlaidų ir mokesčių rezervo.",
+        },
+        {
+          q: "„Vis pamirštu atsidėti mokesčiams.“",
+          a: "Iškart matai, kiek verta atsidėti mokesčiams.",
+        },
+        {
+          q: "„Buhalterinės programos man per sudėtingos.“",
+          a: "Pajamas pridedi per 3 sekundes — be lentelių, be formų.",
+        },
+      ],
+    },
+    howItWorks: {
+      eyebrow: "Kaip veikia",
+      title: "Trys žingsniai — ir aišku.",
+      recordedBadge: "Įrašyta",
+      heroEyebrow: "Kiek gali laisvai išleisti",
+      heroSubline: "Po išlaidų ir mokesčių rezervo",
+      services: {
+        manicure: "Manikiūras",
+        pedicure: "Pedikiūras",
+        brows: "Antakiai",
+        lashes: "Blakstienos",
+      },
+      steps: [
+        {
+          title: "Pridėk savo paslaugas ir kainas",
+          body: "Susikuri savo paslaugas vieną kartą — ir greitai jas pridėsi kiekvieną dieną.",
+        },
+        {
+          title: "Sek pajamas per sekundes",
+          body: "Pasirenki paslaugą, patvirtini — ir viskas.",
+        },
+        {
+          title: "Matai aiškų likutį",
+          body: "Po mokesčių ir išlaidų. Jokio spėliojimo, jokios buhalterijos.",
+        },
+      ],
+    },
+    features: {
+      eyebrow: "Galimybės",
+      title: "Viskas, ko reikia — niekas, ko nereikia.",
+      subtitle:
+        "Sukurta būti paprasta. Be lentelių, be kategorijų medžio, be vakarų pildant duomenis.",
+      items: [
+        {
+          title: "Greitas pajamų įrašas",
+          body: "Spustelk paslaugą — ir įrašas išsaugotas. Be formų, be klaviatūros.",
+        },
+        {
+          title: "Išlaidų sekimas",
+          body: "Nuoma, priemonės ar transportas — visos išlaidos vienoje vietoje.",
+        },
+        {
+          title: "Mokesčių rezervas",
+          body: "Nustatai procentą — Monivo paskaičiuoja, kiek verta pasilikti mokesčiams.",
+        },
+        {
+          title: "Įžvalgos ir tendencijos",
+          body: "Matai geriausias dienas, populiariausias paslaugas ir kaip sekasi šį mėnesį.",
+        },
+        {
+          title: "Grožio specialistams",
+          body: "Nuo paslaugų iki pajamų sekimo — viskas pritaikyta kasdieniam darbui.",
+        },
+        {
+          title: "Mobile-first patirtis",
+          body: "Sukurta naudoti telefone — greitai, paprastai ir be nereikalingų žingsnių.",
+        },
+      ],
+    },
+    pricing: {
+      eyebrow: "Kainos",
+      title: "Paprasta kaina. Jokių staigmenų.",
+      subtitle: "Monivo sąmoningai paprastas.",
+      badge: "Pradžios kaina",
+      perMonth: "/ mėn.",
+      trialNote: "30 dienų nemokamai · Be kortelės.",
+      cta: "Pradėti nemokamai →",
+      cancelNote: "Galėsi atšaukti bet kada.",
+      features: [
+        "Pajamos vienu spustelėjimu",
+        "Išlaidos be lentelių",
+        "Mokesčių rezervo skaičiavimas",
+        "Mėnesio įžvalgos ir tendencijos",
+        "Mobile-first patirtis",
+        "Be sutarties — atsisakai bet kada",
+      ],
+    },
+    faq: {
+      eyebrow: "Dažniausi klausimai",
+      title: "Viskas aiškiau prieš pradedant.",
+      items: [
+        {
+          q: "Ar Monivo tinka dirbant su individualia veikla?",
+          a: "Taip. Monivo sukurta būtent individualiai dirbantiems grožio specialistams — kai pajamos ateina dalimis (grynais, pavedimu, kortele), o mokesčius už save tvarkaisi pats.",
+        },
+        {
+          q: "Ar reikia buhalterinių žinių?",
+          a: "Ne. Monivo nėra apskaitos programa. Visa kalba — paprasta: paslauga, pajamos, išlaidos, mokesčių rezervas. Be sąskaitų plano, be kategorijų medžio.",
+        },
+        {
+          q: "Ar galiu naudoti telefone?",
+          a: "Taip. Monivo pirmiausia sukurta telefonui — greitam ir patogiam naudojimui kasdien. Jei patogiau, gali naudoti ir naršyklėje kompiuteryje.",
+        },
+        {
+          q: "Kaip veikia mokesčių rezervas?",
+          a: "Tu pasirenki procentą, kurį nori atsidėti mokesčiams. Monivo paskaičiuoja ir parodo, kiek verta atsidėti — pinigai lieka tavo banko sąskaitoje, tu pats sprendi, kada juos perkelti.",
+        },
+        {
+          q: "Ar galiu eksportuoti savo duomenis?",
+          a: "Taip. Bet kada gali atsisiųsti savo pajamų ir išlaidų suvestinę CSV formatu — galėsi perduoti buhalteriui arba pasilikti archyvui.",
+        },
+      ],
+      contact: {
+        title: "Vis dar turi klausimų?",
+        body: "Parašyk mums.",
+        sent: "Ačiū — susisieksime greitai.",
+        name: "Vardas",
+        namePlaceholder: "Vardas",
+        email: "El. paštas",
+        emailPlaceholder: "vardas@pastas.lt",
+        question: "Klausimas",
+        questionPlaceholder: "Apie ką norėtum sužinoti?",
+        submit: "Susisiekti →",
+      },
+    },
+    closing: {
+      titleStart: "Žinok, kas iš tikrųjų",
+      titleAccent: "tavo",
+      body: "Be Excel. Be buhalterinės kalbos. Be streso.",
+      cta: "Pradėti nemokamai →",
+    },
+    footer: {
+      brand: "© Monivo",
+      privacy: "Privatumas",
+      terms: "Sąlygos",
+      contact: "Kontaktai",
+    },
+    legal: {
+      updatedPrefix: "Atnaujinta",
+      backLead: "Grįžti į",
+      backLink: "pagrindinį puslapį",
+    },
+    privacy: {
+      eyebrow: "Privatumas",
+      title: "Privatumo nuostatos.",
+      updatedAt: "2026-05-17",
+      intro:
+        "Monivo padeda individualiai dirbantiems grožio specialistams sekti pajamas, išlaidas ir mokesčių rezervą. Šis dokumentas paaiškina, kokius duomenis renkame, kodėl ir kaip juos saugome.",
+      h_what: "Kokius duomenis renkame",
+      p_what:
+        "Renkame tik tuos duomenis, kuriuos įvedate Monivo aplikacijoje: paslaugas, pajamų ir išlaidų įrašus, pasirinktą mokesčių procentą bei registracijos duomenis (el. paštą ir vardą).",
+      h_why: "Kam naudojame duomenis",
+      p_why:
+        "Duomenys naudojami tik tam, kad galėtumėte matyti savo finansinį vaizdą Monivo aplikacijoje. Mes nedaliname duomenų reklamos platformoms ir neparduodame jų tretiesiems asmenims.",
+      h_storage: "Saugojimas",
+      p_storage:
+        "Duomenys saugomi šifruoti Europos Sąjungos serveriuose. Bet kuriuo metu galite juos atsisiųsti CSV formatu arba paprašyti, kad būtų ištrinti.",
+      h_contact: "Susisiekimas",
+      p_contactA: "Klausimais dėl privatumo susisiekite per ",
+      p_contactLink: "kontaktų puslapį",
+      p_contactB: ". Atsakome per kelias darbo dienas.",
+    },
+    terms: {
+      eyebrow: "Sąlygos",
+      title: "Naudojimo sąlygos.",
+      updatedAt: "2026-05-17",
+      intro:
+        "Naudodami Monivo sutinkate su žemiau išdėstytomis sąlygomis. Jos parašytos paprastai, be juridinės kalbos — kad būtų aišku, ko tikimės iš abiejų pusių.",
+      h_what: "Ką Monivo daro",
+      p_what:
+        "Monivo yra įrankis pajamoms, išlaidoms ir mokesčių rezervui sekti. Tai nėra apskaitos programa ir neatlieka oficialios apskaitos funkcijų.",
+      h_notWhat: "Ko Monivo nedaro",
+      p_notWhat:
+        "Monivo nepatvirtina ir nepateikia mokesčių institucijoms jokių deklaracijų. Mokesčius už savo veiklą tvarkote patys arba per savo buhalterį. Skaičiai Monivo aplikacijoje yra orientaciniai.",
+      h_liability: "Atsakomybė",
+      p_liability:
+        "Stengiamės, kad Monivo veiktų stabiliai ir tiksliai, bet negarantuojame nepertraukiamo veikimo. Rekomenduojame periodiškai eksportuoti savo duomenis.",
+      h_changes: "Pakeitimai",
+      p_changesA:
+        "Jei sąlygos keisis reikšmingai, informuosime prieš įsigaliojant pakeitimams. Klausimais dėl sąlygų susisiekite per ",
+      p_changesLink: "kontaktų puslapį",
+      p_changesB: ".",
+    },
+    contact: {
+      eyebrow: "Kontaktai",
+      title: "Parašykite mums.",
+      updatedAt: "2026-05-17",
+      intro:
+        "Sukūrėme Monivo individualiai dirbantiems grožio specialistams. Jei turite klausimų, pastabų ar pasiūlymų — laukiame žinutės.",
+      outro:
+        "Jei norite pasidalinti, ko trūksta kasdienybėje, rašykite paprastai — be formalumų ir ilgų paaiškinimų.",
+    },
+    contactForm: {
+      sentEyebrow: "Ačiū",
+      sentTitle: "Susisieksime greitai.",
+      sentBody: "Žinutė užfiksuota. Atsakome per kelias darbo dienas.",
+      name: "Vardas",
+      namePlaceholder: "Vardas",
+      email: "El. paštas",
+      emailPlaceholder: "vardas@pastas.lt",
+      subject: "Tema",
+      subjectPlaceholder: "Apie ką norite parašyti?",
+      message: "Žinutė",
+      messagePlaceholder: "Parašykite, ko reikia — atsakysime paprastai.",
+      footnote: "Atsakome per kelias darbo dienas. Lietuviškai arba angliškai.",
+      submit: "Siųsti žinutę →",
     },
   },
   auth: {
