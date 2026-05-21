@@ -1,17 +1,36 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useState, useTransition } from "react";
+import { sendContactMessage } from "@/app/(landing)/contact-actions";
 import { Button } from "@/components/ui/button";
-import { useT } from "@/i18n/locale-provider";
+import { useLocale } from "@/i18n/locale-provider";
 
 export function LandingContactForm() {
-  const t = useT();
+  const { t, locale } = useLocale();
   const f = t.landing.contactForm;
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    setError(null);
+    startTransition(async () => {
+      try {
+        await sendContactMessage({
+          name: String(fd.get("name") ?? ""),
+          email: String(fd.get("email") ?? ""),
+          subject: String(fd.get("subject") ?? ""),
+          message: String(fd.get("message") ?? ""),
+          locale,
+        });
+        setSubmitted(true);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : f.errorGeneric);
+      }
+    });
   };
 
   if (submitted) {
@@ -41,6 +60,7 @@ export function LandingContactForm() {
             name="name"
             required
             autoComplete="name"
+            maxLength={80}
             className="rounded-[12px] border border-hair bg-cream px-3.5 py-2.5 text-[14px] text-ink-900 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
             placeholder={f.namePlaceholder}
           />
@@ -52,6 +72,7 @@ export function LandingContactForm() {
             name="email"
             required
             autoComplete="email"
+            maxLength={120}
             className="rounded-[12px] border border-hair bg-cream px-3.5 py-2.5 text-[14px] text-ink-900 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
             placeholder={f.emailPlaceholder}
           />
@@ -64,6 +85,7 @@ export function LandingContactForm() {
           type="text"
           name="subject"
           required
+          maxLength={140}
           className="rounded-[12px] border border-hair bg-cream px-3.5 py-2.5 text-[14px] text-ink-900 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
           placeholder={f.subjectPlaceholder}
         />
@@ -75,19 +97,27 @@ export function LandingContactForm() {
           name="message"
           required
           rows={5}
+          maxLength={4000}
           className="resize-none rounded-[12px] border border-hair bg-cream px-3.5 py-3 text-[14px] leading-[1.5] text-ink-900 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
           placeholder={f.messagePlaceholder}
         />
       </label>
+
+      {error ? (
+        <p className="rounded-[12px] bg-expense-bg px-3.5 py-2.5 text-[13px] text-expense">
+          {f.errorGeneric}
+        </p>
+      ) : null}
 
       <div className="mt-2 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-[12px] text-ink-500">{f.footnote}</p>
         <Button
           variant="primary"
           type="submit"
+          isLoading={pending}
           className="!h-auto !w-auto !rounded-[14px] !px-6 !py-3 !text-[14px]"
         >
-          {f.submit}
+          {pending ? f.sending : error ? f.retry : f.submit}
         </Button>
       </div>
     </form>

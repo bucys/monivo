@@ -8,19 +8,28 @@ import { AppFab } from "./app-fab";
 import { AppSidebar } from "./app-sidebar";
 import { AppTopBar } from "./app-top-bar";
 
+export type SidebarData = {
+  displayName: string;
+  professionLabel: string;
+  /** Tax reserved for the current month, in cents. Null = hide the card. */
+  reserveCents: number | null;
+};
+
 export function AppShell({
   children,
   notifications,
   canWrite,
+  sidebar,
 }: {
   children: ReactNode;
   notifications: AppNotification[];
   canWrite: boolean;
+  sidebar: SidebarData;
 }) {
   return (
     <NotificationsProvider initial={notifications}>
       <div className="min-h-dvh bg-cream">
-        <AppSidebar />
+        <AppSidebar sidebar={sidebar} />
         <div className="flex min-h-dvh min-w-0 flex-col lg:pl-[260px]">
           <AppTopBar />
           <AppDesktopTopBar />

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useTransition, type FormEvent } from "react";
+import { sendContactMessage } from "@/app/(landing)/contact-actions";
 import { Button } from "@/components/ui/button";
-import { useT } from "@/i18n/locale-provider";
-import type { Dictionary } from "@/i18n";
+import { useLocale } from "@/i18n/locale-provider";
+import type { Dictionary, Locale } from "@/i18n";
 import { LandingContainer } from "./landing-container";
 import { LandingSection } from "./landing-section";
 
@@ -65,13 +66,30 @@ function FaqItem({
   );
 }
 
-function ContactCard({ t }: { t: Dictionary }) {
+function ContactCard({ t, locale }: { t: Dictionary; locale: Locale }) {
   const c = t.landing.faq.contact;
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    const fd = new FormData(e.currentTarget);
+    setError(null);
+    startTransition(async () => {
+      try {
+        await sendContactMessage({
+          name: String(fd.get("name") ?? ""),
+          email: String(fd.get("email") ?? ""),
+          subject: "FAQ",
+          message: String(fd.get("question") ?? ""),
+          locale,
+        });
+        setSubmitted(true);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : c.errorGeneric);
+      }
+    });
   };
 
   return (
@@ -91,7 +109,9 @@ function ContactCard({ t }: { t: Dictionary }) {
             {c.name}
             <input
               type="text"
+              name="name"
               required
+              maxLength={80}
               className="rounded-[12px] border border-hair bg-cream px-3.5 py-2.5 text-[14px] text-ink-900 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
               placeholder={c.namePlaceholder}
             />
@@ -100,7 +120,9 @@ function ContactCard({ t }: { t: Dictionary }) {
             {c.email}
             <input
               type="email"
+              name="email"
               required
+              maxLength={120}
               className="rounded-[12px] border border-hair bg-cream px-3.5 py-2.5 text-[14px] text-ink-900 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
               placeholder={c.emailPlaceholder}
             />
@@ -108,18 +130,26 @@ function ContactCard({ t }: { t: Dictionary }) {
           <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
             {c.question}
             <textarea
+              name="question"
               required
               rows={3}
+              maxLength={4000}
               className="resize-none rounded-[12px] border border-hair bg-cream px-3.5 py-2.5 text-[14px] text-ink-900 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
               placeholder={c.questionPlaceholder}
             />
           </label>
+          {error ? (
+            <p className="rounded-[12px] bg-expense-bg px-3.5 py-2.5 text-[13px] text-expense">
+              {c.errorGeneric}
+            </p>
+          ) : null}
           <Button
             variant="primary"
             type="submit"
+            isLoading={pending}
             className="!mt-2 !h-auto !rounded-[14px] !px-5 !py-3 !text-[14px]"
           >
-            {c.submit}
+            {pending ? c.sending : error ? c.retry : c.submit}
           </Button>
         </form>
       )}
@@ -128,7 +158,7 @@ function ContactCard({ t }: { t: Dictionary }) {
 }
 
 export function LandingFaq() {
-  const t = useT();
+  const { t, locale } = useLocale();
   const f = t.landing.faq;
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
@@ -148,7 +178,7 @@ export function LandingFaq() {
 
           <div className="grid gap-6 md:grid-cols-[1fr_1.4fr] md:gap-10">
             <div className="order-2 md:order-1">
-              <ContactCard t={t} />
+              <ContactCard t={t} locale={locale} />
             </div>
             <div className="order-1 overflow-hidden rounded-[24px] border border-hair bg-white shadow-card md:order-2">
               {f.items.map((faq, i) => (

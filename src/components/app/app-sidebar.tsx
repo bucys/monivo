@@ -7,7 +7,9 @@ import {
   dispatchOpenExpenseEntry,
   dispatchOpenIncomeEntry,
 } from "@/components/add-entry/add-entry-sheet";
+import type { SidebarData } from "@/components/app/app-shell";
 import { useT } from "@/i18n/locale-provider";
+import { formatEur } from "@/lib/format";
 
 type NavGroup = {
   eyebrow: string;
@@ -19,9 +21,19 @@ function isActive(pathname: string | null, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function AppSidebar() {
+function initialsOf(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "M";
+  return parts
+    .slice(0, 2)
+    .map((p) => p[0]!.toUpperCase())
+    .join("");
+}
+
+export function AppSidebar({ sidebar }: { sidebar: SidebarData }) {
   const pathname = usePathname();
   const t = useT();
+  const initials = initialsOf(sidebar.displayName);
   const groups: ReadonlyArray<NavGroup> = [
     {
       eyebrow: t.nav.browse,
@@ -122,21 +134,23 @@ export function AppSidebar() {
 
       <div className="flex-1" />
 
-      {/* Tax reserve mini-card — visual stub; data wired later */}
-      <div className="rounded-[16px] border border-hair bg-white p-3.5 shadow-card">
-        <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.05em] text-ink-500">
-          <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-[#E2B673]" />
-          {t.nav.taxReserveMini}
+      {/* Tax reserve mini-card — hidden when there's nothing to show this month
+          (no income yet, or tax_rate is 0). */}
+      {sidebar.reserveCents !== null ? (
+        <div className="rounded-[16px] border border-hair bg-white p-3.5 shadow-card">
+          <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.05em] text-ink-500">
+            <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-[#E2B673]" />
+            {t.nav.taxReserveMini}
+          </div>
+          <div className="mt-1.5 text-[18px] font-semibold tracking-tight text-ink-900/90 tabular-nums">
+            {formatEur(sidebar.reserveCents)}{" "}
+            <span className="text-[11px] font-medium text-ink-500">
+              {t.nav.taxReserveThisMonth}
+            </span>
+          </div>
         </div>
-        <div className="mt-1.5 text-[18px] font-semibold tracking-tight text-ink-900/90">
-          —{" "}
-          <span className="text-[11px] font-medium text-ink-500">
-            {t.nav.taxReserveSubline}
-          </span>
-        </div>
-      </div>
+      ) : null}
 
-      {/* Profile chip — visual stub; data wired later */}
       <Link
         href="/settings"
         className="flex items-center gap-2.5 rounded-[14px] border border-hair bg-transparent p-2 transition-colors hover:bg-white/60"
@@ -145,11 +159,15 @@ export function AppSidebar() {
           aria-hidden
           className="flex h-8 w-8 items-center justify-center rounded-full border border-hair bg-gradient-to-br from-accent-soft to-[#C9EBDF] text-[12px] font-semibold text-accent-deep"
         >
-          —
+          {initials}
         </span>
         <span className="flex flex-1 flex-col text-left">
-          <span className="text-[13px] font-semibold text-ink-900/90">—</span>
-          <span className="mt-0.5 text-[11px] text-ink-500">{t.nav.individualActivity}</span>
+          <span className="truncate text-[13px] font-semibold text-ink-900/90">
+            {sidebar.displayName}
+          </span>
+          <span className="mt-0.5 text-[11px] text-ink-500">
+            {sidebar.professionLabel}
+          </span>
         </span>
         <svg
           width="11"

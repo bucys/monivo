@@ -36,7 +36,16 @@ export type Dictionary = {
     settingsSub: string;
     taxReserveMini: string;
     taxReserveSubline: string;
+    taxReserveThisMonth: string;
     individualActivity: string;
+    accountFallback: string;
+    professions: {
+      hair: string;
+      nails: string;
+      cosmetology: string;
+      lashes: string;
+      other: string;
+    };
   };
   topbar: {
     notificationsAria: string;
@@ -256,6 +265,9 @@ export type Dictionary = {
         question: string;
         questionPlaceholder: string;
         submit: string;
+        sending: string;
+        errorGeneric: string;
+        retry: string;
       };
     };
     closing: {
@@ -328,6 +340,9 @@ export type Dictionary = {
       messagePlaceholder: string;
       footnote: string;
       submit: string;
+      sending: string;
+      errorGeneric: string;
+      retry: string;
     };
   };
   auth: {
@@ -535,7 +550,16 @@ export const lt: Dictionary = {
     settingsSub: "Paskyra",
     taxReserveMini: "Mokesčių rezervas",
     taxReserveSubline: "nuo pajamų",
+    taxReserveThisMonth: "šį mėnesį",
     individualActivity: "Individuali veikla",
+    accountFallback: "Mano paskyra",
+    professions: {
+      hair: "Plaukai",
+      nails: "Nagai",
+      cosmetology: "Veidas ir oda",
+      lashes: "Blakstienos",
+      other: "Individuali veikla",
+    },
   },
   topbar: {
     notificationsAria: "Pranešimai",
@@ -878,6 +902,9 @@ export const lt: Dictionary = {
         question: "Klausimas",
         questionPlaceholder: "Apie ką norėtum sužinoti?",
         submit: "Susisiekti →",
+        sending: "Siunčiama…",
+        errorGeneric: "Nepavyko išsiųsti. Pabandyk dar kartą.",
+        retry: "Pabandyti dar kartą",
       },
     },
     closing: {
@@ -961,6 +988,9 @@ export const lt: Dictionary = {
       messagePlaceholder: "Parašykite, ko reikia — atsakysime paprastai.",
       footnote: "Atsakome per kelias darbo dienas. Lietuviškai arba angliškai.",
       submit: "Siųsti žinutę →",
+      sending: "Siunčiama…",
+      errorGeneric: "Nepavyko išsiųsti. Pabandyk dar kartą.",
+      retry: "Pabandyti dar kartą",
     },
   },
   auth: {

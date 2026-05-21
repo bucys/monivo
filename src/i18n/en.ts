@@ -38,7 +38,16 @@ export const en: Dictionary = {
     settingsSub: "Account",
     taxReserveMini: "Tax reserve",
     taxReserveSubline: "of income",
+    taxReserveThisMonth: "this month",
     individualActivity: "Individual activity",
+    accountFallback: "My account",
+    professions: {
+      hair: "Hair",
+      nails: "Nails",
+      cosmetology: "Face & skin",
+      lashes: "Lashes",
+      other: "Individual activity",
+    },
   },
   topbar: {
     notificationsAria: "Notifications",
@@ -381,6 +390,9 @@ export const en: Dictionary = {
         question: "Question",
         questionPlaceholder: "What would you like to know?",
         submit: "Get in touch →",
+        sending: "Sending…",
+        errorGeneric: "Couldn't send. Please try again.",
+        retry: "Try again",
       },
     },
     closing: {
@@ -464,6 +476,9 @@ export const en: Dictionary = {
       messagePlaceholder: "Tell us what you need — we'll answer plainly.",
       footnote: "We reply within a few business days. In English or Lithuanian.",
       submit: "Send message →",
+      sending: "Sending…",
+      errorGeneric: "Couldn't send. Please try again.",
+      retry: "Try again",
     },
   },
   auth: {
