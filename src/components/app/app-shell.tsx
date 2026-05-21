@@ -11,9 +11,11 @@ import { AppTopBar } from "./app-top-bar";
 export function AppShell({
   children,
   notifications,
+  canWrite,
 }: {
   children: ReactNode;
   notifications: AppNotification[];
+  canWrite: boolean;
 }) {
   return (
     <NotificationsProvider initial={notifications}>
@@ -25,7 +27,7 @@ export function AppShell({
           <main className="flex-1 pb-32 lg:pb-12">{children}</main>
         </div>
         <AppBottomNav />
-        <AppFab />
+        <AppFab canWrite={canWrite} />
         <AddEntryMount />
       </div>
     </NotificationsProvider>

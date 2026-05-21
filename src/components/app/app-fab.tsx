@@ -9,7 +9,7 @@ import {
 } from "@/components/add-entry/add-entry-sheet";
 import { useT } from "@/i18n/locale-provider";
 
-export function AppFab() {
+export function AppFab({ canWrite }: { canWrite: boolean }) {
   const pathname = usePathname();
   const t = useT();
   const onServices =
@@ -44,6 +44,11 @@ export function AppFab() {
   };
 
   const showMenu = menuOpen && !onServices;
+
+  // Read-only (expired trial / canceled): hide the FAB entirely. Tapping a
+  // disabled FAB would be confusing — the user has nothing to do here until
+  // they reactivate their subscription.
+  if (!canWrite) return null;
 
   // Stacking: topbar z-30 · FAB backdrop z-40 (above topbar when open) ·
   // FAB button + menu z-50 (above backdrop, but below any open ModalSheet

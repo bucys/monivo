@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { requireWritableProfile } from "@/lib/profile";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const PAYMENT_METHODS = new Set(["cash", "card", "transfer"]);
@@ -86,6 +87,7 @@ export async function createIncomeEntry(formData: FormData) {
   const note = parseNote(formData.get("note"));
 
   const { supabase, user } = await authedClient();
+  await requireWritableProfile(supabase, user.id);
   const serviceName = await resolveServiceName(supabase, user.id, serviceId);
 
   const { error } = await supabase
@@ -115,6 +117,7 @@ export async function createExpenseEntry(formData: FormData) {
   const note = parseNote(formData.get("note"));
 
   const { supabase, user } = await authedClient();
+  await requireWritableProfile(supabase, user.id);
 
   const { error } = await supabase
     .from("expense_entries")
@@ -140,6 +143,7 @@ export async function updateIncomeEntry(id: string, formData: FormData) {
   const note = parseNote(formData.get("note"));
 
   const { supabase, user } = await authedClient();
+  await requireWritableProfile(supabase, user.id);
   const serviceName = await resolveServiceName(supabase, user.id, serviceId);
 
   const { error } = await supabase
@@ -167,6 +171,7 @@ export async function updateExpenseEntry(id: string, formData: FormData) {
   const note = parseNote(formData.get("note"));
 
   const { supabase, user } = await authedClient();
+  await requireWritableProfile(supabase, user.id);
 
   const { error } = await supabase
     .from("expense_entries")

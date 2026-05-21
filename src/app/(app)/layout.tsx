@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { AppShell } from "@/components/app/app-shell";
 import { getT } from "@/i18n/server";
 import { loadNotifications } from "@/lib/notifications";
+import { loadCanWrite } from "@/lib/profile";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export default async function AppLayout({
@@ -29,11 +30,14 @@ export default async function AppLayout({
   }
 
   const { t } = await getT();
-  const notifications = await loadNotifications(
-    supabase,
-    user.id,
-    t.notifications.generated,
-  );
+  const [notifications, canWrite] = await Promise.all([
+    loadNotifications(supabase, user.id, t.notifications.generated),
+    loadCanWrite(supabase, user.id),
+  ]);
 
-  return <AppShell notifications={notifications}>{children}</AppShell>;
+  return (
+    <AppShell notifications={notifications} canWrite={canWrite}>
+      {children}
+    </AppShell>
+  );
 }

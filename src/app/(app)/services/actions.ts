@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { requireWritableProfile } from "@/lib/profile";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const MAX_NAME = 40;
@@ -42,6 +43,7 @@ export async function createService(formData: FormData) {
   const priceCents = parsePriceCents(formData.get("price"));
 
   const { supabase, userId } = await getUserOrRedirect();
+  await requireWritableProfile(supabase, userId);
 
   const { data: maxRow } = await supabase
     .from("services")
@@ -70,6 +72,7 @@ export async function updateService(id: string, formData: FormData) {
   const priceCents = parsePriceCents(formData.get("price"));
 
   const { supabase, userId } = await getUserOrRedirect();
+  await requireWritableProfile(supabase, userId);
 
   const { error } = await supabase
     .from("services")
