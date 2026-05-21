@@ -5,7 +5,9 @@ const PROTECTED_PREFIXES = [
   "/dashboard",
   "/activity",
   "/insights",
+  "/services",
   "/settings",
+  "/onboarding",
 ];
 
 const AUTH_ROUTES = new Set(["/login", "/register"]);
