@@ -5,9 +5,12 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { AuthCard } from "@/components/auth/auth-card";
+import { useT } from "@/i18n/locale-provider";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 function RegisterForm() {
+  const t = useT();
+  const tr = t.auth.register;
   const searchParams = useSearchParams();
   const prefillEmail = searchParams.get("email") ?? "";
 
@@ -55,9 +58,12 @@ function RegisterForm() {
   };
 
   if (submitted) {
+    const [before, after = ""] = tr.successBody.split("{email}");
     return (
       <div className="rounded-[14px] bg-accent-soft px-4 py-4 text-[13px] text-accent-deep">
-        Patikrink savo el. paštą — nuoroda išsiųsta į <strong>{email}</strong>.
+        {before}
+        <strong>{email}</strong>
+        {after}
       </div>
     );
   }
@@ -65,19 +71,19 @@ function RegisterForm() {
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4">
       <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
-        Vardas
+        {tr.nameLabel}
         <input
           type="text"
           autoComplete="given-name"
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
           className="rounded-[12px] border border-hair bg-cream px-3.5 py-2.5 text-[14px] text-ink-900 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
-          placeholder="Vardas (nebūtina)"
+          placeholder={tr.namePlaceholder}
         />
       </label>
 
       <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
-        El. paštas
+        {tr.emailLabel}
         <input
           type="email"
           required
@@ -86,14 +92,13 @@ function RegisterForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="rounded-[12px] border border-hair bg-cream px-3.5 py-2.5 text-[14px] text-ink-900 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
-          placeholder="vardas@pastas.lt"
+          placeholder={tr.emailPlaceholder}
         />
       </label>
 
       {rateLimited ? (
         <div className="rounded-[12px] border border-hair bg-cream px-3.5 py-3 text-[13px] text-ink-900/90">
-          Per trumpą laiką išsiųsta per daug prisijungimo nuorodų. Palaukite
-          kelias minutes ir bandykite dar kartą.
+          {tr.rateLimited}
         </div>
       ) : error ? (
         <p className="rounded-[12px] bg-expense-bg px-3.5 py-2.5 text-[13px] text-expense">
@@ -107,17 +112,17 @@ function RegisterForm() {
         isLoading={loading}
         className="!mt-1 !h-auto !rounded-[14px] !px-5 !py-3 !text-[14px]"
       >
-        Registruotis →
+        {tr.submit}
       </Button>
 
       <p className="text-[12px] text-ink-500">
-        Registruodamasis sutinki su{" "}
+        {tr.termsLead}{" "}
         <Link href="/salygos" className="text-accent-deep hover:underline">
-          naudojimo sąlygomis
+          {tr.termsLink}
         </Link>{" "}
-        ir{" "}
+        {tr.termsAnd}{" "}
         <Link href="/privatumas" className="text-accent-deep hover:underline">
-          privatumo nuostatomis
+          {tr.privacyLink}
         </Link>
         .
       </p>
@@ -127,26 +132,36 @@ function RegisterForm() {
 
 export default function RegisterPage() {
   return (
+    <Suspense
+      fallback={
+        <div className="w-full max-w-[420px]">
+          <div className="h-[520px] animate-pulse rounded-[24px] bg-ink-100" />
+        </div>
+      }
+    >
+      <RegisterPageInner />
+    </Suspense>
+  );
+}
+
+function RegisterPageInner() {
+  const t = useT();
+  const tr = t.auth.register;
+  return (
     <AuthCard
-      eyebrow="Registracija"
-      title="Pradėk 30 dienų nemokamai."
-      subtitle="Be kortelės. Atsiųsime nuorodą — paspaudus ja iškart pateksi į Monivo."
+      eyebrow={tr.eyebrow}
+      title={tr.title}
+      subtitle={tr.subtitle}
       footer={
         <>
-          Jau turi paskyrą?{" "}
+          {tr.footerLead}{" "}
           <Link href="/login" className="text-accent-deep hover:underline">
-            Prisijunk →
+            {tr.footerCta}
           </Link>
         </>
       }
     >
-      <Suspense
-        fallback={
-          <div className="h-[260px] animate-pulse rounded-[14px] bg-ink-100" />
-        }
-      >
-        <RegisterForm />
-      </Suspense>
+      <RegisterForm />
     </AuthCard>
   );
 }

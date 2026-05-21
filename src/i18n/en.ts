@@ -213,6 +213,81 @@ export const en: Dictionary = {
       ariaLabel: "Edit",
     },
   },
+  auth: {
+    login: {
+      eyebrow: "Log in",
+      title: "Start with your email.",
+      subtitle: "We'll send you a sign-in link — no password needed.",
+      emailLabel: "Email",
+      emailPlaceholder: "you@example.com",
+      submit: "Send link →",
+      successBody: "Check your inbox — we sent a sign-in link to {email}.",
+      rateLimited:
+        "Too many sign-in links sent in a short time. Wait a few minutes and try again.",
+      notRegistered: "We couldn't find an account with this email.",
+      notRegisteredCta: "Create a free account →",
+      footerLead: "No account yet?",
+      footerCta: "Sign up →",
+    },
+    register: {
+      eyebrow: "Sign up",
+      title: "Start your 30-day free trial.",
+      subtitle:
+        "No card required. We'll send a link — tap it to land straight in Monivo.",
+      nameLabel: "Name",
+      namePlaceholder: "Name (optional)",
+      emailLabel: "Email",
+      emailPlaceholder: "you@example.com",
+      submit: "Sign up →",
+      successBody: "Check your inbox — we sent a sign-in link to {email}.",
+      rateLimited:
+        "Too many sign-in links sent in a short time. Wait a few minutes and try again.",
+      footerLead: "Already have an account?",
+      footerCta: "Log in →",
+      termsLead: "By signing up you agree to the",
+      termsLink: "terms of use",
+      termsAnd: "and",
+      privacyLink: "privacy policy",
+    },
+  },
+  onboarding: {
+    stepCounter: "Step {current} of {total}",
+    stepAria: "Step {current} of {total}",
+    profession: {
+      title: "What's your field?",
+      subtitle:
+        "Pick the closest match. You can add specific services and prices later.",
+      none: "My field isn't here",
+      cards: {
+        hair: { title: "Hair", sub: "Cuts, color, barbering" },
+        nails: { title: "Nails", sub: "Manicure, pedicure, nail art" },
+        face: {
+          title: "Face & skin",
+          sub: "Cosmetology, lashes, brows",
+        },
+        body: {
+          title: "Body treatments",
+          sub: "Massage, spa, body care",
+        },
+      },
+    },
+    tax: {
+      title: "How much to set aside for tax?",
+      subtitle:
+        "Monivo will reserve this share of every payment. The money stays in your account.",
+      customLabel: "Or enter your own",
+      customPlaceholder: "e.g. 27",
+      outOfRange: "Enter a number between 0 and 35.",
+    },
+    actions: {
+      continue: "Continue →",
+      skip: "Skip",
+      finish: "Finish →",
+      back: "Back",
+    },
+    footer: "You can change these anytime in settings.",
+    errors: { generic: "Something went wrong" },
+  },
   insights: {
     title: "Insights",
     earnings: {

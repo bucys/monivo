@@ -180,6 +180,70 @@ export type Dictionary = {
     };
     edit: { incomeTitle: string; expenseTitle: string; ariaLabel: string };
   };
+  auth: {
+    login: {
+      eyebrow: string;
+      title: string;
+      subtitle: string;
+      emailLabel: string;
+      emailPlaceholder: string;
+      submit: string;
+      successBody: string;
+      rateLimited: string;
+      notRegistered: string;
+      notRegisteredCta: string;
+      footerLead: string;
+      footerCta: string;
+    };
+    register: {
+      eyebrow: string;
+      title: string;
+      subtitle: string;
+      nameLabel: string;
+      namePlaceholder: string;
+      emailLabel: string;
+      emailPlaceholder: string;
+      submit: string;
+      successBody: string;
+      rateLimited: string;
+      footerLead: string;
+      footerCta: string;
+      termsLead: string;
+      termsLink: string;
+      termsAnd: string;
+      privacyLink: string;
+    };
+  };
+  onboarding: {
+    stepCounter: string;
+    stepAria: string;
+    profession: {
+      title: string;
+      subtitle: string;
+      none: string;
+      cards: {
+        hair: { title: string; sub: string };
+        nails: { title: string; sub: string };
+        face: { title: string; sub: string };
+        body: { title: string; sub: string };
+      };
+    };
+    tax: {
+      title: string;
+      subtitle: string;
+      customLabel: string;
+      customPlaceholder: string;
+      outOfRange: string;
+    };
+    actions: {
+      continue: string;
+      skip: string;
+      finish: string;
+      back: string;
+    };
+    footer: string;
+    errors: { generic: string };
+  };
   insights: {
     title: string;
     earnings: {
@@ -489,6 +553,85 @@ export const lt: Dictionary = {
       expenseTitle: "Redaguoti išlaidas",
       ariaLabel: "Redaguoti",
     },
+  },
+  auth: {
+    login: {
+      eyebrow: "Prisijungimas",
+      title: "Pradėk nuo el. pašto.",
+      subtitle:
+        "Atsiųsime nuorodą — paspaudus ja prisijungsi be slaptažodžio.",
+      emailLabel: "El. paštas",
+      emailPlaceholder: "vardas@pastas.lt",
+      submit: "Siųsti nuorodą →",
+      successBody: "Patikrink savo el. paštą — nuoroda išsiųsta į {email}.",
+      rateLimited:
+        "Per trumpą laiką išsiųsta per daug prisijungimo nuorodų. Palaukite kelias minutes ir bandykite dar kartą.",
+      notRegistered: "Paskyros su šiuo el. paštu neradome.",
+      notRegisteredCta: "Sukurkite paskyrą nemokamai →",
+      footerLead: "Neturi paskyros?",
+      footerCta: "Registruokis →",
+    },
+    register: {
+      eyebrow: "Registracija",
+      title: "Pradėk 30 dienų nemokamai.",
+      subtitle:
+        "Be kortelės. Atsiųsime nuorodą — paspaudus ja iškart pateksi į Monivo.",
+      nameLabel: "Vardas",
+      namePlaceholder: "Vardas (nebūtina)",
+      emailLabel: "El. paštas",
+      emailPlaceholder: "vardas@pastas.lt",
+      submit: "Registruotis →",
+      successBody: "Patikrink savo el. paštą — nuoroda išsiųsta į {email}.",
+      rateLimited:
+        "Per trumpą laiką išsiųsta per daug prisijungimo nuorodų. Palaukite kelias minutes ir bandykite dar kartą.",
+      footerLead: "Jau turi paskyrą?",
+      footerCta: "Prisijunk →",
+      termsLead: "Registruodamasis sutinki su",
+      termsLink: "naudojimo sąlygomis",
+      termsAnd: "ir",
+      privacyLink: "privatumo nuostatomis",
+    },
+  },
+  onboarding: {
+    stepCounter: "{current} žingsnis iš {total}",
+    stepAria: "Žingsnis {current} iš {total}",
+    profession: {
+      title: "Kokia tavo sritis?",
+      subtitle:
+        "Pasirink artimiausią sritį. Vėliau galėsi pridėti konkrečias paslaugas ir kainas.",
+      none: "Mano srities nėra",
+      cards: {
+        hair: { title: "Plaukai", sub: "Kirpimai, dažymai, barberis" },
+        nails: {
+          title: "Nagai",
+          sub: "Manikiūras, pedikiūras, nagų dizainas",
+        },
+        face: {
+          title: "Veidas ir oda",
+          sub: "Kosmetologija, blakstienos, antakiai",
+        },
+        body: {
+          title: "Kūno procedūros",
+          sub: "Masažai, SPA, kūno procedūros",
+        },
+      },
+    },
+    tax: {
+      title: "Kiek atidėti mokesčiams?",
+      subtitle:
+        "Monivo nuo kiekvienos pajamos paskaičiuos, kiek verta atsidėti. Pinigai lieka tavo banko sąskaitoje.",
+      customLabel: "Arba įvesk savo",
+      customPlaceholder: "Pvz. 27",
+      outOfRange: "Įvesk skaičių nuo 0 iki 35.",
+    },
+    actions: {
+      continue: "Tęsti →",
+      skip: "Praleisti",
+      finish: "Baigti →",
+      back: "Atgal",
+    },
+    footer: "Šiuos pasirinkimus galėsi pakeisti bet kada nustatymuose.",
+    errors: { generic: "Įvyko klaida" },
   },
   insights: {
     title: "Įžvalgos",

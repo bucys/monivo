@@ -5,9 +5,12 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { AuthCard } from "@/components/auth/auth-card";
+import { useT } from "@/i18n/locale-provider";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 function LoginForm() {
+  const t = useT();
+  const tl = t.auth.login;
   const searchParams = useSearchParams();
   const next = searchParams.get("next") ?? "/dashboard";
 
@@ -60,9 +63,12 @@ function LoginForm() {
   };
 
   if (submitted) {
+    const [before, after = ""] = tl.successBody.split("{email}");
     return (
       <div className="rounded-[14px] bg-accent-soft px-4 py-4 text-[13px] text-accent-deep">
-        Patikrink savo el. paštą — nuoroda išsiųsta į <strong>{email}</strong>.
+        {before}
+        <strong>{email}</strong>
+        {after}
       </div>
     );
   }
@@ -70,7 +76,7 @@ function LoginForm() {
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4">
       <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
-        El. paštas
+        {tl.emailLabel}
         <input
           type="email"
           required
@@ -79,23 +85,22 @@ function LoginForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="rounded-[12px] border border-hair bg-cream px-3.5 py-2.5 text-[14px] text-ink-900 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
-          placeholder="vardas@pastas.lt"
+          placeholder={tl.emailPlaceholder}
         />
       </label>
 
       {rateLimited ? (
         <div className="rounded-[12px] border border-hair bg-cream px-3.5 py-3 text-[13px] text-ink-900/90">
-          Per trumpą laiką išsiųsta per daug prisijungimo nuorodų. Palaukite
-          kelias minutes ir bandykite dar kartą.
+          {tl.rateLimited}
         </div>
       ) : notRegistered ? (
         <div className="rounded-[12px] border border-hair bg-cream px-3.5 py-3 text-[13px] text-ink-900/90">
-          Paskyros su šiuo el. paštu neradome.{" "}
+          {tl.notRegistered}{" "}
           <Link
             href={`/register?email=${encodeURIComponent(email)}`}
             className="text-accent-deep hover:underline"
           >
-            Sukurkite paskyrą nemokamai →
+            {tl.notRegisteredCta}
           </Link>
         </div>
       ) : error ? (
@@ -110,7 +115,7 @@ function LoginForm() {
         isLoading={loading}
         className="!mt-1 !h-auto !rounded-[14px] !px-5 !py-3 !text-[14px]"
       >
-        Siųsti nuorodą →
+        {tl.submit}
       </Button>
     </form>
   );
@@ -118,26 +123,36 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
+    <Suspense
+      fallback={
+        <div className="w-full max-w-[420px]">
+          <div className="h-[420px] animate-pulse rounded-[24px] bg-ink-100" />
+        </div>
+      }
+    >
+      <LoginPageInner />
+    </Suspense>
+  );
+}
+
+function LoginPageInner() {
+  const t = useT();
+  const tl = t.auth.login;
+  return (
     <AuthCard
-      eyebrow="Prisijungimas"
-      title="Pradėk nuo el. pašto."
-      subtitle="Atsiųsime nuorodą — paspaudus ja prisijungsi be slaptažodžio."
+      eyebrow={tl.eyebrow}
+      title={tl.title}
+      subtitle={tl.subtitle}
       footer={
         <>
-          Neturi paskyros?{" "}
+          {tl.footerLead}{" "}
           <Link href="/register" className="text-accent-deep hover:underline">
-            Registruokis →
+            {tl.footerCta}
           </Link>
         </>
       }
     >
-      <Suspense
-        fallback={
-          <div className="h-[148px] animate-pulse rounded-[14px] bg-ink-100" />
-        }
-      >
-        <LoginForm />
-      </Suspense>
+      <LoginForm />
     </AuthCard>
   );
 }

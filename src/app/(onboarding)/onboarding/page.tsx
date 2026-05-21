@@ -3,42 +3,25 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { format } from "@/i18n";
+import { useT } from "@/i18n/locale-provider";
+import type { Dictionary } from "@/i18n";
 import { completeOnboarding } from "./actions";
 
 type Profession = "nails" | "lashes" | "cosmetology" | "hair" | "other";
 
+type ProfessionCardId = "hair" | "nails" | "face" | "body";
+
 type ProfessionCard = {
-  key: string;
+  key: ProfessionCardId;
   id: Profession;
-  title: string;
-  sub: string;
 };
 
 const PROFESSIONS: ReadonlyArray<ProfessionCard> = [
-  {
-    key: "hair",
-    id: "hair",
-    title: "Plaukai",
-    sub: "Kirpimai, dažymai, barberis",
-  },
-  {
-    key: "nails",
-    id: "nails",
-    title: "Nagai",
-    sub: "Manikiūras, pedikiūras, nagų dizainas",
-  },
-  {
-    key: "face",
-    id: "cosmetology",
-    title: "Veidas ir oda",
-    sub: "Kosmetologija, blakstienos, antakiai",
-  },
-  {
-    key: "body",
-    id: "other",
-    title: "Kūno procedūros",
-    sub: "Masažai, SPA, kūno procedūros",
-  },
+  { key: "hair", id: "hair" },
+  { key: "nails", id: "nails" },
+  { key: "face", id: "cosmetology" },
+  { key: "body", id: "other" },
 ];
 
 const FALLBACK_KEY = "none";
@@ -46,6 +29,8 @@ const FALLBACK_KEY = "none";
 const TAX_PRESETS: ReadonlyArray<number> = [20, 25, 30];
 
 export default function OnboardingPage() {
+  const t = useT();
+  const to = t.onboarding;
   const [step, setStep] = useState<1 | 2>(1);
   const [professionKey, setProfessionKey] = useState<string>(FALLBACK_KEY);
   const profession: Profession =
@@ -77,7 +62,7 @@ export default function OnboardingPage() {
       try {
         await completeOnboarding(fd);
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Įvyko klaida");
+        setError(e instanceof Error ? e.message : to.errors.generic);
       }
     });
   };
@@ -101,7 +86,7 @@ export default function OnboardingPage() {
       </Link>
 
       <article className="rounded-[24px] border border-hair bg-white p-7 shadow-card sm:p-8">
-        <StepDots current={step} total={2} />
+        <StepDots current={step} total={2} ariaTemplate={to.stepAria} />
 
         {step === 1 ? (
           <ProfessionStep
@@ -112,6 +97,7 @@ export default function OnboardingPage() {
               setProfessionKey(FALLBACK_KEY);
               setStep(2);
             }}
+            t={t}
           />
         ) : (
           <TaxStep
@@ -131,22 +117,29 @@ export default function OnboardingPage() {
             onSubmit={submit}
             pending={pending}
             error={error}
+            t={t}
           />
         )}
       </article>
 
-      <p className="mt-6 text-center text-[12px] text-ink-500">
-        Šiuos pasirinkimus galėsi pakeisti bet kada nustatymuose.
-      </p>
+      <p className="mt-6 text-center text-[12px] text-ink-500">{to.footer}</p>
     </div>
   );
 }
 
-function StepDots({ current, total }: { current: number; total: number }) {
+function StepDots({
+  current,
+  total,
+  ariaTemplate,
+}: {
+  current: number;
+  total: number;
+  ariaTemplate: string;
+}) {
   return (
     <div
       className="mb-6 flex items-center justify-center gap-1.5"
-      aria-label={`Žingsnis ${current} iš ${total}`}
+      aria-label={format(ariaTemplate, { current, total })}
     >
       {Array.from({ length: total }).map((_, i) => (
         <span
@@ -166,29 +159,32 @@ function ProfessionStep({
   onChange,
   onContinue,
   onSkip,
+  t,
 }: {
   value: string;
   onChange: (key: string) => void;
   onContinue: () => void;
   onSkip: () => void;
+  t: Dictionary;
 }) {
+  const to = t.onboarding;
   return (
     <>
       <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-accent/[0.08] px-3 py-1.5 text-eyebrow text-accent">
         <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-accent" />
-        1 žingsnis iš 2
+        {format(to.stepCounter, { current: 1, total: 2 })}
       </span>
       <h1 className="mt-5 text-[26px] font-semibold leading-[1.1] tracking-[-0.028em] text-ink-900/90 text-balance sm:text-[28px]">
-        Kokia tavo sritis?
+        {to.profession.title}
       </h1>
       <p className="mt-2 text-[14px] leading-[1.55] text-ink-500">
-        Pasirink artimiausią sritį. Vėliau galėsi pridėti konkrečias paslaugas
-        ir kainas.
+        {to.profession.subtitle}
       </p>
 
       <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
         {PROFESSIONS.map((p) => {
           const active = value === p.key;
+          const card = to.profession.cards[p.key];
           return (
             <button
               key={p.key}
@@ -206,10 +202,10 @@ function ProfessionStep({
                   active ? "text-accent-deep" : "text-ink-900/90"
                 }`}
               >
-                {p.title}
+                {card.title}
               </span>
               <span className="text-[12px] leading-[1.45] text-ink-500">
-                {p.sub}
+                {card.sub}
               </span>
             </button>
           );
@@ -226,7 +222,7 @@ function ProfessionStep({
             : "border-hair bg-transparent text-ink-500 hover:border-accent/40 hover:text-ink-900/90"
         }`}
       >
-        Mano srities nėra
+        {to.profession.none}
       </button>
 
       <div className="mt-7 flex flex-col gap-2">
@@ -236,14 +232,14 @@ function ProfessionStep({
           onClick={onContinue}
           className="!h-auto !rounded-[14px] !px-5 !py-3 !text-[14px]"
         >
-          Tęsti →
+          {to.actions.continue}
         </Button>
         <button
           type="button"
           onClick={onSkip}
           className="self-center px-2 py-1 text-[13px] text-ink-500 hover:text-ink-900/90"
         >
-          Praleisti
+          {to.actions.skip}
         </button>
       </div>
     </>
@@ -261,6 +257,7 @@ function TaxStep({
   onSubmit,
   pending,
   error,
+  t,
 }: {
   preset: number | null;
   custom: string;
@@ -272,19 +269,20 @@ function TaxStep({
   onSubmit: () => void;
   pending: boolean;
   error: string | null;
+  t: Dictionary;
 }) {
+  const to = t.onboarding;
   return (
     <>
       <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-accent/[0.08] px-3 py-1.5 text-eyebrow text-accent">
         <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-accent" />
-        2 žingsnis iš 2
+        {format(to.stepCounter, { current: 2, total: 2 })}
       </span>
       <h1 className="mt-5 text-[26px] font-semibold leading-[1.1] tracking-[-0.028em] text-ink-900/90 text-balance sm:text-[28px]">
-        Kiek atidėti mokesčiams?
+        {to.tax.title}
       </h1>
       <p className="mt-2 text-[14px] leading-[1.55] text-ink-500">
-        Monivo nuo kiekvienos pajamos paskaičiuos, kiek verta atsidėti.
-        Pinigai lieka tavo banko sąskaitoje.
+        {to.tax.subtitle}
       </p>
 
       <div className="mt-6 grid grid-cols-3 gap-2">
@@ -315,7 +313,7 @@ function TaxStep({
       </div>
 
       <label className="mt-5 flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
-        Arba įvesk savo
+        {to.tax.customLabel}
         <div
           className={`flex items-center rounded-[14px] border bg-white px-3.5 py-2.5 transition-colors focus-within:ring-2 focus-within:ring-accent/30 ${
             customOutOfRange
@@ -336,7 +334,7 @@ function TaxStep({
               onCustomChange(cleaned);
             }}
             aria-invalid={customOutOfRange || undefined}
-            placeholder="Pvz. 27"
+            placeholder={to.tax.customPlaceholder}
             className="w-full bg-transparent text-[16px] font-medium tabular-nums text-ink-900/90 placeholder:text-ink-500 focus:outline-none"
           />
           <span
@@ -348,7 +346,7 @@ function TaxStep({
         </div>
         {customOutOfRange ? (
           <span className="text-[12px] font-normal text-expense">
-            Įvesk skaičių nuo 0 iki 35.
+            {to.tax.outOfRange}
           </span>
         ) : null}
       </label>
@@ -368,7 +366,7 @@ function TaxStep({
           disabled={submitDisabled}
           className="!h-auto !rounded-[14px] !px-5 !py-3 !text-[14px]"
         >
-          Baigti →
+          {to.actions.finish}
         </Button>
         <button
           type="button"
@@ -376,7 +374,7 @@ function TaxStep({
           disabled={pending}
           className="self-center px-2 py-1 text-[13px] text-ink-500 hover:text-ink-900/90 disabled:opacity-50"
         >
-          Atgal
+          {to.actions.back}
         </button>
       </div>
     </>
