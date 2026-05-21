@@ -13,13 +13,6 @@ import {
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { calculateTaxReserve } from "@/lib/tax";
 
-type ProfessionKey =
-  | "hair"
-  | "nails"
-  | "cosmetology"
-  | "lashes"
-  | "other";
-
 export default async function AppLayout({
   children,
 }: {
@@ -98,16 +91,14 @@ export default async function AppLayout({
   const reserveCents = reserve.totalCents;
 
   const displayName = profile?.display_name?.trim() ?? "";
-  const professionRaw = (profile?.profession ?? "") as string;
-  const professionLabels = t.nav.professions;
-  const professionLabel =
-    professionRaw && professionRaw in professionLabels
-      ? professionLabels[professionRaw as ProfessionKey]
-      : "";
+  // Sidebar subtitle shows the legal/tax activity form (IV / VL / Custom),
+  // not the onboarding profession. Falls back to the IV label when no tax
+  // profile data is available.
+  const activityLabel = t.settings.tax.modes[taxProfile.taxMode];
 
   const sidebar: SidebarData = {
     displayName: displayName || t.nav.accountFallback,
-    professionLabel: professionLabel || t.nav.individualActivity,
+    activityLabel,
     reserveCents: reserveCents > 0 ? reserveCents : null,
   };
 

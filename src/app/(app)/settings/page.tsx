@@ -12,11 +12,10 @@ import {
   IconGlobe,
   IconList,
   IconPerson,
-  IconReceipt,
   IconSparkle,
 } from "@/components/settings/settings-icons";
 import { LanguageToggle } from "@/components/settings/language-toggle";
-import { TaxProfileCard } from "@/components/settings/tax-profile-card";
+import { TaxFormSheet } from "@/components/settings/tax-form-sheet";
 import { getDictionary } from "@/i18n";
 import { getServerLocale } from "@/i18n/server";
 import {
@@ -112,16 +111,8 @@ export default async function SettingsPage() {
             detail={String(serviceCount)}
             href="/services"
           />
-          <SettingsRow
-            icon={<IconReceipt />}
-            label={t.settings.business.activityForm}
-            detail={t.settings.tax.modes[taxProfile.taxMode]}
-            href="#tax-mode"
-            last
-          />
+          <TaxFormSheet initial={taxProfile} last />
         </SettingsSection>
-
-        <TaxProfileCard initial={taxProfile} />
 
         <SettingsSection label={t.settings.sections.app}>
           <SettingsRow

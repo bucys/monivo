@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { updateTaxProfile } from "@/app/(app)/settings/actions";
+import { AccordionRow } from "@/components/ui/accordion-row";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/i18n/locale-provider";
 import type { TaxProfile } from "@/lib/tax";
@@ -10,7 +11,13 @@ import type { TaxProfile } from "@/lib/tax";
 type Mode = TaxProfile["taxMode"];
 type IvExpense = TaxProfile["ivExpenseMode"];
 
-export function TaxProfileCard({ initial }: { initial: TaxProfile }) {
+export function TaxProfileCard({
+  initial,
+  onSaved,
+}: {
+  initial: TaxProfile;
+  onSaved?: () => void;
+}) {
   const router = useRouter();
   const t = useT();
   const tx = t.settings.tax;
@@ -53,6 +60,7 @@ export function TaxProfileCard({ initial }: { initial: TaxProfile }) {
       try {
         await updateTaxProfile(fd);
         router.refresh();
+        onSaved?.();
       } catch (e) {
         setError(e instanceof Error ? e.message : t.common.genericError);
       }
@@ -60,18 +68,8 @@ export function TaxProfileCard({ initial }: { initial: TaxProfile }) {
   };
 
   return (
-    <section
-      id="tax-mode"
-      className="scroll-mt-20 rounded-[22px] border border-hair bg-white p-5 shadow-card sm:p-6"
-    >
-      <header className="flex flex-col gap-1">
-        <h3 className="text-[15px] font-semibold tracking-[-0.012em] text-ink-900/90">
-          {tx.sectionTitle}
-        </h3>
-        <p className="text-[12px] leading-[1.5] text-ink-500">{tx.sectionHint}</p>
-      </header>
-
-      <div className="mt-4">
+    <div className="flex flex-col">
+      <div>
         <span className="text-[11px] font-semibold uppercase tracking-[0.05em] text-ink-500">
           {tx.modeLabel}
         </span>
@@ -149,12 +147,15 @@ export function TaxProfileCard({ initial }: { initial: TaxProfile }) {
           </label>
           <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
             {tx.vl.validUntilLabel}
-            <input
-              type="date"
-              value={vlValidUntil}
-              onChange={(e) => setVlValidUntil(e.target.value)}
-              className="rounded-[14px] border border-hair bg-white px-3.5 py-2.5 text-[14px] font-medium text-ink-900/90 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
-            />
+            <div className="flex items-center rounded-[14px] border border-hair bg-white px-3.5 py-2.5 transition-colors focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/30">
+              <CalendarIcon />
+              <input
+                type="date"
+                value={vlValidUntil}
+                onChange={(e) => setVlValidUntil(e.target.value)}
+                className="ml-2.5 w-full bg-transparent text-[15px] font-medium text-ink-900/90 placeholder:text-ink-500 focus:outline-none [color-scheme:light] [&::-webkit-calendar-picker-indicator]:opacity-60 [&::-webkit-calendar-picker-indicator]:hover:opacity-100"
+              />
+            </div>
           </label>
           <PsdToggle
             checked={includePsd}
@@ -206,6 +207,31 @@ export function TaxProfileCard({ initial }: { initial: TaxProfile }) {
         </p>
       ) : null}
 
+      <div className="mt-5 flex flex-col gap-1 border-t border-hair pt-3">
+        {mode === "iv" ? (
+          <>
+            <AccordionRow header={<ExplainTitle>{t.dashboard.reserveBreakdownGpm}</ExplainTitle>}>
+              {tx.explain.gpm}
+            </AccordionRow>
+            <AccordionRow header={<ExplainTitle>{t.dashboard.reserveBreakdownVsd}</ExplainTitle>}>
+              {tx.explain.vsd}
+            </AccordionRow>
+            <AccordionRow header={<ExplainTitle>{t.dashboard.reserveBreakdownPsd}</ExplainTitle>}>
+              {tx.explain.psd}
+            </AccordionRow>
+          </>
+        ) : mode === "vl" ? (
+          <>
+            <AccordionRow header={<ExplainTitle>{t.dashboard.reserveBreakdownVl}</ExplainTitle>}>
+              {tx.explain.vl}
+            </AccordionRow>
+            <AccordionRow header={<ExplainTitle>{t.dashboard.reserveBreakdownPsd}</ExplainTitle>}>
+              {tx.explain.psd}
+            </AccordionRow>
+          </>
+        ) : null}
+      </div>
+
       <div className="mt-5 flex flex-col gap-3">
         <Button
           variant="primary"
@@ -220,7 +246,33 @@ export function TaxProfileCard({ initial }: { initial: TaxProfile }) {
           {tx.disclaimer}
         </p>
       </div>
-    </section>
+    </div>
+  );
+}
+
+function ExplainTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="text-[13px] font-medium text-ink-900/90">{children}</span>
+  );
+}
+
+function CalendarIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      className="text-ink-500"
+    >
+      <rect x="3.5" y="5" width="17" height="15" rx="3" />
+      <path d="M8 3v4M16 3v4M3.5 10h17" />
+    </svg>
   );
 }
 

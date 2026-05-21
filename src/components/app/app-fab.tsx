@@ -7,6 +7,7 @@ import {
   dispatchOpenExpenseEntry,
   dispatchOpenIncomeEntry,
 } from "@/components/add-entry/add-entry-sheet";
+import { useChromeSuppressed } from "@/components/app/ui-chrome";
 import { useT } from "@/i18n/locale-provider";
 
 export function AppFab({ canWrite }: { canWrite: boolean }) {
@@ -15,10 +16,15 @@ export function AppFab({ canWrite }: { canWrite: boolean }) {
   const onServices =
     pathname === "/services" || pathname?.startsWith("/services/");
   const [menuOpen, setMenuOpen] = useState(false);
+  const chromeSuppressed = useChromeSuppressed();
 
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (chromeSuppressed) setMenuOpen(false);
+  }, [chromeSuppressed]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -48,7 +54,10 @@ export function AppFab({ canWrite }: { canWrite: boolean }) {
   // Read-only (expired trial / canceled): hide the FAB entirely. Tapping a
   // disabled FAB would be confusing — the user has nothing to do here until
   // they reactivate their subscription.
-  if (!canWrite) return null;
+  //
+  // Also hide while a ModalSheet is open so the FAB doesn't overlap modal
+  // surfaces or steal keyboard focus from the dialog.
+  if (!canWrite || chromeSuppressed) return null;
 
   // Stacking: topbar z-30 · FAB backdrop z-40 (above topbar when open) ·
   // FAB button + menu z-50 (above backdrop, but below any open ModalSheet

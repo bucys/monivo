@@ -65,6 +65,7 @@ export type Dictionary = {
     statsTaxReserve: string;
     reservePlannedTitle: string;
     reserveAboutPrefix: string;
+    reserveTapHint: string;
     reserveBreakdownGpm: string;
     reserveBreakdownVsd: string;
     reserveBreakdownPsd: string;
@@ -144,6 +145,7 @@ export type Dictionary = {
     tax: {
       sectionTitle: string;
       sectionHint: string;
+      modalSubtitle: string;
       modeLabel: string;
       modes: { iv: string; vl: string; custom: string };
       iv: {
@@ -172,6 +174,13 @@ export type Dictionary = {
       saveCta: string;
       savedToast: string;
       disclaimer: string;
+      explain: {
+        gpm: string;
+        vsd: string;
+        psd: string;
+        vl: string;
+        footnote: string;
+      };
     };
     app: {
       appearance: string;
@@ -622,6 +631,7 @@ export const lt: Dictionary = {
     statsTaxReserve: "Atidėta",
     reservePlannedTitle: "Planuojamas mokesčių rezervas",
     reserveAboutPrefix: "apie",
+    reserveTapHint: "Paspauskite, kad pamatytumėte detalizaciją.",
     reserveBreakdownGpm: "GPM",
     reserveBreakdownVsd: "VSD",
     reserveBreakdownPsd: "PSD",
@@ -725,6 +735,8 @@ export const lt: Dictionary = {
       sectionTitle: "Mokesčių rezervas",
       sectionHint:
         "Skaičiavimai yra orientaciniai — padeda planuoti, kiek atsidėti.",
+      modalSubtitle:
+        "Ši informacija naudojama mokesčių rezervo skaičiavimui.",
       modeLabel: "Veiklos forma",
       modes: {
         iv: "Individuali veikla",
@@ -762,6 +774,13 @@ export const lt: Dictionary = {
       savedToast: "Išsaugota",
       disclaimer:
         "Tai planavimo įrankis, ne oficiali apskaita. Tikslius mokesčius patvirtina VMI.",
+      explain: {
+        gpm: "Pajamų mokestis nuo apmokestinamojo pelno. Naudojamas saugesnis 15% planavimo rezervas — taip lieka šiek tiek atsargos.",
+        vsd: "Socialinio draudimo įmoka. Skaičiuojama 12,52% nuo Sodros bazės (90% apmokestinamojo pelno).",
+        psd: "Sveikatos draudimas — 6,98% nuo Sodros bazės. Jei suma maža, taikoma mėnesinė minimumo riba. Jei PSD moka darbdavys ar kita veikla, gali PSD rezervą išjungti.",
+        vl: "Verslo liudijimo kaina paskirstoma per likusį galiojimo laikotarpį, kad mėnesinis rezervas atspindėtų realų likutį.",
+        footnote: "Planavimo įvertis, ne oficialus mokesčių patarimas.",
+      },
     },
     app: {
       appearance: "Išvaizda",

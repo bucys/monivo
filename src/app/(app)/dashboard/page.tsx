@@ -3,6 +3,7 @@ import { AppScreen } from "@/components/app/app-screen";
 import { TodayEmpty } from "@/components/dashboard/empty-prompt";
 import { MobileQuickActions } from "@/components/dashboard/mobile-quick-actions";
 import { MonthlyStats } from "@/components/dashboard/monthly-stats";
+import { ReserveBreakdownCard } from "@/components/dashboard/reserve-breakdown-card";
 import { NotificationBell } from "@/components/notifications/notification-bell";
 import {
   QuickActions,
@@ -17,9 +18,8 @@ import { SpendableHero } from "@/components/dashboard/spendable-card";
 import { MobileTodayList } from "@/components/dashboard/today-list";
 import { WeeklyEarnings } from "@/components/dashboard/weekly-earnings";
 import { format } from "@/i18n";
-import type { Dictionary } from "@/i18n";
 import { getT } from "@/i18n/server";
-import { formatEur, monthRange } from "@/lib/format";
+import { monthRange } from "@/lib/format";
 import {
   TAX_PROFILE_COLUMNS,
   canWriteProfile,
@@ -27,7 +27,7 @@ import {
   type ProfileTaxFields,
 } from "@/lib/profile";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { calculateTaxReserve, type ReserveBreakdown } from "@/lib/tax";
+import { calculateTaxReserve } from "@/lib/tax";
 
 function todayIso() {
   const d = new Date();
@@ -246,7 +246,7 @@ export default async function DashboardPage() {
         />
 
         {taxReserveCents > 0 ? (
-          <ReserveBreakdownCard reserve={reserve} t={t} />
+          <ReserveBreakdownCard reserve={reserve} />
         ) : null}
 
         <MobileQuickActions services={serviceList} canWrite={canWrite} />
@@ -285,63 +285,3 @@ export default async function DashboardPage() {
   );
 }
 
-function ReserveBreakdownCard({
-  reserve,
-  t,
-}: {
-  reserve: ReserveBreakdown;
-  t: Dictionary;
-}) {
-  const lines: ReadonlyArray<{ label: string; cents: number }> = [
-    reserve.vlCents !== undefined
-      ? { label: t.dashboard.reserveBreakdownVl, cents: reserve.vlCents }
-      : null,
-    reserve.gpmCents !== undefined
-      ? { label: t.dashboard.reserveBreakdownGpm, cents: reserve.gpmCents }
-      : null,
-    reserve.vsdCents !== undefined
-      ? { label: t.dashboard.reserveBreakdownVsd, cents: reserve.vsdCents }
-      : null,
-    reserve.psdCents !== undefined
-      ? { label: t.dashboard.reserveBreakdownPsd, cents: reserve.psdCents }
-      : null,
-  ].filter((x): x is { label: string; cents: number } => x !== null);
-
-  return (
-    <section className="rounded-[22px] bg-white p-5 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] sm:p-6">
-      <div className="text-[11px] font-semibold uppercase tracking-[0.06em] text-ink-500">
-        {t.dashboard.reservePlannedTitle}
-      </div>
-      <div className="mt-1.5 flex items-baseline gap-1.5 tabular-nums text-ink-900/90">
-        <span className="text-[13px] font-medium text-ink-500">
-          {t.dashboard.reserveAboutPrefix}
-        </span>
-        <span className="text-[28px] font-semibold leading-none tracking-[-0.025em]">
-          {formatEur(roundToEuro(reserve.totalCents))}
-        </span>
-      </div>
-      {lines.length > 0 ? (
-        <ul className="mt-4 flex flex-col gap-2 border-t border-hair pt-3">
-          {lines.map((line) => (
-            <li
-              key={line.label}
-              className="flex items-baseline justify-between text-[13px]"
-            >
-              <span className="text-ink-500">{line.label}</span>
-              <span className="font-medium tabular-nums text-ink-900/90">
-                {t.dashboard.reserveAboutPrefix}{" "}
-                {formatEur(roundToEuro(line.cents))}
-              </span>
-            </li>
-          ))}
-        </ul>
-      ) : null}
-    </section>
-  );
-}
-
-/** Rounds to the nearest whole euro so reserve numbers read as friendly
- *  estimates ("apie 312 €") instead of precise figures ("312,47 €"). */
-function roundToEuro(cents: number) {
-  return Math.round(cents / 100) * 100;
-}

@@ -166,7 +166,7 @@ export function AppSidebar({ sidebar }: { sidebar: SidebarData }) {
             {sidebar.displayName}
           </span>
           <span className="mt-0.5 text-[11px] text-ink-500">
-            {sidebar.professionLabel}
+            {sidebar.activityLabel}
           </span>
         </span>
         <svg

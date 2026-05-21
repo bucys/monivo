@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, type ReactNode } from "react";
+import { useChromeBlocker } from "@/components/app/ui-chrome";
 import { cn } from "@/lib/cn";
 
 export type ModalSheetProps = {
@@ -18,6 +19,9 @@ export function ModalSheet({
   closeLabel,
   children,
 }: ModalSheetProps) {
+  // Suppresses chrome (FAB, etc.) while open — see ui-chrome.tsx.
+  useChromeBlocker(open);
+
   useEffect(() => {
     if (!open) return;
     const handleKey = (event: KeyboardEvent) => {

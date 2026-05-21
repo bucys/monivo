@@ -67,6 +67,7 @@ export const en: Dictionary = {
     statsTaxReserve: "Reserved",
     reservePlannedTitle: "Planned tax reserve",
     reserveAboutPrefix: "about",
+    reserveTapHint: "Tap to see the breakdown.",
     reserveBreakdownGpm: "Income tax",
     reserveBreakdownVsd: "Social (VSD)",
     reserveBreakdownPsd: "Health (PSD)",
@@ -170,6 +171,8 @@ export const en: Dictionary = {
       sectionTitle: "Tax reserve",
       sectionHint:
         "These figures are estimates — they help you plan how much to set aside.",
+      modalSubtitle:
+        "This information is used to calculate your tax reserve.",
       modeLabel: "Business form",
       modes: {
         iv: "Self-Employed",
@@ -205,6 +208,13 @@ export const en: Dictionary = {
       savedToast: "Saved",
       disclaimer:
         "This is a planning tool, not official accounting. Final figures are set by the tax authority.",
+      explain: {
+        gpm: "Income tax on taxable profit. Uses a safer 15% planning reserve so you always have a small cushion.",
+        vsd: "Social insurance contribution. Estimated at 12.52% of the Sodra base (90% of taxable profit).",
+        psd: "Health insurance — 6.98% of the Sodra base. A monthly minimum floor applies when income is low. Turn this off if PSD is paid by your employer or another role.",
+        vl: "The certificate cost is spread across the remaining validity period so the monthly reserve reflects what's actually left to plan for.",
+        footnote: "Planning estimate, not official tax advice.",
+      },
     },
     app: {
       appearance: "Appearance",
