@@ -166,7 +166,11 @@ export function TaxProfileCard({ initial }: { initial: TaxProfile }) {
             <p className="rounded-[12px] border border-dashed border-hair bg-cream px-3.5 py-2.5 text-[12px] text-ink-500">
               {tx.vl.emptyHint}
             </p>
-          ) : null}
+          ) : (
+            <p className="rounded-[12px] bg-cream px-3.5 py-2.5 text-[12px] leading-[1.5] text-ink-500">
+              {tx.vl.reserveHelper}
+            </p>
+          )}
         </div>
       ) : (
         <div className="mt-5 flex flex-col gap-2">

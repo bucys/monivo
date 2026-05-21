@@ -1,4 +1,4 @@
-import { IV_RATES } from "./rates";
+import { IV_RATES, VL_RATES } from "./rates";
 
 export type TaxMode = "iv" | "vl" | "custom";
 export type IvExpenseMode = "fixed_30" | "actual";
@@ -11,7 +11,7 @@ export type TaxProfile = {
   customTaxPercent: number | null;
   /** Annual VL cost in cents. Used when taxMode === "vl". */
   vlYearlyCostCents: number | null;
-  /** Inclusive date the current VL is valid through. */
+  /** Inclusive date the current VL is valid through (ISO yyyy-mm-dd). */
   vlValidUntil: string | null;
 };
 
@@ -25,11 +25,11 @@ export type ReserveBreakdown = {
   mode: TaxMode;
   /** Present for IV mode. */
   gpmCents?: number;
-  /** Present for IV mode and for VL when PSD is included. */
+  /** Present when PSD is included (IV or VL). */
   psdCents?: number;
-  /** Present for IV mode. */
+  /** Present for IV mode and for VL Phase-1 planning. */
   vsdCents?: number;
-  /** Present for VL mode — the prorated VL license cost. */
+  /** Present for VL mode — the prorated VL certificate cost reserve. */
   vlCents?: number;
 };
 
@@ -54,6 +54,7 @@ export function calculateIvReserve(
   // Sodra (VSD + PSD) is computed on 90% of taxable profit.
   const sodraBase = taxableProfit * IV_RATES.sodraBaseRatio;
 
+  // Safer GPM estimate (15%) — see comment on IV_RATES.gpm.
   const gpmCents = roundCents(taxableProfit * IV_RATES.gpm);
   const vsdCents = roundCents(sodraBase * IV_RATES.vsd);
   const psdCents = profile.includePsd
@@ -72,22 +73,51 @@ export function calculateIvReserve(
   };
 }
 
-/** Phase-1 VL reserve: simple monthly proration of the yearly license cost
- *  plus optional PSD on the period's income. */
+/** Count of inclusive calendar months from `now`'s month through `validUntil`'s
+ *  month. Returns 0 when `validUntil` is in the past. Exported for tests. */
+export function monthsRemainingThroughValidity(
+  validUntil: string | null,
+  now: Date = new Date(),
+): number {
+  if (!validUntil) return 0;
+  const ts = Date.parse(validUntil);
+  if (Number.isNaN(ts)) return 0;
+  const end = new Date(ts);
+  const startYM = now.getFullYear() * 12 + now.getMonth();
+  const endYM = end.getFullYear() * 12 + end.getMonth();
+  if (endYM < startYM) return 0;
+  return endYM - startYM + 1;
+}
+
+/**
+ * Phase-1 VL reserve. Spreads the entered certificate cost across the
+ * remaining months of validity (or 12 if no end date), plus a lightweight
+ * VSD planning slice on income and the statutory minimum PSD.
+ *
+ * No VL GPM is computed — that's typically pre-paid with the certificate;
+ * the certificate-cost line *is* the GPM reserve.
+ */
 export function calculateVlReserve(
   profile: TaxProfile,
   input: ReserveInputs,
+  now: Date = new Date(),
 ): ReserveBreakdown {
   const yearly = profile.vlYearlyCostCents ?? 0;
-  const vlCents = roundCents(yearly / 12);
-  const psdCents = profile.includePsd
-    ? roundCents(input.incomeCents * IV_RATES.psd)
-    : 0;
+  let vlCents = 0;
+  if (yearly > 0) {
+    const months = monthsRemainingThroughValidity(profile.vlValidUntil, now);
+    vlCents = roundCents(yearly / (months > 0 ? months : 12));
+  }
+
+  const psdCents = profile.includePsd ? IV_RATES.minMonthlyPsdCents : 0;
+  const vsdCents = roundCents(input.incomeCents * VL_RATES.vsd);
+
   return {
     mode: "vl",
     vlCents,
     psdCents: profile.includePsd ? psdCents : undefined,
-    totalCents: vlCents + psdCents,
+    vsdCents,
+    totalCents: vlCents + psdCents + vsdCents,
   };
 }
 
@@ -117,4 +147,4 @@ export function calculateTaxReserve(
   }
 }
 
-export { IV_RATES };
+export { IV_RATES, VL_RATES };

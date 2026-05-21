@@ -162,6 +162,7 @@ export type Dictionary = {
         psdToggle: string;
         psdHelper: string;
         emptyHint: string;
+        reserveHelper: string;
       };
       custom: {
         percentLabel: string;
@@ -624,7 +625,7 @@ export const lt: Dictionary = {
     reserveBreakdownGpm: "GPM",
     reserveBreakdownVsd: "VSD",
     reserveBreakdownPsd: "PSD",
-    reserveBreakdownVl: "Verslo liudijimas",
+    reserveBreakdownVl: "Verslo liudijimo dalis",
     weeklyTitle: "Uždarbis šį mėnesį",
     weeklyWeekShort: "sav.",
     quickActions: "Greiti veiksmai",
@@ -749,6 +750,8 @@ export const lt: Dictionary = {
         psdHelper: "Išjunk jei PSD moka darbdavys ar kita veikla.",
         emptyHint:
           "Įvesk metinę VL kainą — paskaičiuosime, kiek atsidėti per mėnesį.",
+        reserveHelper:
+          "Jei liudijimą jau apmokėjai, ši suma padeda paskirstyti jo kainą per likusį laikotarpį.",
       },
       custom: {
         percentLabel: "Procentas nuo pajamų",

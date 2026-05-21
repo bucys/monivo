@@ -70,7 +70,7 @@ export const en: Dictionary = {
     reserveBreakdownGpm: "Income tax",
     reserveBreakdownVsd: "Social (VSD)",
     reserveBreakdownPsd: "Health (PSD)",
-    reserveBreakdownVl: "Business licence",
+    reserveBreakdownVl: "Business certificate cost",
     weeklyTitle: "Earnings this month",
     weeklyWeekShort: "Wk",
     quickActions: "Quick actions",
@@ -186,13 +186,15 @@ export const en: Dictionary = {
         psdHelper: "Turn off if PSD is paid by your employer or another role.",
       },
       vl: {
-        yearlyCostLabel: "Business licence yearly cost",
+        yearlyCostLabel: "Business certificate yearly cost",
         yearlyCostPlaceholder: "e.g. 420",
         validUntilLabel: "Valid until",
         psdToggle: "Include PSD in reserve",
         psdHelper: "Turn off if PSD is paid by your employer or another role.",
         emptyHint:
-          "Enter the yearly licence cost — we'll work out a monthly reserve.",
+          "Enter the yearly certificate cost — we'll work out a monthly reserve.",
+        reserveHelper:
+          "If you already paid for the certificate, this spreads its cost across the remaining period.",
       },
       custom: {
         percentLabel: "Percent of income",
