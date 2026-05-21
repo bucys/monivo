@@ -4,6 +4,7 @@ export type Dictionary = {
     cancel: string;
     edit: string;
     delete: string;
+    close: string;
     loading: string;
     soon: string;
     saved: string;
@@ -80,6 +81,22 @@ export type Dictionary = {
     markAllRead: string;
     emptyTitle: string;
     emptyBody: string;
+    relative: {
+      now: string;
+      minutesAgo: string;
+      hoursAgo: string;
+      yesterday: string;
+      daysAgo: string;
+    };
+    generated: {
+      trialEnding: { title: string; body: string };
+      trialEnded: { title: string; body: string };
+      emptyActivity: { title: string; body: string };
+      taxReminder: { title: string; body: string };
+      topService: { title: string; body: string };
+      milestoneFirst: { title: string; body: string };
+      milestoneTen: { title: string; body: string };
+    };
   };
   settings: {
     title: string;
@@ -266,6 +283,7 @@ export const lt: Dictionary = {
     cancel: "Atšaukti",
     edit: "Keisti",
     delete: "Ištrinti",
+    close: "Uždaryti",
     loading: "Įkeliama…",
     soon: "Greitai",
     saved: "Išsaugota",
@@ -344,6 +362,43 @@ export const lt: Dictionary = {
     emptyTitle: "Kol kas pranešimų nėra.",
     emptyBody:
       "Čia matysi mokesčių priminimus, mėnesio įžvalgas ir paskyros žinutes.",
+    relative: {
+      now: "ką tik",
+      minutesAgo: "prieš {n} min.",
+      hoursAgo: "prieš {n} val.",
+      yesterday: "vakar",
+      daysAgo: "prieš {n} d.",
+    },
+    generated: {
+      trialEnding: {
+        title: "Bandymas baigiasi",
+        body: "Liko {days} d. bandomojo laikotarpio.",
+      },
+      trialEnded: {
+        title: "Bandymas pasibaigė",
+        body: "Pasirink planą, kad galėtum tęsti darbą su Monivo.",
+      },
+      emptyActivity: {
+        title: "Tylioji savaitė",
+        body: "Per pastarąsias 7 d. įrašų nebuvo. Atnaujink veiklą vienu paliestimu.",
+      },
+      taxReminder: {
+        title: "Mokesčių priminimas",
+        body: "Šį mėnesį atidėjai {amount} € mokesčiams.",
+      },
+      topService: {
+        title: "Mėnesio lyderė",
+        body: "Daugiausia uždirba {name} — {amount} €.",
+      },
+      milestoneFirst: {
+        title: "Pirmas įrašas pridėtas",
+        body: "Sveikiname — Monivo jau seka tavo pajamas.",
+      },
+      milestoneTen: {
+        title: "10 įrašų šį mėnesį",
+        body: "Konsistencija atsiperka — taip ir laikykis.",
+      },
+    },
   },
   settings: {
     title: "Daugiau",

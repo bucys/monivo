@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { AppShell } from "@/components/app/app-shell";
+import { getT } from "@/i18n/server";
 import { loadNotifications } from "@/lib/notifications";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -27,7 +28,12 @@ export default async function AppLayout({
     redirect("/onboarding");
   }
 
-  const notifications = await loadNotifications(supabase, user.id);
+  const { t } = await getT();
+  const notifications = await loadNotifications(
+    supabase,
+    user.id,
+    t.notifications.generated,
+  );
 
   return <AppShell notifications={notifications}>{children}</AppShell>;
 }

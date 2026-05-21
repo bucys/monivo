@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { format } from "@/i18n";
+import { useLocale } from "@/i18n/locale-provider";
+import type { Dictionary, Locale } from "@/i18n";
 import type { AppNotification, NotificationTone } from "@/lib/notifications";
 
 const TONE_BG: Record<NotificationTone, string> = {
@@ -46,21 +49,25 @@ function ToneIcon({ tone }: { tone: NotificationTone }) {
   );
 }
 
-function relativeTime(iso: string) {
+function relativeTime(
+  iso: string,
+  labels: Dictionary["notifications"]["relative"],
+  locale: Locale,
+) {
   const ms = Date.now() - Date.parse(iso);
   if (Number.isNaN(ms)) return "";
   const mins = Math.round(ms / 60_000);
-  if (mins < 1) return "ką tik";
-  if (mins < 60) return `prieš ${mins} min.`;
+  if (mins < 1) return labels.now;
+  if (mins < 60) return format(labels.minutesAgo, { n: mins });
   const hours = Math.round(mins / 60);
-  if (hours < 24) return `prieš ${hours} val.`;
+  if (hours < 24) return format(labels.hoursAgo, { n: hours });
   const days = Math.round(hours / 24);
-  if (days === 1) return "vakar";
-  if (days < 7) return `prieš ${days} d.`;
-  return new Date(iso).toLocaleDateString("lt-LT", {
-    day: "numeric",
-    month: "short",
-  });
+  if (days === 1) return labels.yesterday;
+  if (days < 7) return format(labels.daysAgo, { n: days });
+  return new Date(iso).toLocaleDateString(
+    locale === "en" ? "en-US" : "lt-LT",
+    { day: "numeric", month: "short" },
+  );
 }
 
 function useHasMounted() {
@@ -80,8 +87,11 @@ export function NotificationItem({
   unread: boolean;
   onActivate: () => void;
 }) {
+  const { t, locale } = useLocale();
   const mounted = useHasMounted();
-  const timeLabel = mounted ? relativeTime(notification.occurredAt) : "";
+  const timeLabel = mounted
+    ? relativeTime(notification.occurredAt, t.notifications.relative, locale)
+    : "";
   const inner = (
     <div className="flex items-start gap-3">
       <span

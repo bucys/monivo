@@ -92,6 +92,7 @@ export function NotificationBell() {
       {open ? (
         <MobileTopPanel
           ariaLabel={t.notifications.title}
+          closeLabel={t.common.close}
           onClose={() => setOpen(false)}
         >
           <PanelHeader
@@ -112,10 +113,12 @@ export function NotificationBell() {
 
 function MobileTopPanel({
   ariaLabel,
+  closeLabel,
   onClose,
   children,
 }: {
   ariaLabel: string;
+  closeLabel: string;
   onClose: () => void;
   children: React.ReactNode;
 }) {
@@ -142,7 +145,7 @@ function MobileTopPanel({
     <div className="fixed inset-0 z-[60] lg:hidden">
       <button
         type="button"
-        aria-label="Uždaryti"
+        aria-label={closeLabel}
         onClick={onClose}
         className={cn(
           "absolute inset-0 bg-ink-900/40 transition-opacity duration-200 ease-out",

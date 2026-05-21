@@ -6,6 +6,7 @@ export const en: Dictionary = {
     cancel: "Cancel",
     edit: "Edit",
     delete: "Delete",
+    close: "Close",
     loading: "Loading…",
     soon: "Soon",
     saved: "Saved",
@@ -84,6 +85,43 @@ export const en: Dictionary = {
     emptyTitle: "No notifications yet.",
     emptyBody:
       "Tax reminders, monthly insights and account messages will appear here.",
+    relative: {
+      now: "just now",
+      minutesAgo: "{n} min ago",
+      hoursAgo: "{n} h ago",
+      yesterday: "yesterday",
+      daysAgo: "{n} d ago",
+    },
+    generated: {
+      trialEnding: {
+        title: "Trial ending soon",
+        body: "{days} days left on your trial.",
+      },
+      trialEnded: {
+        title: "Trial ended",
+        body: "Pick a plan to keep using Monivo.",
+      },
+      emptyActivity: {
+        title: "Quiet week",
+        body: "No entries in the last 7 days. Log something with one tap.",
+      },
+      taxReminder: {
+        title: "Tax reminder",
+        body: "You've set aside {amount} € for taxes this month.",
+      },
+      topService: {
+        title: "Top service",
+        body: "{name} earned the most this month — {amount} €.",
+      },
+      milestoneFirst: {
+        title: "First entry added",
+        body: "Nice — Monivo is now tracking your income.",
+      },
+      milestoneTen: {
+        title: "10 entries this month",
+        body: "Consistency pays off — keep it going.",
+      },
+    },
   },
   settings: {
     title: "More",

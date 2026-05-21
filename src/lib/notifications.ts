@@ -1,6 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { format, type Dictionary } from "@/i18n";
 import { rankServices, type IncomeRow } from "@/lib/insights";
 import { monthRange } from "@/lib/format";
+
+export type NotificationLabels = Dictionary["notifications"]["generated"];
 
 export type NotificationTone =
   | "accent"
@@ -73,6 +76,7 @@ function isoNDaysAgo(n: number) {
 export async function loadNotifications(
   supabase: SupabaseClient,
   userId: string,
+  labels: NotificationLabels,
 ): Promise<AppNotification[]> {
   const { monthStart, nextMonthStart } = monthRange();
   const sevenDaysAgo = isoNDaysAgo(7);
@@ -131,8 +135,8 @@ export async function loadNotifications(
         id: `trial_ended:${trialEndsAt.slice(0, 10)}`,
         kind: "trial_ended",
         tone: "danger",
-        title: "Bandymas pasibaigė",
-        body: "Pasirink planą, kad galėtum tęsti darbą su Monivo.",
+        title: labels.trialEnded.title,
+        body: labels.trialEnded.body,
         occurredAt: trialEndsAt,
         href: "/settings",
       });
@@ -141,8 +145,8 @@ export async function loadNotifications(
         id: `trial_ending:${trialEndsAt.slice(0, 10)}`,
         kind: "trial_ending",
         tone: "warn",
-        title: "Bandymas baigiasi",
-        body: `Liko ${daysLeft} d. bandomojo laikotarpio.`,
+        title: labels.trialEnding.title,
+        body: format(labels.trialEnding.body, { days: daysLeft }),
         occurredAt: new Date().toISOString(),
         href: "/settings",
       });
@@ -155,8 +159,8 @@ export async function loadNotifications(
       id: `empty_activity:${todayIso()}`,
       kind: "empty_activity",
       tone: "info",
-      title: "Tylioji savaitė",
-      body: "Per pastarąsias 7 d. įrašų nebuvo. Atnaujink veiklą vienu paliestimu.",
+      title: labels.emptyActivity.title,
+      body: labels.emptyActivity.body,
       occurredAt: new Date().toISOString(),
       href: "/activity",
     });
@@ -169,8 +173,8 @@ export async function loadNotifications(
       id: `tax_reminder:${monthKey}`,
       kind: "tax_reminder",
       tone: "accent",
-      title: "Mokesčių priminimas",
-      body: `Šį mėnesį atidėjai ${EUR(reserveCents)} € mokesčiams.`,
+      title: labels.taxReminder.title,
+      body: format(labels.taxReminder.body, { amount: EUR(reserveCents) }),
       occurredAt: new Date().toISOString(),
       href: "/insights",
     });
@@ -184,8 +188,11 @@ export async function loadNotifications(
       id: `top_service:${monthKey}:${top.key}`,
       kind: "top_service",
       tone: "success",
-      title: "Mėnesio lyderė",
-      body: `Daugiausia uždirba ${top.name} — ${EUR(top.totalCents)} €.`,
+      title: labels.topService.title,
+      body: format(labels.topService.body, {
+        name: top.name,
+        amount: EUR(top.totalCents),
+      }),
       occurredAt: new Date().toISOString(),
       href: "/insights",
     });
@@ -197,8 +204,8 @@ export async function loadNotifications(
       id: `milestone_first:${monthKey}`,
       kind: "milestone_first",
       tone: "success",
-      title: "Pirmas įrašas pridėtas",
-      body: "Sveikiname — Monivo jau seka tavo pajamas.",
+      title: labels.milestoneFirst.title,
+      body: labels.milestoneFirst.body,
       occurredAt: new Date().toISOString(),
       href: "/activity",
     });
@@ -208,8 +215,8 @@ export async function loadNotifications(
       id: `milestone_ten:${monthKey}`,
       kind: "milestone_ten",
       tone: "success",
-      title: "10 įrašų šį mėnesį",
-      body: "Konsistencija atsiperka — taip ir laikykis.",
+      title: labels.milestoneTen.title,
+      body: labels.milestoneTen.body,
       occurredAt: new Date().toISOString(),
       href: "/insights",
     });
