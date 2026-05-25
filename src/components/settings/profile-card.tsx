@@ -33,7 +33,7 @@ export function ProfileCard({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex w-full items-center gap-3.5 rounded-[22px] bg-white p-[18px] text-left shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] transition-colors hover:bg-white active:bg-cream/40"
+        className="flex w-full items-center gap-3.5 rounded-[22px] bg-surface p-[18px] text-left shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] transition-colors hover:bg-surface active:bg-cream/40"
       >
         <span
           aria-hidden

@@ -36,7 +36,7 @@ export function ReserveBreakdownCard({ reserve }: { reserve: ReserveBreakdown })
   ].filter((x): x is Line => x !== null);
 
   return (
-    <section className="rounded-[22px] bg-white shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
+    <section className="rounded-[22px] bg-surface shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}

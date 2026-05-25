@@ -37,7 +37,7 @@ export async function LandingClosing() {
             <Link href="/register" className="mt-7 inline-flex">
               <Button
                 variant="primary"
-                className="!h-auto !w-auto !rounded-[14px] !bg-white !px-[22px] !py-3 !text-[14px] !text-accent-deep"
+                className="!h-auto !w-auto !rounded-[14px] !bg-surface !px-[22px] !py-3 !text-[14px] !text-accent-deep"
               >
                 {c.cta}
               </Button>

@@ -132,7 +132,7 @@ export function TaxProfileCard({
         <div className="mt-5 flex flex-col gap-4">
           <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
             {tx.vl.yearlyCostLabel}
-            <div className="flex items-center rounded-[14px] border border-hair bg-white px-3.5 py-2.5 focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/30">
+            <div className="flex items-center rounded-[14px] border border-hair bg-surface px-3.5 py-2.5 focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/30">
               <input
                 type="text"
                 inputMode="decimal"
@@ -175,7 +175,7 @@ export function TaxProfileCard({
         <div className="mt-5 flex flex-col gap-2">
           <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
             {tx.custom.percentLabel}
-            <div className="flex items-center rounded-[14px] border border-hair bg-white px-3.5 py-2.5 focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/30">
+            <div className="flex items-center rounded-[14px] border border-hair bg-surface px-3.5 py-2.5 focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/30">
               <input
                 type="text"
                 inputMode="numeric"
@@ -273,7 +273,7 @@ function ExpenseOption({
       className={`flex flex-col gap-1 rounded-[14px] border px-4 py-3 text-left transition-colors ${
         checked
           ? "border-accent bg-accent-soft"
-          : "border-hair bg-white hover:border-accent/40"
+          : "border-hair bg-surface hover:border-accent/40"
       }`}
     >
       <span className="flex items-center gap-2">
@@ -318,12 +318,12 @@ function PsdToggle({
       type="button"
       onClick={onToggle}
       aria-pressed={checked}
-      className="flex items-start gap-3 rounded-[14px] border border-hair bg-white px-4 py-3 text-left transition-colors hover:border-accent/40"
+      className="flex items-start gap-3 rounded-[14px] border border-hair bg-surface px-4 py-3 text-left transition-colors hover:border-accent/40"
     >
       <span
         aria-hidden
         className={`mt-0.5 flex h-5 w-5 items-center justify-center rounded-[6px] border-2 transition-colors ${
-          checked ? "border-accent bg-accent text-white" : "border-hair bg-white"
+          checked ? "border-accent bg-accent text-white" : "border-hair bg-surface"
         }`}
       >
         {checked ? (

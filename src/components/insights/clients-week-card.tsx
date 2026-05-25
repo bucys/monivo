@@ -14,7 +14,7 @@ export function ServicesPerformedCard({
   return (
     <section
       aria-label={labels.eyebrow}
-      className="rounded-[22px] bg-white p-6 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] lg:p-[30px]"
+      className="rounded-[22px] bg-surface p-6 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] lg:p-[30px]"
     >
       <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">
         {labels.eyebrow}

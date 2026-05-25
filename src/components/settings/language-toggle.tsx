@@ -18,7 +18,7 @@ export function LanguageToggle() {
             onClick={() => setLocale(l)}
             className={`min-w-[44px] rounded-full px-3 py-1.5 text-[12px] font-semibold uppercase transition-colors ${
               active
-                ? "bg-white text-ink-900/90 shadow-[0_1px_2px_rgba(23,33,29,0.08)]"
+                ? "bg-surface text-ink-900/90 shadow-[0_1px_2px_rgba(23,33,29,0.08)]"
                 : "text-ink-500 hover:text-ink-900/90"
             }`}
           >

@@ -83,7 +83,7 @@ export function ServicesClient({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between rounded-[16px] border border-hair bg-white px-4 py-3">
+      <div className="flex items-center justify-between rounded-[16px] border border-hair bg-surface px-4 py-3">
         <span className="text-[13px] text-ink-500">
           {services.length} {countLabel(services.length, t)}
           {" · "}
@@ -114,7 +114,7 @@ export function ServicesClient({
                 canWrite ? setMode({ kind: "edit", service: s }) : undefined
               }
               disabled={!canWrite}
-              className="flex w-full items-center justify-between rounded-[18px] border border-hair bg-white px-5 py-4 text-left transition-colors hover:border-accent/40 disabled:cursor-default disabled:hover:border-hair"
+              className="flex w-full items-center justify-between rounded-[18px] border border-hair bg-surface px-5 py-4 text-left transition-colors hover:border-accent/40 disabled:cursor-default disabled:hover:border-hair"
             >
               <span className="flex flex-col">
                 <span className="text-[16px] font-semibold tracking-[-0.018em] text-ink-900/90">
@@ -143,7 +143,7 @@ function EmptyState({
 }) {
   const t = useT();
   return (
-    <div className="flex flex-col items-center rounded-[24px] border border-hair bg-white px-6 py-12 text-center">
+    <div className="flex flex-col items-center rounded-[24px] border border-hair bg-surface px-6 py-12 text-center">
       <h2 className="text-[20px] font-semibold tracking-[-0.022em] text-ink-900/90">
         {t.services.emptyTitle}
       </h2>
@@ -283,13 +283,13 @@ function ServiceForm({
           maxLength={40}
           placeholder={t.services.form.namePlaceholder}
           autoFocus={mode.kind === "add"}
-          className="rounded-[14px] border border-hair bg-white px-3.5 py-2.5 text-[16px] font-medium text-ink-900/90 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
+          className="rounded-[14px] border border-hair bg-surface px-3.5 py-2.5 text-[16px] font-medium text-ink-900/90 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
         />
       </label>
 
       <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
         {t.services.form.price}
-        <div className="flex items-center rounded-[14px] border border-hair bg-white px-3.5 py-2.5 focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/30">
+        <div className="flex items-center rounded-[14px] border border-hair bg-surface px-3.5 py-2.5 focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/30">
           <input
             type="text"
             inputMode="decimal"
@@ -370,7 +370,7 @@ function ServiceForm({
                   type="button"
                   onClick={() => setConfirmDelete(false)}
                   disabled={deletePending}
-                  className="flex-1 rounded-[12px] border border-hair bg-white px-3 py-2 text-[13px] font-medium text-ink-700 disabled:opacity-50"
+                  className="flex-1 rounded-[12px] border border-hair bg-surface px-3 py-2 text-[13px] font-medium text-ink-700 disabled:opacity-50"
                 >
                   {t.services.delete.cancel}
                 </button>

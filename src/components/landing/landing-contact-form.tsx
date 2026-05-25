@@ -35,7 +35,7 @@ export function LandingContactForm() {
 
   if (submitted) {
     return (
-      <div className="rounded-[20px] border border-hair bg-white p-7 shadow-card sm:p-8">
+      <div className="rounded-[20px] border border-hair bg-surface p-7 shadow-card sm:p-8">
         <span className="text-[12px] font-semibold uppercase tracking-[0.18em] text-accent">
           {f.sentEyebrow}
         </span>
@@ -50,7 +50,7 @@ export function LandingContactForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className="flex flex-col gap-4 rounded-[20px] border border-hair bg-white p-7 shadow-card sm:p-8"
+      className="flex flex-col gap-4 rounded-[20px] border border-hair bg-surface p-7 shadow-card sm:p-8"
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">

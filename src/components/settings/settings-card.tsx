@@ -14,7 +14,7 @@ export function SettingsSection({
       <h2 className="px-1.5 pb-2.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-500">
         {label}
       </h2>
-      <div className="overflow-hidden rounded-[22px] bg-white shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
+      <div className="overflow-hidden rounded-[22px] bg-surface shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
         {children}
       </div>
     </section>

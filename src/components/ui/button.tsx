@@ -14,7 +14,7 @@ const base =
 
 const variants: Record<ButtonVariant, string> = {
   primary: "bg-accent text-white",
-  secondary: "border border-ink-300 bg-white text-ink-900",
+  secondary: "border border-ink-300 bg-surface text-ink-900",
   ghost: "bg-transparent text-accent",
   destructive: "bg-danger text-white",
 };

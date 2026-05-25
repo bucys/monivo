@@ -50,7 +50,7 @@ export function NotificationBell() {
         aria-haspopup="dialog"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className="relative inline-flex h-10 w-10 touch-manipulation items-center justify-center rounded-full bg-white/60 text-ink-700 ring-1 ring-hair/70 transition-colors hover:bg-white hover:text-ink-900/90"
+        className="relative inline-flex h-10 w-10 touch-manipulation items-center justify-center rounded-full bg-white/60 text-ink-700 ring-1 ring-hair/70 transition-colors hover:bg-surface hover:text-ink-900/90"
       >
         <svg
           width="18"
@@ -157,7 +157,7 @@ function MobileTopPanel({
         aria-modal="true"
         aria-label={ariaLabel}
         className={cn(
-          "absolute inset-x-0 top-0 max-h-[80dvh] overflow-y-auto rounded-b-[24px] bg-white pt-[env(safe-area-inset-top)] shadow-[0_18px_40px_-12px_rgba(23,33,29,0.25),_0_2px_6px_rgba(23,33,29,0.06)] transition-transform duration-200 ease-out",
+          "absolute inset-x-0 top-0 max-h-[80dvh] overflow-y-auto rounded-b-[24px] bg-surface pt-[env(safe-area-inset-top)] shadow-[0_18px_40px_-12px_rgba(23,33,29,0.25),_0_2px_6px_rgba(23,33,29,0.06)] transition-transform duration-200 ease-out",
           entered ? "translate-y-0" : "-translate-y-full",
         )}
       >
@@ -189,7 +189,7 @@ function PanelCard({
     <div
       role="dialog"
       aria-label={t.notifications.title}
-      className="overflow-hidden rounded-[18px] border border-hair bg-white shadow-[0_12px_40px_-12px_rgba(23,33,29,0.2),_0_2px_6px_rgba(23,33,29,0.06)]"
+      className="overflow-hidden rounded-[18px] border border-hair bg-surface shadow-[0_12px_40px_-12px_rgba(23,33,29,0.2),_0_2px_6px_rgba(23,33,29,0.06)]"
     >
       <PanelHeader count={items.length} unread={unread} onMarkAll={onMarkAll} />
       <PanelBody items={items} isRead={isRead} onItem={onItem} />

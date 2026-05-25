@@ -36,7 +36,7 @@ export async function LandingPricing() {
             </p>
           </div>
 
-          <article className="relative mx-auto max-w-[480px] rounded-[28px] border border-hair bg-white p-8 shadow-card sm:p-10">
+          <article className="relative mx-auto max-w-[480px] rounded-[28px] border border-hair bg-surface p-8 shadow-card sm:p-10">
             <div className="flex items-center justify-between">
               <span className="text-[14px] font-semibold tracking-tight text-ink-900/90">
                 Monivo

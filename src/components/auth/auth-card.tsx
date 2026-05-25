@@ -34,7 +34,7 @@ export function AuthCard({
         </span>
       </Link>
 
-      <article className="rounded-[24px] border border-hair bg-white p-7 shadow-card sm:p-8">
+      <article className="rounded-[24px] border border-hair bg-surface p-7 shadow-card sm:p-8">
         <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-accent/[0.08] px-3 py-1.5 text-eyebrow text-accent">
           <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-accent" />
           {eyebrow}

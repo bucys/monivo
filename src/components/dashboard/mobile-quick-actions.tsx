@@ -73,7 +73,7 @@ function Chip({
       type="button"
       onClick={() => !disabled && dispatchOpenIncomeEntry(service.id)}
       disabled={disabled}
-      className="flex shrink-0 items-center gap-2.5 rounded-full border border-hair bg-white py-3 pl-2 pr-4 text-[14px] font-medium text-ink-900/90 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] transition-transform active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60"
+      className="flex shrink-0 items-center gap-2.5 rounded-full border border-hair bg-surface py-3 pl-2 pr-4 text-[14px] font-medium text-ink-900/90 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] transition-transform active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60"
     >
       <span
         aria-hidden

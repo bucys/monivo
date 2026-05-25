@@ -38,7 +38,7 @@ function MobileGroup({
         expenseCents={group.expenseCents}
         className="mb-2.5 flex items-baseline justify-between px-1"
       />
-      <div className="overflow-hidden rounded-[22px] bg-white shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
+      <div className="overflow-hidden rounded-[22px] bg-surface shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
         {group.entries.map((e, i, arr) => (
           <MobileActivityRow
             key={e.id}
@@ -62,7 +62,7 @@ function DesktopGroup({
   onActions?: (entry: RecentEntry) => void;
 }) {
   return (
-    <div className="hidden overflow-hidden rounded-[22px] bg-white shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] lg:block">
+    <div className="hidden overflow-hidden rounded-[22px] bg-surface shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] lg:block">
       <DayHeader
         label={label}
         incomeCents={group.incomeCents}

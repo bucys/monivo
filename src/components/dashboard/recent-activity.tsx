@@ -62,7 +62,7 @@ export function TodayCard({
   return (
     <section
       aria-label={labels.aria}
-      className="overflow-hidden rounded-[20px] bg-white shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]"
+      className="overflow-hidden rounded-[20px] bg-surface shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]"
     >
       <div className="flex items-center justify-between border-b border-hair px-6 py-5">
         <div>

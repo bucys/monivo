@@ -18,7 +18,7 @@ export function WeeklyEarnings({
   return (
     <section
       aria-label={title}
-      className="flex h-full flex-col rounded-[20px] bg-white p-[26px] shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]"
+      className="flex h-full flex-col rounded-[20px] bg-surface p-[26px] shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]"
     >
       <div className="flex items-start justify-between gap-4">
         <div>

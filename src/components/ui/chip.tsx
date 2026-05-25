@@ -21,7 +21,7 @@ export function Chip({
         "inline-flex min-h-10 items-center rounded-sm px-3 text-body-strong transition-colors",
         isSelected
           ? "bg-accent-soft text-accent"
-          : "border border-ink-300 bg-white text-ink-900",
+          : "border border-ink-300 bg-surface text-ink-900",
         className,
       )}
       {...rest}

@@ -59,7 +59,7 @@ export function ModalSheet({
         aria-modal="true"
         aria-label={ariaLabel}
         className={cn(
-          "absolute inset-x-0 bottom-0 max-h-[85dvh] overflow-y-auto rounded-t-xl bg-white pb-[env(safe-area-inset-bottom)] shadow-hero transition-transform duration-200 ease-out",
+          "absolute inset-x-0 bottom-0 max-h-[85dvh] overflow-y-auto rounded-t-xl bg-surface pb-[env(safe-area-inset-bottom)] shadow-hero transition-transform duration-200 ease-out",
           open ? "translate-y-0" : "translate-y-full",
         )}
       >

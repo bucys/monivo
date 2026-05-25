@@ -175,7 +175,7 @@ export function DatePicker({
         aria-expanded={open}
         aria-label={ariaLabel}
         className={cn(
-          "flex w-full items-center gap-2.5 rounded-[14px] border border-hair bg-white px-3.5 py-2.5 text-left transition-colors",
+          "flex w-full items-center gap-2.5 rounded-[14px] border border-hair bg-surface px-3.5 py-2.5 text-left transition-colors",
           "focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30",
           disabled ? "cursor-not-allowed opacity-60" : "hover:border-accent/40",
         )}
@@ -291,7 +291,7 @@ function CalendarPanel({
       role="dialog"
       aria-label={monthHeaderTitle}
       className={cn(
-        "rounded-[18px] border border-hair bg-white shadow-[0_12px_40px_-12px_rgba(23,33,29,0.2),_0_2px_6px_rgba(23,33,29,0.06)]",
+        "rounded-[18px] border border-hair bg-surface shadow-[0_12px_40px_-12px_rgba(23,33,29,0.2),_0_2px_6px_rgba(23,33,29,0.06)]",
         compact ? "p-3" : "p-2",
       )}
     >

@@ -20,7 +20,7 @@ export function Card({
   ...rest
 }: CardProps) {
   return (
-    <div className={cn("bg-white", variants[variant], className)} {...rest}>
+    <div className={cn("bg-surface", variants[variant], className)} {...rest}>
       {children}
     </div>
   );

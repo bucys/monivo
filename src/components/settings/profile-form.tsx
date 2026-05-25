@@ -48,7 +48,7 @@ export function DisplayNameField({
         maxLength={80}
         onChange={(e) => setValue(e.target.value)}
         placeholder={t.settings.profile.displayNamePlaceholder}
-        className="rounded-[14px] border border-hair bg-white px-4 py-3 text-[15px] text-ink-900/90 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
+        className="rounded-[14px] border border-hair bg-surface px-4 py-3 text-[15px] text-ink-900/90 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
       />
       {error ? (
         <p className="text-[12px] text-expense">{error}</p>
@@ -117,7 +117,7 @@ export function TaxRatePill({ initialPercent }: { initialPercent: number }) {
       }}
       className="flex items-center gap-2"
     >
-      <div className="flex items-center rounded-[12px] border border-hair bg-white px-2.5 py-1 focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/30">
+      <div className="flex items-center rounded-[12px] border border-hair bg-surface px-2.5 py-1 focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/30">
         <input
           type="text"
           inputMode="decimal"

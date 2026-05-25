@@ -42,7 +42,7 @@ function MiniCard({
   const t = TONES[tone];
   const amount = formatEur(cents).replace(/\s?€/, "");
   return (
-    <div className="relative min-w-0 overflow-hidden rounded-[18px] bg-white p-3.5 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
+    <div className="relative min-w-0 overflow-hidden rounded-[18px] bg-surface p-3.5 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
       <span
         aria-hidden
         className="absolute right-3 top-3 flex h-[22px] w-[22px] items-center justify-center rounded-[8px]"

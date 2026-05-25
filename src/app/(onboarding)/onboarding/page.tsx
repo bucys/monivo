@@ -85,7 +85,7 @@ export default function OnboardingPage() {
         </span>
       </Link>
 
-      <article className="rounded-[24px] border border-hair bg-white p-7 shadow-card sm:p-8">
+      <article className="rounded-[24px] border border-hair bg-surface p-7 shadow-card sm:p-8">
         <StepDots current={step} total={2} ariaTemplate={to.stepAria} />
 
         {step === 1 ? (
@@ -194,7 +194,7 @@ function ProfessionStep({
               className={`flex flex-col items-start gap-1 rounded-[18px] border px-5 py-4 text-left transition-colors ${
                 active
                   ? "border-accent bg-accent-soft"
-                  : "border-hair bg-cream hover:border-accent/40 hover:bg-white"
+                  : "border-hair bg-cream hover:border-accent/40 hover:bg-surface"
               }`}
             >
               <span
@@ -315,7 +315,7 @@ function TaxStep({
       <label className="mt-5 flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
         {to.tax.customLabel}
         <div
-          className={`flex items-center rounded-[14px] border bg-white px-3.5 py-2.5 transition-colors focus-within:ring-2 focus-within:ring-accent/30 ${
+          className={`flex items-center rounded-[14px] border bg-surface px-3.5 py-2.5 transition-colors focus-within:ring-2 focus-within:ring-accent/30 ${
             customOutOfRange
               ? "border-expense focus-within:border-expense focus-within:ring-expense/20"
               : custom !== ""

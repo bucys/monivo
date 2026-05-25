@@ -91,7 +91,7 @@ export async function LandingFeatures() {
               return (
                 <article
                   key={feature.title}
-                  className="flex flex-col rounded-[22px] border border-hair bg-white p-7 shadow-card"
+                  className="flex flex-col rounded-[22px] border border-hair bg-surface p-7 shadow-card"
                 >
                   <span
                     aria-hidden

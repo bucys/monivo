@@ -93,7 +93,7 @@ export async function LandingHero() {
               />
             </div>
 
-            <div className="absolute -left-2 top-10 z-[3] flex -rotate-6 items-center gap-2.5 rounded-[14px] border border-hair bg-white px-3 py-2 shadow-card sm:left-0 sm:top-[60px] sm:px-3.5 sm:py-2.5">
+            <div className="absolute -left-2 top-10 z-[3] flex -rotate-6 items-center gap-2.5 rounded-[14px] border border-hair bg-surface px-3 py-2 shadow-card sm:left-0 sm:top-[60px] sm:px-3.5 sm:py-2.5">
               <span
                 aria-hidden
                 className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-income-bg text-[16px] font-bold leading-none text-income"
@@ -110,7 +110,7 @@ export async function LandingHero() {
               </span>
             </div>
 
-            <div className="absolute -right-2 bottom-16 z-[3] flex rotate-[4deg] items-center gap-2.5 rounded-[14px] border border-hair bg-white px-3 py-2 shadow-card sm:bottom-20 sm:right-2.5 sm:px-3.5 sm:py-2.5">
+            <div className="absolute -right-2 bottom-16 z-[3] flex rotate-[4deg] items-center gap-2.5 rounded-[14px] border border-hair bg-surface px-3 py-2 shadow-card sm:bottom-20 sm:right-2.5 sm:px-3.5 sm:py-2.5">
               <span
                 aria-hidden
                 className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-tax-bg text-tax"

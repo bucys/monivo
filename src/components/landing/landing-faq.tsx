@@ -93,7 +93,7 @@ function ContactCard({ t, locale }: { t: Dictionary; locale: Locale }) {
   };
 
   return (
-    <article className="flex flex-col rounded-[24px] border border-hair bg-white p-7 shadow-card sm:p-8">
+    <article className="flex flex-col rounded-[24px] border border-hair bg-surface p-7 shadow-card sm:p-8">
       <h3 className="text-[20px] font-semibold tracking-[-0.022em] text-ink-900">
         {c.title}
       </h3>
@@ -180,7 +180,7 @@ export function LandingFaq() {
             <div className="order-2 md:order-1">
               <ContactCard t={t} locale={locale} />
             </div>
-            <div className="order-1 overflow-hidden rounded-[24px] border border-hair bg-white shadow-card md:order-2">
+            <div className="order-1 overflow-hidden rounded-[24px] border border-hair bg-surface shadow-card md:order-2">
               {f.items.map((faq, i) => (
                 <FaqItem
                   key={faq.q}

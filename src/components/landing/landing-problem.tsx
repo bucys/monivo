@@ -31,7 +31,7 @@ export async function LandingProblem() {
               return (
                 <article
                   key={pain.q}
-                  className="flex flex-col gap-4 rounded-[24px] border border-hair bg-white p-7 shadow-card"
+                  className="flex flex-col gap-4 rounded-[24px] border border-hair bg-surface p-7 shadow-card"
                 >
                   <p className="rounded-[14px] bg-cream px-4 py-3.5 text-[16px] italic leading-[1.4] tracking-tight text-ink-500">
                     {pain.q}

@@ -53,7 +53,7 @@ export function AppSidebar({ sidebar }: { sidebar: SidebarData }) {
   ];
 
   return (
-    <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-20 lg:flex lg:h-dvh lg:w-[260px] lg:flex-col lg:gap-5 lg:overflow-y-auto lg:border-r lg:border-hair lg:bg-[#F4F1EA] lg:p-[22px]">
+    <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-20 lg:flex lg:h-dvh lg:w-[260px] lg:flex-col lg:gap-5 lg:overflow-y-auto lg:border-r lg:border-hair lg:bg-shell lg:p-[22px]">
       <Link
         href="/dashboard"
         className="flex items-center gap-2.5 px-1.5"
@@ -87,7 +87,7 @@ export function AppSidebar({ sidebar }: { sidebar: SidebarData }) {
         <button
           type="button"
           onClick={dispatchOpenExpenseEntry}
-          className="flex items-center gap-2.5 rounded-[14px] border border-hair bg-white px-3.5 py-3 text-[14px] font-medium text-ink-900/90"
+          className="flex items-center gap-2.5 rounded-[14px] border border-hair bg-surface px-3.5 py-3 text-[14px] font-medium text-ink-900/90"
         >
           <span
             aria-hidden
@@ -114,7 +114,7 @@ export function AppSidebar({ sidebar }: { sidebar: SidebarData }) {
                   aria-current={active ? "page" : undefined}
                   className={`flex items-center gap-3 rounded-[14px] px-3.5 py-2.5 text-[14px] font-medium tracking-tight transition-colors ${
                     active
-                      ? "bg-white text-ink-900/90 shadow-card"
+                      ? "bg-surface text-ink-900/90 shadow-card"
                       : "text-ink-500 hover:bg-white/60 hover:text-ink-900/90"
                   }`}
                 >
@@ -137,7 +137,7 @@ export function AppSidebar({ sidebar }: { sidebar: SidebarData }) {
       {/* Tax reserve mini-card — hidden when there's nothing to show this month
           (no income yet, or tax_rate is 0). */}
       {sidebar.reserveCents !== null ? (
-        <div className="rounded-[16px] border border-hair bg-white p-3.5 shadow-card">
+        <div className="rounded-[16px] border border-hair bg-surface p-3.5 shadow-card">
           <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.05em] text-ink-500">
             <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-[#E2B673]" />
             {t.nav.taxReserveMini}

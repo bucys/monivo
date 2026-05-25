@@ -54,7 +54,7 @@ function ChipsVisual({ t }: { t: Dictionary }) {
           return (
             <span
               key={s.initial}
-              className={`inline-flex items-center gap-2 rounded-full border border-hair bg-white px-3.5 py-2 text-[13px] font-medium text-ink-900 shadow-card ${
+              className={`inline-flex items-center gap-2 rounded-full border border-hair bg-surface px-3.5 py-2 text-[13px] font-medium text-ink-900 shadow-card ${
                 selected ? "scale-105 -rotate-2 outline outline-2 outline-offset-2 outline-accent" : ""
               }`}
             >
@@ -135,7 +135,7 @@ export async function LandingHowItWorks() {
               return (
                 <li
                   key={number}
-                  className="grid gap-8 rounded-[28px] border border-hair bg-white p-8 shadow-card md:grid-cols-2 md:items-center md:gap-10 md:p-7 lg:gap-12 lg:px-9 lg:py-7"
+                  className="grid gap-8 rounded-[28px] border border-hair bg-surface p-8 shadow-card md:grid-cols-2 md:items-center md:gap-10 md:p-7 lg:gap-12 lg:px-9 lg:py-7"
                 >
                   <div className={textFirst ? "md:order-1" : "md:order-2"}>
                     <span className="inline-flex h-11 w-11 items-center justify-center rounded-[14px] bg-accent-soft text-[18px] font-bold tracking-tight text-accent-deep tabular-nums">

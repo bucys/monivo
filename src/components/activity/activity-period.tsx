@@ -57,7 +57,7 @@ export function ActivityPeriod({
       <div
         role="tablist"
         aria-label={t.activity.period.ariaLabel}
-        className="inline-flex max-w-full items-center gap-1 rounded-full bg-white p-1 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] ring-1 ring-hair"
+        className="inline-flex max-w-full items-center gap-1 rounded-full bg-surface p-1 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] ring-1 ring-hair"
       >
         {items.map((item) => {
           const active = item.mode === mode;

@@ -1,38 +1,45 @@
 import type { Config } from "tailwindcss";
 
+// Color tokens consume CSS variables defined in src/app/globals.css.
+// Light + dark values live in `:root` and `.dark` blocks there.
+// `white` stays literal so `text-white` on accent buttons remains bright.
+
 const config: Config = {
+  darkMode: "class",
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
         ink: {
-          100: "#EFEDE9",
-          300: "#C9C9C9",
-          500: "#6E7A74",
-          700: "#3D3D3D",
-          900: "#17211D",
+          100: "rgb(var(--c-ink-100) / <alpha-value>)",
+          300: "rgb(var(--c-ink-300) / <alpha-value>)",
+          500: "rgb(var(--c-ink-500) / <alpha-value>)",
+          700: "rgb(var(--c-ink-700) / <alpha-value>)",
+          900: "rgb(var(--c-ink-900) / <alpha-value>)",
         },
-        cream: "#FAF8F4",
+        cream: "rgb(var(--c-cream) / <alpha-value>)",
+        shell: "rgb(var(--c-shell) / <alpha-value>)",
+        surface: "rgb(var(--c-surface) / <alpha-value>)",
         accent: {
-          DEFAULT: "#1F7A6B",
-          deep: "#185E53",
-          soft: "#DDF4EC",
+          DEFAULT: "rgb(var(--c-accent) / <alpha-value>)",
+          deep: "rgb(var(--c-accent-deep) / <alpha-value>)",
+          soft: "rgb(var(--c-accent-soft) / <alpha-value>)",
         },
         income: {
-          DEFAULT: "#1F7A4B",
-          bg: "#D8F5E5",
+          DEFAULT: "rgb(var(--c-income) / <alpha-value>)",
+          bg: "rgb(var(--c-income-bg) / <alpha-value>)",
         },
         expense: {
-          DEFAULT: "#A03A3A",
-          bg: "#FFE7E7",
+          DEFAULT: "rgb(var(--c-expense) / <alpha-value>)",
+          bg: "rgb(var(--c-expense-bg) / <alpha-value>)",
         },
         tax: {
-          DEFAULT: "#8A6418",
-          bg: "#FFF2D9",
+          DEFAULT: "rgb(var(--c-tax) / <alpha-value>)",
+          bg: "rgb(var(--c-tax-bg) / <alpha-value>)",
         },
         reserve: "#9A8654",
         danger: "#A6463A",
-        hair: "rgba(23,33,29,0.06)",
+        hair: "rgb(var(--c-hair) / var(--a-hair))",
       },
       fontFamily: {
         sans: [

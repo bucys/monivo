@@ -48,7 +48,7 @@ export function TopServicesCard({
     return (
       <section
         aria-label={labels.eyebrow}
-        className="rounded-[22px] bg-white p-6 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] lg:p-[30px]"
+        className="rounded-[22px] bg-surface p-6 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] lg:p-[30px]"
       >
         <Header labels={labels} />
         <p className="mt-3 text-[13px] leading-[1.55] text-ink-500">
@@ -65,7 +65,7 @@ export function TopServicesCard({
   return (
     <section
       aria-label={labels.eyebrow}
-      className="rounded-[22px] bg-white p-6 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] lg:p-[30px]"
+      className="rounded-[22px] bg-surface p-6 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] lg:p-[30px]"
     >
       <Header labels={labels} />
 
@@ -160,7 +160,7 @@ function ServiceTile({
 
   const surfaceClass = isTop
     ? "border-[rgba(23,33,29,0.1)] bg-[#FBFAF6] shadow-[0_1px_2px_rgba(23,33,29,0.05),_0_12px_28px_-12px_rgba(31,122,107,0.25)]"
-    : "border-hair bg-white shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_6px_18px_-10px_rgba(23,33,29,0.08)]";
+    : "border-hair bg-surface shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_6px_18px_-10px_rgba(23,33,29,0.08)]";
 
   return (
     <div

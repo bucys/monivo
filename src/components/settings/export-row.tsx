@@ -222,7 +222,7 @@ function OptionCard({
       className={`flex w-full flex-col gap-1 rounded-[14px] border px-4 py-3 text-left transition-colors ${
         active
           ? "border-accent bg-accent-soft"
-          : "border-hair bg-white hover:border-accent/40"
+          : "border-hair bg-surface hover:border-accent/40"
       }`}
     >
       <span className="flex items-center gap-2">

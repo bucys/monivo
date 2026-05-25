@@ -38,7 +38,7 @@ export function QuickActions({
   return (
     <section
       aria-label={t.dashboard.quickActions}
-      className="flex h-full flex-col rounded-[20px] bg-white p-6 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]"
+      className="flex h-full flex-col rounded-[20px] bg-surface p-6 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]"
     >
       <div className="mb-3.5 flex items-baseline justify-between gap-3">
         <h2 className="text-[14px] font-semibold tracking-[-0.012em] text-ink-900/90">
@@ -59,7 +59,7 @@ export function QuickActions({
                 type="button"
                 onClick={() => canWrite && dispatchOpenIncomeEntry(s.id)}
                 disabled={!canWrite}
-                className="group flex w-full items-center gap-3 rounded-[14px] border border-hair bg-cream px-3.5 py-[11px] text-left transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-cream"
+                className="group flex w-full items-center gap-3 rounded-[14px] border border-hair bg-cream px-3.5 py-[11px] text-left transition-colors hover:bg-surface disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-cream"
               >
                 <span
                   aria-hidden

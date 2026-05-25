@@ -2,6 +2,66 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Color tokens. Light values in :root, dark overrides in .dark.
+ * Values are RGB triplets so Tailwind's `rgb(var(--c-X) / <alpha-value>)` form
+ * works with alpha modifiers (e.g. bg-ink-900/40).
+ *
+ * Semantic token names map roughly:
+ *   surface    → card / floating element background (was "bg-white")
+ *   cream      → page background
+ *   shell      → secondary surface (sidebar)
+ *   ink-900..100 → text + subtle backgrounds
+ *   accent     → primary brand action
+ *   accent-soft→ accent-tinted background
+ *   income/expense/tax → semantic tones + paler bg variants
+ *   hair       → 1px borders / dividers (alpha-aware)
+ */
+:root {
+  --c-surface: 255 255 255;
+  --c-cream: 250 248 244;
+  --c-shell: 244 241 234;
+  --c-ink-100: 239 237 233;
+  --c-ink-300: 201 201 201;
+  --c-ink-500: 110 122 116;
+  --c-ink-700: 61 61 61;
+  --c-ink-900: 23 33 29;
+  --c-accent: 31 122 107;
+  --c-accent-deep: 24 94 83;
+  --c-accent-soft: 221 244 236;
+  --c-income: 31 122 75;
+  --c-income-bg: 216 245 229;
+  --c-expense: 160 58 58;
+  --c-expense-bg: 255 231 231;
+  --c-tax: 138 100 24;
+  --c-tax-bg: 255 242 217;
+  --c-hair: 23 33 29;
+  --a-hair: 0.06;
+}
+
+.dark {
+  /* Warm graphite / espresso palette — not pure black. */
+  --c-surface: 31 26 20;        /* cards, sheets, modals */
+  --c-cream: 21 17 13;          /* body / page background */
+  --c-shell: 26 22 18;          /* sidebar */
+  --c-ink-100: 42 36 29;        /* subtle filled chips, cream/60 replacements */
+  --c-ink-300: 74 66 56;        /* disabled borders */
+  --c-ink-500: 156 148 138;     /* muted text */
+  --c-ink-700: 200 194 184;     /* secondary text */
+  --c-ink-900: 236 228 216;     /* primary text — warm off-white */
+  --c-accent: 53 173 152;       /* slightly brighter teal for AA contrast */
+  --c-accent-deep: 91 200 176;
+  --c-accent-soft: 30 58 51;    /* deep teal-tinted background */
+  --c-income: 92 196 144;
+  --c-income-bg: 30 58 42;
+  --c-expense: 226 117 117;
+  --c-expense-bg: 58 31 31;
+  --c-tax: 214 177 106;
+  --c-tax-bg: 58 47 26;
+  --c-hair: 255 255 255;
+  --a-hair: 0.10;
+}
+
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
@@ -17,7 +77,6 @@
     @apply bg-cream text-ink-900 font-sans antialiased;
     font-feature-settings: "ss01", "cv11";
   }
-
 }
 
 @layer utilities {

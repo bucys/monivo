@@ -11,7 +11,7 @@ export function StatCard({ label, value, className }: StatCardProps) {
   return (
     <div
       className={cn(
-        "flex flex-1 flex-col gap-1 rounded-lg bg-white p-4 shadow-card",
+        "flex flex-1 flex-col gap-1 rounded-lg bg-surface p-4 shadow-card",
         className,
       )}
     >

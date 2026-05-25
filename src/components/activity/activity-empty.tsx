@@ -19,7 +19,7 @@ export function ActivityEmpty({
     custom: t.activity.empty.custom,
   };
   return (
-    <div className="flex flex-col items-center rounded-[22px] bg-white px-6 py-12 text-center shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
+    <div className="flex flex-col items-center rounded-[22px] bg-surface px-6 py-12 text-center shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
       <span
         aria-hidden
         className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-accent-soft text-accent-deep"

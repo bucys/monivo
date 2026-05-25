@@ -156,7 +156,7 @@ function MenuPill({
       type="button"
       onClick={onClick}
       tabIndex={tabIndex}
-      className="flex items-center gap-2.5 rounded-full bg-white px-4 py-2.5 text-[14px] font-semibold text-ink-900/90 shadow-fab transition-transform active:scale-[0.97]"
+      className="flex items-center gap-2.5 rounded-full bg-surface px-4 py-2.5 text-[14px] font-semibold text-ink-900/90 shadow-fab transition-transform active:scale-[0.97]"
     >
       <span
         aria-hidden

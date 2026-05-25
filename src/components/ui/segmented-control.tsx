@@ -41,7 +41,7 @@ export function SegmentedControl<T extends string>({
             className={cn(
               "h-10 flex-1 rounded-sm text-body-strong transition-colors",
               selected
-                ? "bg-white text-ink-900 shadow-card"
+                ? "bg-surface text-ink-900 shadow-card"
                 : "text-ink-500",
             )}
           >

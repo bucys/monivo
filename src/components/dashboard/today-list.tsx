@@ -29,7 +29,7 @@ export function MobileTodayList({
     <section aria-label={labels.aria} className="lg:hidden">
       <SectionHeader title={labels.title} seeAll={labels.seeAll} />
       {entries.length > 0 ? (
-        <div className="overflow-hidden rounded-[22px] bg-white shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
+        <div className="overflow-hidden rounded-[22px] bg-surface shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
           {entries.slice(0, 6).map((e, i, arr) => (
             <Row key={e.id} entry={e} last={i === arr.length - 1} labels={labels} />
           ))}
@@ -119,7 +119,7 @@ function EmptyCard({
   emptyBody: string;
 }) {
   return (
-    <div className="flex flex-col items-center rounded-[22px] bg-white px-6 py-10 text-center shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
+    <div className="flex flex-col items-center rounded-[22px] bg-surface px-6 py-10 text-center shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
       <span
         aria-hidden
         className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-accent-soft text-accent-deep"

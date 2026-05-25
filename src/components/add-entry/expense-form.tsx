@@ -124,7 +124,7 @@ export function ExpenseForm({
 
       <label className="flex flex-col gap-2">
         <span className="text-[12px] font-medium text-ink-500">{tx.amount}</span>
-        <div className="flex items-baseline rounded-[16px] border border-hair bg-white px-4 py-3 focus-within:border-expense focus-within:ring-2 focus-within:ring-expense/20">
+        <div className="flex items-baseline rounded-[16px] border border-hair bg-surface px-4 py-3 focus-within:border-expense focus-within:ring-2 focus-within:ring-expense/20">
           <input
             type="text"
             inputMode="decimal"
@@ -152,7 +152,7 @@ export function ExpenseForm({
                 className={`rounded-[14px] border px-3.5 py-3 text-left text-[14px] font-medium transition-colors ${
                   active
                     ? "border-expense bg-expense-bg text-expense"
-                    : "border-hair bg-white text-ink-700 hover:border-expense/40"
+                    : "border-hair bg-surface text-ink-700 hover:border-expense/40"
                 }`}
               >
                 {c.label}
@@ -171,7 +171,7 @@ export function ExpenseForm({
             onChange={(e) => setNote(e.target.value)}
             maxLength={200}
             placeholder={tx.notePlaceholder}
-            className="rounded-[14px] border border-hair bg-white px-3.5 py-2.5 text-[14px] text-ink-900/90 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
+            className="rounded-[14px] border border-hair bg-surface px-3.5 py-2.5 text-[14px] text-ink-900/90 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
           />
         </label>
       ) : (
