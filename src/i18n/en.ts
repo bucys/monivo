@@ -219,9 +219,36 @@ export const en: Dictionary = {
     app: {
       appearance: "Appearance",
       appearanceValue: "Light",
+      themeAria: "Choose appearance",
+      themeOptions: { light: "Light", dark: "Dark", device: "Device" },
       language: "Language",
       export: "Export data",
       exportValue: "CSV",
+      exportHint: "Download your income and expense history.",
+      exportEmpty: "Nothing to export yet.",
+      exportEmptyIncome: "No income data to export.",
+      exportEmptyExpenses: "No expense data to export.",
+      exportError: "Couldn't prepare the file.",
+      exportPending: "Preparing…",
+      exportSheet: {
+        title: "Export data",
+        subtitle: "Pick what you'd like to download.",
+        download: "Download CSV",
+        options: {
+          all: {
+            label: "All data",
+            helper: "Full export including income and expenses.",
+          },
+          income: {
+            label: "Income only",
+            helper: "Export only income entries and services.",
+          },
+          expenses: {
+            label: "Expenses only",
+            helper: "Export only expense entries.",
+          },
+        },
+      },
     },
     subscription: {
       title: "Your plan",
@@ -235,6 +262,7 @@ export const en: Dictionary = {
     },
     account: {
       account: "Account",
+      email: "Email",
       logout: "Sign out",
     },
   },

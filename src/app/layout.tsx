@@ -55,6 +55,22 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
+// Inline pre-hydration script — runs before React paints, so the user's saved
+// theme is applied without a light-mode flash. Kept tiny; mirrors the runtime
+// helpers in src/lib/theme.ts.
+const themeBootstrap = `
+(function(){try{
+var k='monivo_theme';
+var v=localStorage.getItem(k);
+if(v!=='light'&&v!=='dark'&&v!=='device')v='device';
+var dark=v==='dark'||(v==='device'&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+var r=document.documentElement;
+if(dark)r.classList.add('dark');else r.classList.remove('dark');
+r.dataset.theme=dark?'dark':'light';
+r.style.colorScheme=dark?'dark':'light';
+}catch(e){}})();
+`;
+
 export default async function RootLayout({
   children,
 }: {
@@ -64,6 +80,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} className={inter.variable}>
       <body>
+        <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
         <LocaleProvider initialLocale={locale}>{children}</LocaleProvider>
       </body>
     </html>

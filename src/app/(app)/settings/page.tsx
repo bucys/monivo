@@ -8,14 +8,15 @@ import {
 } from "@/components/settings/settings-card";
 import {
   IconCrown,
-  IconExport,
   IconGlobe,
   IconList,
   IconPerson,
   IconSparkle,
 } from "@/components/settings/settings-icons";
+import { ExportRow } from "@/components/settings/export-row";
 import { LanguageToggle } from "@/components/settings/language-toggle";
 import { TaxFormSheet } from "@/components/settings/tax-form-sheet";
+import { ThemeToggle } from "@/components/settings/theme-toggle";
 import { getDictionary } from "@/i18n";
 import { getServerLocale } from "@/i18n/server";
 import {
@@ -118,7 +119,8 @@ export default async function SettingsPage() {
           <SettingsRow
             icon={<IconSparkle />}
             label={t.settings.app.appearance}
-            detail={t.settings.app.appearanceValue}
+            right={<ThemeToggle />}
+            chevron={false}
           />
           <SettingsRow
             icon={<IconGlobe />}
@@ -126,12 +128,7 @@ export default async function SettingsPage() {
             right={<LanguageToggle />}
             chevron={false}
           />
-          <SettingsRow
-            icon={<IconExport />}
-            label={t.settings.app.export}
-            detail={t.settings.app.exportValue}
-            last
-          />
+          <ExportRow last />
         </SettingsSection>
 
         <SettingsSection label={t.settings.sections.subscription}>
@@ -152,7 +149,9 @@ export default async function SettingsPage() {
         <SettingsSection label={t.settings.sections.account}>
           <SettingsRow
             icon={<IconPerson />}
-            label={t.settings.account.account}
+            label={t.settings.account.email}
+            detail={user.email ?? ""}
+            chevron={false}
           />
           <LogoutRow label={t.settings.account.logout} />
         </SettingsSection>

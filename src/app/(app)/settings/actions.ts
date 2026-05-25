@@ -4,6 +4,208 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
+const EXPENSE_CATEGORY_LABEL: Record<string, string> = {
+  supplies: "Priemonės",
+  rent: "Nuoma",
+  marketing: "Marketingas",
+  education: "Mokymai",
+  equipment: "Įranga",
+  other: "Kita",
+};
+
+function csvEscape(value: string | number | null | undefined): string {
+  if (value === null || value === undefined) return "";
+  const s = String(value);
+  // Wrap if it contains a comma, quote, CR or LF; double internal quotes.
+  if (/[",\r\n]/.test(s)) {
+    return `"${s.replace(/"/g, '""')}"`;
+  }
+  return s;
+}
+
+function todayIsoDate() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+export type ExportKind = "all" | "income" | "expenses";
+
+const ALLOWED_KINDS: ReadonlySet<ExportKind> = new Set([
+  "all",
+  "income",
+  "expenses",
+]);
+
+/** Serializes a 2D table into a CSV string with a UTF-8 BOM. */
+function serializeCsv(header: ReadonlyArray<string>, rows: string[][]): string {
+  const body = rows
+    .map((r) => r.map(csvEscape).join(","))
+    .join("\r\n");
+  // BOM ensures Excel reads UTF-8 (Lithuanian chars).
+  return body
+    ? `﻿${header.join(",")}\r\n${body}\r\n`
+    : `﻿${header.join(",")}\r\n`;
+}
+
+function centsToEur(cents: number | null | undefined): string {
+  return (Number(cents ?? 0) / 100).toFixed(2);
+}
+
+export async function exportEntriesCsv(kind: ExportKind = "all"): Promise<{
+  csv: string;
+  filename: string;
+  rowCount: number;
+}> {
+  if (!ALLOWED_KINDS.has(kind)) {
+    throw new Error("Neteisingas eksporto tipas.");
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const wantIncome = kind === "all" || kind === "income";
+  const wantExpenses = kind === "all" || kind === "expenses";
+
+  const [incomeRes, expenseRes] = await Promise.all([
+    wantIncome
+      ? supabase
+          .from("income_entries")
+          .select(
+            "amount_cents, service_name, payment_method, note, occurred_at, created_at",
+          )
+          .eq("user_id", user.id)
+          .order("occurred_at", { ascending: false })
+          .order("created_at", { ascending: false })
+      : Promise.resolve({ data: [] as Array<Record<string, unknown>> }),
+    wantExpenses
+      ? supabase
+          .from("expense_entries")
+          .select("amount_cents, category, note, occurred_at, created_at")
+          .eq("user_id", user.id)
+          .order("occurred_at", { ascending: false })
+          .order("created_at", { ascending: false })
+      : Promise.resolve({ data: [] as Array<Record<string, unknown>> }),
+  ]);
+
+  const incomes = (incomeRes.data ?? []) as Array<{
+    amount_cents: number;
+    service_name: string | null;
+    payment_method: string | null;
+    note: string | null;
+    occurred_at: string;
+    created_at: string;
+  }>;
+  const expenses = (expenseRes.data ?? []) as Array<{
+    amount_cents: number;
+    category: string | null;
+    note: string | null;
+    occurred_at: string;
+    created_at: string;
+  }>;
+
+  let header: ReadonlyArray<string>;
+  let rows: string[][];
+
+  if (kind === "income") {
+    header = [
+      "date",
+      "service",
+      "payment_method",
+      "note",
+      "amount_eur",
+      "currency",
+      "created_at",
+    ];
+    rows = incomes.map((r) => [
+      String(r.occurred_at ?? ""),
+      String(r.service_name ?? ""),
+      String(r.payment_method ?? ""),
+      String(r.note ?? ""),
+      centsToEur(r.amount_cents),
+      "EUR",
+      String(r.created_at ?? ""),
+    ]);
+  } else if (kind === "expenses") {
+    header = [
+      "date",
+      "category",
+      "note",
+      "amount_eur",
+      "currency",
+      "created_at",
+    ];
+    rows = expenses.map((r) => {
+      const slug = String(r.category ?? "");
+      return [
+        String(r.occurred_at ?? ""),
+        EXPENSE_CATEGORY_LABEL[slug] ?? slug,
+        String(r.note ?? ""),
+        centsToEur(r.amount_cents),
+        "EUR",
+        String(r.created_at ?? ""),
+      ];
+    });
+  } else {
+    // kind === "all" — merged with a type column, matches the original format.
+    header = [
+      "date",
+      "type",
+      "category",
+      "payment_method",
+      "note",
+      "amount_eur",
+      "currency",
+      "created_at",
+    ];
+    const merged: Array<{ occurred_at: string; row: string[] }> = [];
+    for (const r of incomes) {
+      merged.push({
+        occurred_at: String(r.occurred_at ?? ""),
+        row: [
+          String(r.occurred_at ?? ""),
+          "income",
+          String(r.service_name ?? ""),
+          String(r.payment_method ?? ""),
+          String(r.note ?? ""),
+          centsToEur(r.amount_cents),
+          "EUR",
+          String(r.created_at ?? ""),
+        ],
+      });
+    }
+    for (const r of expenses) {
+      const slug = String(r.category ?? "");
+      merged.push({
+        occurred_at: String(r.occurred_at ?? ""),
+        row: [
+          String(r.occurred_at ?? ""),
+          "expense",
+          EXPENSE_CATEGORY_LABEL[slug] ?? slug,
+          "",
+          String(r.note ?? ""),
+          centsToEur(r.amount_cents),
+          "EUR",
+          String(r.created_at ?? ""),
+        ],
+      });
+    }
+    merged.sort((a, b) => (a.occurred_at < b.occurred_at ? 1 : -1));
+    rows = merged.map((m) => m.row);
+  }
+
+  return {
+    csv: serializeCsv(header, rows),
+    filename: `monivo-${kind}-${todayIsoDate()}.csv`,
+    rowCount: rows.length,
+  };
+}
+
 const MAX_NAME = 80;
 
 function parseDisplayName(raw: unknown): string | null {

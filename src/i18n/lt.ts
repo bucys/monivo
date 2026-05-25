@@ -185,9 +185,27 @@ export type Dictionary = {
     app: {
       appearance: string;
       appearanceValue: string;
+      themeAria: string;
+      themeOptions: { light: string; dark: string; device: string };
       language: string;
       export: string;
       exportValue: string;
+      exportHint: string;
+      exportEmpty: string;
+      exportEmptyIncome: string;
+      exportEmptyExpenses: string;
+      exportError: string;
+      exportPending: string;
+      exportSheet: {
+        title: string;
+        subtitle: string;
+        download: string;
+        options: {
+          all: { label: string; helper: string };
+          income: { label: string; helper: string };
+          expenses: { label: string; helper: string };
+        };
+      };
     };
     subscription: {
       title: string;
@@ -201,6 +219,7 @@ export type Dictionary = {
     };
     account: {
       account: string;
+      email: string;
       logout: string;
     };
   };
@@ -785,9 +804,36 @@ export const lt: Dictionary = {
     app: {
       appearance: "Išvaizda",
       appearanceValue: "Šviesi",
+      themeAria: "Pasirinkti išvaizdą",
+      themeOptions: { light: "Šviesi", dark: "Tamsi", device: "Įrenginio" },
       language: "Kalba",
       export: "Eksportuoti duomenis",
       exportValue: "CSV",
+      exportHint: "Atsisiųsk pajamų ir išlaidų suvestinę.",
+      exportEmpty: "Nėra duomenų eksportui.",
+      exportEmptyIncome: "Nėra pajamų duomenų eksportui.",
+      exportEmptyExpenses: "Nėra išlaidų duomenų eksportui.",
+      exportError: "Nepavyko paruošti failo.",
+      exportPending: "Ruošiama…",
+      exportSheet: {
+        title: "Eksportuoti duomenis",
+        subtitle: "Pasirink, ką nori atsisiųsti.",
+        download: "Atsisiųsti CSV",
+        options: {
+          all: {
+            label: "Visi duomenys",
+            helper: "Pilnas eksportas — pajamos ir išlaidos kartu.",
+          },
+          income: {
+            label: "Tik pajamos",
+            helper: "Tik pajamų įrašai ir paslaugos.",
+          },
+          expenses: {
+            label: "Tik išlaidos",
+            helper: "Tik išlaidų įrašai.",
+          },
+        },
+      },
     },
     subscription: {
       title: "Tavo planas",
@@ -801,6 +847,7 @@ export const lt: Dictionary = {
     },
     account: {
       account: "Paskyra",
+      email: "El. paštas",
       logout: "Atsijungti",
     },
   },
