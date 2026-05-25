@@ -1,14 +1,22 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { exportEntriesCsv, type ExportKind } from "@/app/(app)/settings/actions";
+import {
+  exportEntriesCsv,
+  type ExportKind,
+  type ExportRange,
+} from "@/app/(app)/settings/actions";
 import { SettingsRow } from "@/components/settings/settings-card";
 import { IconExport } from "@/components/settings/settings-icons";
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import { ModalSheet } from "@/components/ui/modal-sheet";
 import { useT } from "@/i18n/locale-provider";
 
 const KINDS: ReadonlyArray<ExportKind> = ["all", "income", "expenses"];
+
+type RangeKey = "this_month" | "this_year" | "custom";
+const RANGE_KEYS: ReadonlyArray<RangeKey> = ["this_month", "this_year", "custom"];
 
 function emptyMessageFor(
   kind: ExportKind,
@@ -25,8 +33,16 @@ export function ExportRow({ last }: { last?: boolean }) {
 
   const [open, setOpen] = useState(false);
   const [kind, setKind] = useState<ExportKind>("all");
+  const [rangeKey, setRangeKey] = useState<RangeKey>("this_month");
+  const [from, setFrom] = useState<string>("");
+  const [to, setTo] = useState<string>("");
   const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
+
+  const customInvalid =
+    rangeKey === "custom" && from !== "" && to !== "" && from > to;
+  const customIncomplete = rangeKey === "custom" && (from === "" || to === "");
+  const downloadDisabled = pending || customInvalid || customIncomplete;
 
   const onOpen = () => {
     setMessage(null);
@@ -39,11 +55,13 @@ export function ExportRow({ last }: { last?: boolean }) {
   };
 
   const onDownload = () => {
-    if (pending) return;
+    if (downloadDisabled) return;
     setMessage(null);
+    const range: ExportRange =
+      rangeKey === "custom" ? { type: "custom", from, to } : { type: rangeKey };
     startTransition(async () => {
       try {
-        const { csv, filename, rowCount } = await exportEntriesCsv(kind);
+        const { csv, filename, rowCount } = await exportEntriesCsv(kind, range);
         if (rowCount === 0) {
           setMessage(emptyMessageFor(kind, t));
           return;
@@ -94,43 +112,73 @@ export function ExportRow({ last }: { last?: boolean }) {
             const opt = sheet.options[k];
             return (
               <li key={k}>
-                <button
-                  type="button"
-                  onClick={() => setKind(k)}
-                  aria-pressed={active}
-                  className={`flex w-full flex-col gap-1 rounded-[14px] border px-4 py-3 text-left transition-colors ${
-                    active
-                      ? "border-accent bg-accent-soft"
-                      : "border-hair bg-white hover:border-accent/40"
-                  }`}
-                >
-                  <span className="flex items-center gap-2">
-                    <span
-                      aria-hidden
-                      className={`flex h-4 w-4 items-center justify-center rounded-full border-2 ${
-                        active ? "border-accent" : "border-hair"
-                      }`}
-                    >
-                      {active ? (
-                        <span className="block h-2 w-2 rounded-full bg-accent" />
-                      ) : null}
-                    </span>
-                    <span
-                      className={`text-[14px] font-medium tracking-[-0.008em] ${
-                        active ? "text-accent-deep" : "text-ink-900/90"
-                      }`}
-                    >
-                      {opt.label}
-                    </span>
-                  </span>
-                  <span className="pl-6 text-[12px] leading-[1.45] text-ink-500">
-                    {opt.helper}
-                  </span>
-                </button>
+                <OptionCard
+                  active={active}
+                  onSelect={() => setKind(k)}
+                  label={opt.label}
+                  helper={opt.helper}
+                />
               </li>
             );
           })}
         </ul>
+
+        <div className="mt-4 flex flex-col gap-2">
+          <span className="px-1 text-[11px] font-semibold uppercase tracking-[0.05em] text-ink-500">
+            {sheet.rangeLabel}
+          </span>
+          <div className="grid grid-cols-3 gap-1 rounded-[18px] bg-cream p-1 ring-1 ring-hair">
+            {RANGE_KEYS.map((rk) => {
+              const active = rangeKey === rk;
+              return (
+                <button
+                  key={rk}
+                  type="button"
+                  onClick={() => setRangeKey(rk)}
+                  aria-pressed={active}
+                  className={`rounded-[14px] px-2 py-2 text-center text-[12px] font-medium leading-tight tracking-[-0.008em] transition-colors ${
+                    active
+                      ? "bg-ink-900 text-white shadow-[0_1px_2px_rgba(23,33,29,0.18)]"
+                      : "text-ink-700 hover:text-ink-900/90"
+                  }`}
+                >
+                  {sheet.ranges[rk]}
+                </button>
+              );
+            })}
+          </div>
+
+          {rangeKey === "custom" ? (
+            <div className="mt-1 grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
+                {sheet.from}
+                <DatePicker
+                  value={from}
+                  onChange={setFrom}
+                  placeholder={sheet.from}
+                  ariaLabel={sheet.from}
+                  maxDate={to || undefined}
+                />
+              </label>
+              <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
+                {sheet.to}
+                <DatePicker
+                  value={to}
+                  onChange={setTo}
+                  placeholder={sheet.to}
+                  ariaLabel={sheet.to}
+                  minDate={from || undefined}
+                />
+              </label>
+            </div>
+          ) : null}
+
+          {customInvalid ? (
+            <p className="rounded-[12px] bg-expense-bg px-3.5 py-2.5 text-[12px] text-expense">
+              {sheet.invalidRange}
+            </p>
+          ) : null}
+        </div>
 
         {message ? (
           <p className="mt-3 rounded-[12px] bg-cream px-3.5 py-2.5 text-[13px] text-ink-700">
@@ -144,6 +192,7 @@ export function ExportRow({ last }: { last?: boolean }) {
             type="button"
             onClick={onDownload}
             isLoading={pending}
+            disabled={downloadDisabled}
             className="!h-auto !w-full !rounded-[14px] !px-5 !py-3 !text-[14px]"
           >
             {pending ? t.settings.app.exportPending : sheet.download}
@@ -153,3 +202,52 @@ export function ExportRow({ last }: { last?: boolean }) {
     </>
   );
 }
+
+function OptionCard({
+  active,
+  onSelect,
+  label,
+  helper,
+}: {
+  active: boolean;
+  onSelect: () => void;
+  label: string;
+  helper: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      aria-pressed={active}
+      className={`flex w-full flex-col gap-1 rounded-[14px] border px-4 py-3 text-left transition-colors ${
+        active
+          ? "border-accent bg-accent-soft"
+          : "border-hair bg-white hover:border-accent/40"
+      }`}
+    >
+      <span className="flex items-center gap-2">
+        <span
+          aria-hidden
+          className={`flex h-4 w-4 items-center justify-center rounded-full border-2 ${
+            active ? "border-accent" : "border-hair"
+          }`}
+        >
+          {active ? (
+            <span className="block h-2 w-2 rounded-full bg-accent" />
+          ) : null}
+        </span>
+        <span
+          className={`text-[14px] font-medium tracking-[-0.008em] ${
+            active ? "text-accent-deep" : "text-ink-900/90"
+          }`}
+        >
+          {label}
+        </span>
+      </span>
+      <span className="pl-6 text-[12px] leading-[1.45] text-ink-500">
+        {helper}
+      </span>
+    </button>
+  );
+}
+

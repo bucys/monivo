@@ -5,6 +5,7 @@ import { useState, useTransition } from "react";
 import { updateTaxProfile } from "@/app/(app)/settings/actions";
 import { AccordionRow } from "@/components/ui/accordion-row";
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import { useT } from "@/i18n/locale-provider";
 import type { TaxProfile } from "@/lib/tax";
 
@@ -147,15 +148,12 @@ export function TaxProfileCard({
           </label>
           <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
             {tx.vl.validUntilLabel}
-            <div className="flex items-center rounded-[14px] border border-hair bg-white px-3.5 py-2.5 transition-colors focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/30">
-              <CalendarIcon />
-              <input
-                type="date"
-                value={vlValidUntil}
-                onChange={(e) => setVlValidUntil(e.target.value)}
-                className="ml-2.5 w-full bg-transparent text-[15px] font-medium text-ink-900/90 placeholder:text-ink-500 focus:outline-none [color-scheme:light] [&::-webkit-calendar-picker-indicator]:opacity-60 [&::-webkit-calendar-picker-indicator]:hover:opacity-100"
-              />
-            </div>
+            <DatePicker
+              value={vlValidUntil}
+              onChange={setVlValidUntil}
+              placeholder={tx.vl.validUntilLabel}
+              ariaLabel={tx.vl.validUntilLabel}
+            />
           </label>
           <PsdToggle
             checked={includePsd}
@@ -253,26 +251,6 @@ export function TaxProfileCard({
 function ExplainTitle({ children }: { children: React.ReactNode }) {
   return (
     <span className="text-[13px] font-medium text-ink-900/90">{children}</span>
-  );
-}
-
-function CalendarIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      className="text-ink-500"
-    >
-      <rect x="3.5" y="5" width="17" height="15" rx="3" />
-      <path d="M8 3v4M16 3v4M3.5 10h17" />
-    </svg>
   );
 }
 

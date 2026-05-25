@@ -5,6 +5,8 @@ export type Dictionary = {
     edit: string;
     delete: string;
     close: string;
+    previousMonth: string;
+    nextMonth: string;
     genericError: string;
     loading: string;
     soon: string;
@@ -205,6 +207,15 @@ export type Dictionary = {
           income: { label: string; helper: string };
           expenses: { label: string; helper: string };
         };
+        rangeLabel: string;
+        ranges: {
+          this_month: string;
+          this_year: string;
+          custom: string;
+        };
+        from: string;
+        to: string;
+        invalidRange: string;
       };
     };
     subscription: {
@@ -590,6 +601,8 @@ export const lt: Dictionary = {
     edit: "Keisti",
     delete: "Ištrinti",
     close: "Uždaryti",
+    previousMonth: "Ankstesnis mėnuo",
+    nextMonth: "Kitas mėnuo",
     genericError: "Įvyko klaida",
     loading: "Įkeliama…",
     soon: "Greitai",
@@ -810,9 +823,9 @@ export const lt: Dictionary = {
       export: "Eksportuoti duomenis",
       exportValue: "CSV",
       exportHint: "Atsisiųsk pajamų ir išlaidų suvestinę.",
-      exportEmpty: "Nėra duomenų eksportui.",
-      exportEmptyIncome: "Nėra pajamų duomenų eksportui.",
-      exportEmptyExpenses: "Nėra išlaidų duomenų eksportui.",
+      exportEmpty: "Šiame periode įrašų nėra.",
+      exportEmptyIncome: "Šiame periode pajamų įrašų nėra.",
+      exportEmptyExpenses: "Šiame periode išlaidų įrašų nėra.",
       exportError: "Nepavyko paruošti failo.",
       exportPending: "Ruošiama…",
       exportSheet: {
@@ -833,6 +846,15 @@ export const lt: Dictionary = {
             helper: "Tik išlaidų įrašai.",
           },
         },
+        rangeLabel: "Periodas",
+        ranges: {
+          this_month: "Šis mėnuo",
+          this_year: "Šie metai",
+          custom: "Pasirinktas periodas",
+        },
+        from: "Nuo",
+        to: "Iki",
+        invalidRange: "Pradžios data turi būti ne vėlesnė už pabaigos datą.",
       },
     },
     subscription: {

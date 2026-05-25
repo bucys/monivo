@@ -32,12 +32,85 @@ function todayIsoDate() {
 }
 
 export type ExportKind = "all" | "income" | "expenses";
+export type ExportRangeType = "this_month" | "this_year" | "custom" | "all";
+
+export type ExportRange =
+  | { type: "all" }
+  | { type: "this_month" }
+  | { type: "this_year" }
+  | { type: "custom"; from: string; to: string };
 
 const ALLOWED_KINDS: ReadonlySet<ExportKind> = new Set([
   "all",
   "income",
   "expenses",
 ]);
+
+const ALLOWED_RANGE_TYPES: ReadonlySet<ExportRangeType> = new Set([
+  "this_month",
+  "this_year",
+  "custom",
+  "all",
+]);
+
+const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+function pad2(n: number) {
+  return String(n).padStart(2, "0");
+}
+
+function isoDate(d: Date) {
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
+
+function addDaysIso(iso: string, days: number): string {
+  const [y, m, d] = iso.split("-").map(Number);
+  const dt = new Date(y!, (m ?? 1) - 1, (d ?? 1) + days);
+  return isoDate(dt);
+}
+
+type ResolvedBounds = {
+  /** YYYY-MM-DD inclusive */
+  startInclusive: string;
+  /** YYYY-MM-DD exclusive */
+  endExclusive: string;
+  /** Filename slug for this range. */
+  slug: string;
+};
+
+function resolveRange(range: ExportRange, now: Date = new Date()): ResolvedBounds | null {
+  if (range.type === "all") return null;
+  if (range.type === "this_month") {
+    const start = new Date(now.getFullYear(), now.getMonth(), 1);
+    const end = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    return {
+      startInclusive: isoDate(start),
+      endExclusive: isoDate(end),
+      slug: `this-month-${now.getFullYear()}-${pad2(now.getMonth() + 1)}`,
+    };
+  }
+  if (range.type === "this_year") {
+    const start = new Date(now.getFullYear(), 0, 1);
+    const end = new Date(now.getFullYear() + 1, 0, 1);
+    return {
+      startInclusive: isoDate(start),
+      endExclusive: isoDate(end),
+      slug: `this-year-${now.getFullYear()}`,
+    };
+  }
+  // custom
+  if (!ISO_DATE_RE.test(range.from) || !ISO_DATE_RE.test(range.to)) {
+    throw new Error("Neteisinga data.");
+  }
+  if (range.from > range.to) {
+    throw new Error("Pradžios data turi būti ankstesnė už pabaigos datą.");
+  }
+  return {
+    startInclusive: range.from,
+    endExclusive: addDaysIso(range.to, 1),
+    slug: `${range.from}_to_${range.to}`,
+  };
+}
 
 /** Serializes a 2D table into a CSV string with a UTF-8 BOM. */
 function serializeCsv(header: ReadonlyArray<string>, rows: string[][]): string {
@@ -54,13 +127,19 @@ function centsToEur(cents: number | null | undefined): string {
   return (Number(cents ?? 0) / 100).toFixed(2);
 }
 
-export async function exportEntriesCsv(kind: ExportKind = "all"): Promise<{
+export async function exportEntriesCsv(
+  kind: ExportKind = "all",
+  range: ExportRange = { type: "all" },
+): Promise<{
   csv: string;
   filename: string;
   rowCount: number;
 }> {
   if (!ALLOWED_KINDS.has(kind)) {
     throw new Error("Neteisingas eksporto tipas.");
+  }
+  if (!ALLOWED_RANGE_TYPES.has(range.type)) {
+    throw new Error("Neteisingas periodas.");
   }
 
   const supabase = await createSupabaseServerClient();
@@ -69,29 +148,48 @@ export async function exportEntriesCsv(kind: ExportKind = "all"): Promise<{
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
+  const bounds = resolveRange(range);
+
   const wantIncome = kind === "all" || kind === "income";
   const wantExpenses = kind === "all" || kind === "expenses";
 
-  const [incomeRes, expenseRes] = await Promise.all([
-    wantIncome
-      ? supabase
+  const incomeQuery = wantIncome
+    ? (() => {
+        let q = supabase
           .from("income_entries")
           .select(
             "amount_cents, service_name, payment_method, note, occurred_at, created_at",
           )
-          .eq("user_id", user.id)
+          .eq("user_id", user.id);
+        if (bounds) {
+          q = q
+            .gte("occurred_at", bounds.startInclusive)
+            .lt("occurred_at", bounds.endExclusive);
+        }
+        return q
           .order("occurred_at", { ascending: false })
-          .order("created_at", { ascending: false })
-      : Promise.resolve({ data: [] as Array<Record<string, unknown>> }),
-    wantExpenses
-      ? supabase
+          .order("created_at", { ascending: false });
+      })()
+    : Promise.resolve({ data: [] as Array<Record<string, unknown>> });
+
+  const expenseQuery = wantExpenses
+    ? (() => {
+        let q = supabase
           .from("expense_entries")
           .select("amount_cents, category, note, occurred_at, created_at")
-          .eq("user_id", user.id)
+          .eq("user_id", user.id);
+        if (bounds) {
+          q = q
+            .gte("occurred_at", bounds.startInclusive)
+            .lt("occurred_at", bounds.endExclusive);
+        }
+        return q
           .order("occurred_at", { ascending: false })
-          .order("created_at", { ascending: false })
-      : Promise.resolve({ data: [] as Array<Record<string, unknown>> }),
-  ]);
+          .order("created_at", { ascending: false });
+      })()
+    : Promise.resolve({ data: [] as Array<Record<string, unknown>> });
+
+  const [incomeRes, expenseRes] = await Promise.all([incomeQuery, expenseQuery]);
 
   const incomes = (incomeRes.data ?? []) as Array<{
     amount_cents: number;
@@ -199,9 +297,10 @@ export async function exportEntriesCsv(kind: ExportKind = "all"): Promise<{
     rows = merged.map((m) => m.row);
   }
 
+  const filenameSlug = bounds ? bounds.slug : todayIsoDate();
   return {
     csv: serializeCsv(header, rows),
-    filename: `monivo-${kind}-${todayIsoDate()}.csv`,
+    filename: `monivo-${kind}-${filenameSlug}.csv`,
     rowCount: rows.length,
   };
 }
