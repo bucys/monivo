@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
+import { safeOrigin } from "@/lib/origin";
 
 const PROTECTED_PREFIXES = [
   "/dashboard",
@@ -46,18 +47,18 @@ export async function updateSession(request: NextRequest) {
     (p) => pathname === p || pathname.startsWith(`${p}/`),
   );
 
+  // Build redirects against a sanitized origin so requests that arrived via
+  // the bind address 0.0.0.0 don't get bounced to an unroutable host.
+  const origin = safeOrigin(request.nextUrl);
+
   if (!user && isProtected) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
+    const url = new URL("/login", origin);
     url.searchParams.set("next", pathname);
     return NextResponse.redirect(url);
   }
 
   if (user && AUTH_ROUTES.has(pathname)) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
-    url.search = "";
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(new URL("/dashboard", origin));
   }
 
   return supabaseResponse;

@@ -30,7 +30,7 @@ function RegisterForm() {
     const supabase = createSupabaseBrowserClient();
     const redirectTo =
       typeof window !== "undefined"
-        ? `${window.location.origin}/auth/callback?next=/dashboard`
+        ? `${window.location.origin}/auth/callback?next=${encodeURIComponent("/dashboard")}`
         : undefined;
 
     const { error: signUpError } = await supabase.auth.signInWithOtp({
