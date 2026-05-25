@@ -138,7 +138,7 @@ export function ExportRow({ last }: { last?: boolean }) {
                   aria-pressed={active}
                   className={`rounded-[14px] px-2 py-2 text-center text-[12px] font-medium leading-tight tracking-[-0.008em] transition-colors ${
                     active
-                      ? "bg-ink-900 text-white shadow-[0_1px_2px_rgba(23,33,29,0.18)]"
+                      ? "bg-accent text-white shadow-[0_1px_3px_rgba(0,0,0,0.18)]"
                       : "text-ink-700 hover:text-ink-900/90"
                   }`}
                 >

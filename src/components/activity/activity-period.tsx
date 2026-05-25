@@ -72,7 +72,7 @@ export function ActivityPeriod({
               onClick={() => handlePill(item.mode)}
               className={`whitespace-nowrap rounded-full px-3.5 py-1.5 text-[13px] font-medium tracking-[-0.008em] transition-colors disabled:opacity-60 ${
                 active
-                  ? "bg-ink-900 text-white shadow-[0_1px_2px_rgba(23,33,29,0.18)]"
+                  ? "bg-accent text-white shadow-[0_1px_3px_rgba(0,0,0,0.18)]"
                   : "text-ink-700 hover:text-ink-900/90"
               }`}
             >

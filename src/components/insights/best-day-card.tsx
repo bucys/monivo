@@ -94,15 +94,15 @@ function DayBars({
         const ratio = t.totalCents > 0 ? t.totalCents / max : 0;
         return (
           <div key={t.index} className="flex flex-1 flex-col items-center gap-2">
-            <div className="relative h-[64px] w-full overflow-hidden rounded-[8px] bg-[#F1EDE4]">
+            <div className="relative h-[64px] w-full overflow-hidden rounded-[8px] bg-ink-100">
               {ratio > 0 ? (
                 <div
                   className="absolute inset-x-0 bottom-0"
                   style={{
                     height: `${Math.max(ratio * 100, 14)}%`,
                     background: active
-                      ? "linear-gradient(180deg, #1F7A6B, #185E53)"
-                      : "#C9EBDF",
+                      ? "linear-gradient(180deg, rgb(var(--c-accent)), rgb(var(--c-accent-deep)))"
+                      : "rgb(var(--c-accent-soft))",
                   }}
                 />
               ) : null}

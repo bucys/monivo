@@ -70,7 +70,7 @@ export function ThemeToggle() {
             aria-pressed={active}
             className={`rounded-full px-2.5 py-1 transition-colors ${
               active
-                ? "bg-ink-900 text-white"
+                ? "bg-accent text-white shadow-[0_1px_3px_rgba(0,0,0,0.18)]"
                 : "text-ink-500 hover:text-ink-900"
             }`}
           >

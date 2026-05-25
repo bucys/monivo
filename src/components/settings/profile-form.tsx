@@ -65,7 +65,7 @@ export function DisplayNameField({
         <button
           type="submit"
           disabled={pending}
-          className="flex-1 rounded-[14px] bg-ink-900 px-4 py-3 text-[14px] font-medium text-white transition-colors hover:bg-ink-900/90 disabled:opacity-60"
+          className="flex-1 rounded-[14px] bg-inverse px-4 py-3 text-[14px] font-medium text-white transition-colors hover:bg-inverse/90 disabled:opacity-60"
         >
           {pending ? t.common.loading : t.common.save}
         </button>
@@ -133,7 +133,7 @@ export function TaxRatePill({ initialPercent }: { initialPercent: number }) {
       <button
         type="submit"
         disabled={pending}
-        className="rounded-[10px] bg-ink-900 px-2.5 py-1.5 text-[12px] font-medium text-white disabled:opacity-60"
+        className="rounded-[10px] bg-inverse px-2.5 py-1.5 text-[12px] font-medium text-white disabled:opacity-60"
       >
         {pending ? "…" : t.common.save}
       </button>

@@ -20,6 +20,7 @@ const config: Config = {
         cream: "rgb(var(--c-cream) / <alpha-value>)",
         shell: "rgb(var(--c-shell) / <alpha-value>)",
         surface: "rgb(var(--c-surface) / <alpha-value>)",
+        inverse: "rgb(var(--c-inverse) / <alpha-value>)",
         accent: {
           DEFAULT: "rgb(var(--c-accent) / <alpha-value>)",
           deep: "rgb(var(--c-accent-deep) / <alpha-value>)",

@@ -115,7 +115,7 @@ export function AppSidebar({ sidebar }: { sidebar: SidebarData }) {
                   className={`flex items-center gap-3 rounded-[14px] px-3.5 py-2.5 text-[14px] font-medium tracking-tight transition-colors ${
                     active
                       ? "bg-surface text-ink-900/90 shadow-card"
-                      : "text-ink-500 hover:bg-white/60 hover:text-ink-900/90"
+                      : "text-ink-500 hover:bg-surface/60 hover:text-ink-900/90"
                   }`}
                 >
                   <span
@@ -153,7 +153,7 @@ export function AppSidebar({ sidebar }: { sidebar: SidebarData }) {
 
       <Link
         href="/settings"
-        className="flex items-center gap-2.5 rounded-[14px] border border-hair bg-transparent p-2 transition-colors hover:bg-white/60"
+        className="flex items-center gap-2.5 rounded-[14px] border border-hair bg-transparent p-2 transition-colors hover:bg-surface/60"
       >
         <span
           aria-hidden

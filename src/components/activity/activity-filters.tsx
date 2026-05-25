@@ -29,7 +29,7 @@ export function ActivityFilters({
             onClick={() => onChange(item.id)}
             className={`flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-medium transition-colors ${
               active
-                ? "bg-ink-900 text-white"
+                ? "border border-accent/40 bg-accent-soft text-accent-deep"
                 : "border border-hair bg-surface text-ink-900/90 shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)] hover:bg-cream/60"
             }`}
           >
@@ -37,7 +37,7 @@ export function ActivityFilters({
             <span
               className={`hidden rounded-full px-2 py-[2px] text-[11px] font-semibold lg:inline-flex ${
                 active
-                  ? "bg-white/20 text-white"
+                  ? "bg-accent/20 text-accent-deep"
                   : "bg-cream text-ink-500"
               }`}
             >

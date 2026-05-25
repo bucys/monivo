@@ -27,7 +27,7 @@ export function AppBottomNav() {
   return (
     <nav
       aria-label={t.nav.mobileNavAria}
-      className="fixed inset-x-4 bottom-6 z-30 rounded-[32px] border border-hair bg-white/85 px-2 pb-[env(safe-area-inset-bottom)] shadow-card backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-white/70 lg:hidden"
+      className="fixed inset-x-4 bottom-6 z-30 rounded-[32px] border border-hair bg-surface/90 px-2 pb-[env(safe-area-inset-bottom)] shadow-card backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-surface/75 lg:hidden"
     >
       <ul className="relative flex items-center">
         {leftTabs.map((tab) => (
@@ -49,7 +49,7 @@ function NavItem({ tab, active }: { tab: Tab; active: boolean }) {
         href={tab.href}
         aria-current={active ? "page" : undefined}
         className={`flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] font-semibold transition-colors ${
-          active ? "text-accent" : "text-ink-500"
+          active ? "text-accent" : "text-ink-700"
         }`}
       >
         <span aria-hidden className="block h-[22px] w-[22px]">

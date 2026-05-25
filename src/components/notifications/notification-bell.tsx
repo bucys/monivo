@@ -50,7 +50,7 @@ export function NotificationBell() {
         aria-haspopup="dialog"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className="relative inline-flex h-10 w-10 touch-manipulation items-center justify-center rounded-full bg-white/60 text-ink-700 ring-1 ring-hair/70 transition-colors hover:bg-surface hover:text-ink-900/90"
+        className="relative inline-flex h-10 w-10 touch-manipulation items-center justify-center rounded-full bg-surface/80 text-ink-700 ring-1 ring-hair transition-colors hover:bg-surface hover:text-ink-900"
       >
         <svg
           width="18"
@@ -148,7 +148,7 @@ function MobileTopPanel({
         aria-label={closeLabel}
         onClick={onClose}
         className={cn(
-          "absolute inset-0 bg-ink-900/40 transition-opacity duration-200 ease-out",
+          "absolute inset-0 bg-inverse/40 transition-opacity duration-200 ease-out",
           entered ? "opacity-100" : "opacity-0",
         )}
       />

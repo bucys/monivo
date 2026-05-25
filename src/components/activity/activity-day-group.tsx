@@ -100,9 +100,9 @@ function DayHeader({
         {label}
       </span>
       <span className="text-[12px] font-medium text-ink-500 tabular-nums">
-        <span className="font-semibold text-[#1F7A4B]">+{incomeText}</span>
+        <span className="font-semibold text-income">+{incomeText}</span>
         <span className="mx-1.5">·</span>
-        <span className="font-semibold text-[#A03A3A]">−{expenseText}</span>
+        <span className="font-semibold text-expense">−{expenseText}</span>
         <span className="ml-1.5">€</span>
       </span>
     </div>

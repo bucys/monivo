@@ -64,10 +64,10 @@ export function WeeklyEarningsCard({
                   style={{
                     height: `${Math.max(h, isEmpty ? 2 : 8)}%`,
                     background: active
-                      ? "linear-gradient(180deg, #1F7A6B, #185E53)"
+                      ? "linear-gradient(180deg, rgb(var(--c-accent)), rgb(var(--c-accent-deep)))"
                       : isEmpty
-                        ? "#F1EDE4"
-                        : "#DDF4EC",
+                        ? "rgb(var(--c-ink-100))"
+                        : "rgb(var(--c-accent-soft))",
                   }}
                 />
                 <div

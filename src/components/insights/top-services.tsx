@@ -152,14 +152,14 @@ function ServiceTile({
   const isTop = rank === 0;
   const barWidthPct = isZero ? 100 : Math.max(barRatio * 100, 8);
   const barFill = isZero
-    ? "#E8E4DA"
+    ? "rgb(var(--c-ink-100))"
     : isTop
-      ? "linear-gradient(90deg, #1F7A6B, #185E53)"
+      ? "linear-gradient(90deg, rgb(var(--c-accent)), rgb(var(--c-accent-deep)))"
       : tone.bar;
   const barOpacity = isZero || isTop ? 1 : (BAR_OPACITY_BY_RANK[rank] ?? 0.4);
 
   const surfaceClass = isTop
-    ? "border-[rgba(23,33,29,0.1)] bg-[#FBFAF6] shadow-[0_1px_2px_rgba(23,33,29,0.05),_0_12px_28px_-12px_rgba(31,122,107,0.25)]"
+    ? "border-accent/30 bg-surface shadow-[0_1px_2px_rgba(23,33,29,0.05),_0_12px_28px_-12px_rgba(31,122,107,0.25)]"
     : "border-hair bg-surface shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_6px_18px_-10px_rgba(23,33,29,0.08)]";
 
   return (
@@ -169,7 +169,7 @@ function ServiceTile({
       <div className="flex items-start justify-between gap-2">
         <span
           aria-hidden
-          className="flex h-11 w-11 items-center justify-center rounded-[14px] text-[16px] font-semibold tracking-[-0.012em] text-ink-900/90"
+          className="flex h-11 w-11 items-center justify-center rounded-[14px] text-[16px] font-semibold tracking-[-0.012em] text-inverse"
           style={{ background: tone.square }}
         >
           {initial}
@@ -198,7 +198,7 @@ function ServiceTile({
         {format(shareTemplate, { pct: sharePct })}
       </div>
 
-      <div className="mt-4 h-[6px] overflow-hidden rounded-full bg-[#EEEAE0]">
+      <div className="mt-4 h-[6px] overflow-hidden rounded-full bg-ink-100">
         <div
           className="h-full rounded-full"
           style={{

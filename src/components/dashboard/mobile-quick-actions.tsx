@@ -77,7 +77,7 @@ function Chip({
     >
       <span
         aria-hidden
-        className="flex h-[26px] min-w-[26px] items-center justify-center rounded-full px-2 text-[11px] font-semibold tracking-[-0.012em] text-ink-900/90"
+        className="flex h-[26px] min-w-[26px] items-center justify-center rounded-full px-2 text-[11px] font-semibold tracking-[-0.012em] text-inverse"
         style={{ background: tone }}
       >
         +{Math.round(service.price_cents / 100)}

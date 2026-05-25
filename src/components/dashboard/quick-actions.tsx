@@ -59,11 +59,11 @@ export function QuickActions({
                 type="button"
                 onClick={() => canWrite && dispatchOpenIncomeEntry(s.id)}
                 disabled={!canWrite}
-                className="group flex w-full items-center gap-3 rounded-[14px] border border-hair bg-cream px-3.5 py-[11px] text-left transition-colors hover:bg-surface disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-cream"
+                className="group flex w-full items-center gap-3 rounded-[14px] border border-hair bg-ink-100 px-3.5 py-[11px] text-left transition-colors hover:bg-surface disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-ink-100"
               >
                 <span
                   aria-hidden
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] text-[12px] font-bold tracking-[-0.012em] text-ink-900/90"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] text-[12px] font-bold tracking-[-0.012em] text-inverse"
                   style={{ background: toneFor(s.id, i) }}
                 >
                   +{Math.round(s.price_cents / 100)}

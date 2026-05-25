@@ -42,8 +42,8 @@ export function DesktopActivityRow({
         aria-hidden
         className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[12px] text-[16px] font-semibold ${
           isIncome
-            ? "bg-[#D8F5E5] text-[#1F7A4B]"
-            : "bg-[#FFE7E7] text-[#A03A3A]"
+            ? "bg-income-bg text-income"
+            : "bg-expense-bg text-expense"
         }`}
       >
         {sign}
@@ -71,7 +71,7 @@ export function DesktopActivityRow({
       </div>
       <div
         className={`w-[110px] shrink-0 whitespace-nowrap text-right text-[16px] font-semibold tabular-nums tracking-[-0.018em] ${
-          isIncome ? "text-[#1F7A4B]" : "text-[#A03A3A]"
+          isIncome ? "text-income" : "text-expense"
         }`}
       >
         {sign}

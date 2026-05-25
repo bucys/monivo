@@ -37,29 +37,35 @@
   --c-tax-bg: 255 242 217;
   --c-hair: 23 33 29;
   --a-hair: 0.06;
+  /* "Inverse" — for pills/CTAs that need to read as dark on light surfaces.
+     Stays the same dark in both modes. */
+  --c-inverse: 23 33 29;
 }
 
 .dark {
-  /* Warm graphite / espresso palette — not pure black. */
-  --c-surface: 31 26 20;        /* cards, sheets, modals */
+  /* Warm graphite / espresso palette — not pure black.
+     Tuned for outdoor mobile readability without going neon. */
+  --c-surface: 35 30 23;        /* cards, sheets, modals — slightly lifted */
   --c-cream: 21 17 13;          /* body / page background */
   --c-shell: 26 22 18;          /* sidebar */
-  --c-ink-100: 42 36 29;        /* subtle filled chips, cream/60 replacements */
-  --c-ink-300: 74 66 56;        /* disabled borders */
-  --c-ink-500: 156 148 138;     /* muted text */
-  --c-ink-700: 200 194 184;     /* secondary text */
-  --c-ink-900: 236 228 216;     /* primary text — warm off-white */
-  --c-accent: 53 173 152;       /* slightly brighter teal for AA contrast */
-  --c-accent-deep: 91 200 176;
-  --c-accent-soft: 30 58 51;    /* deep teal-tinted background */
-  --c-income: 92 196 144;
-  --c-income-bg: 30 58 42;
-  --c-expense: 226 117 117;
-  --c-expense-bg: 58 31 31;
-  --c-tax: 214 177 106;
-  --c-tax-bg: 58 47 26;
+  --c-ink-100: 47 40 32;        /* subtle filled chips */
+  --c-ink-300: 90 82 71;        /* disabled borders */
+  --c-ink-500: 178 170 158;     /* muted text — brighter for legibility */
+  --c-ink-700: 214 206 195;     /* secondary text */
+  --c-ink-900: 240 233 222;     /* primary text — warm off-white */
+  --c-accent: 64 188 165;       /* brighter teal for AA contrast */
+  --c-accent-deep: 110 214 188;
+  --c-accent-soft: 34 64 56;    /* deep teal-tinted background */
+  --c-income: 110 210 158;
+  --c-income-bg: 34 64 48;
+  --c-expense: 232 132 132;
+  --c-expense-bg: 64 36 36;
+  --c-tax: 222 188 122;
+  --c-tax-bg: 64 51 28;
   --c-hair: 255 255 255;
-  --a-hair: 0.10;
+  --a-hair: 0.14;               /* stronger card edges */
+  /* Inverse pills stay readable as a deep almost-black against warm graphite. */
+  --c-inverse: 10 8 5;
 }
 
 @layer base {

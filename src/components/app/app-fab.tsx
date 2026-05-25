@@ -70,7 +70,7 @@ export function AppFab({ canWrite }: { canWrite: boolean }) {
         aria-hidden={!showMenu}
         tabIndex={showMenu ? 0 : -1}
         onClick={() => setMenuOpen(false)}
-        className={`fixed inset-0 z-40 bg-ink-900/40 transition-opacity duration-200 ease-out ${
+        className={`fixed inset-0 z-40 bg-inverse/40 transition-opacity duration-200 ease-out ${
           showMenu ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       />

@@ -96,7 +96,7 @@ export function AddEntrySheet({
       {justAdded ? (
         <div
           role="status"
-          className="pointer-events-none fixed bottom-[112px] left-1/2 z-50 -translate-x-1/2 rounded-full bg-ink-900/90 px-4 py-2 text-[13px] font-medium text-white shadow-card lg:bottom-8"
+          className="pointer-events-none fixed bottom-[112px] left-1/2 z-50 -translate-x-1/2 rounded-full bg-inverse/90 px-4 py-2 text-[13px] font-medium text-white shadow-card lg:bottom-8"
         >
           {t.addEntry.fab.addedToast}
         </div>

@@ -40,8 +40,8 @@ export function MobileActivityRow({
         aria-hidden
         className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[12px] text-[16px] font-semibold ${
           isIncome
-            ? "bg-[#D8F5E5] text-[#1F7A4B]"
-            : "bg-[#FFE7E7] text-[#A03A3A]"
+            ? "bg-income-bg text-income"
+            : "bg-expense-bg text-expense"
         }`}
       >
         {sign}
@@ -66,7 +66,7 @@ export function MobileActivityRow({
       </div>
       <div
         className={`shrink-0 text-[15px] font-semibold tabular-nums tracking-[-0.012em] ${
-          isIncome ? "text-[#1F7A4B]" : "text-[#A03A3A]"
+          isIncome ? "text-income" : "text-expense"
         }`}
       >
         {sign}

@@ -50,7 +50,7 @@ export function ModalSheet({
         tabIndex={open ? 0 : -1}
         onClick={onClose}
         className={cn(
-          "absolute inset-0 bg-ink-900/40 transition-opacity duration-200 ease-out",
+          "absolute inset-0 bg-inverse/40 transition-opacity duration-200 ease-out",
           open ? "opacity-100" : "opacity-0",
         )}
       />
