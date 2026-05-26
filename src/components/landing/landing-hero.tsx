@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getT } from "@/i18n/server";
+import { appHref } from "@/lib/urls";
 import { LandingContainer } from "./landing-container";
 import { LandingSection } from "./landing-section";
 
@@ -35,7 +36,7 @@ export async function LandingHero() {
             </p>
 
             <div className="mt-8 flex justify-center sm:justify-start">
-              <Link href="/register">
+              <Link href={appHref("/register")}>
                 <Button
                   variant="primary"
                   className="!h-auto !w-auto !rounded-[14px] !px-[22px] !py-[13px] !text-[14px]"

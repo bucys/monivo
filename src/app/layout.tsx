@@ -10,7 +10,9 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const siteUrl = "https://monivo.lt";
+const siteUrl =
+  process.env.NEXT_PUBLIC_MARKETING_URL?.replace(/\/$/, "") ??
+  "https://monivo.lt";
 const siteTitle = "Monivo — aišku, kiek lieka";
 const siteDescription =
   "Monivo padeda individualiai dirbantiems grožio specialistams sekti pajamas, išlaidas ir mokesčių rezervą — kad būtų aiškiau, kiek lieka.";

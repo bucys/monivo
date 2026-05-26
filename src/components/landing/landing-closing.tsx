@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getT } from "@/i18n/server";
+import { appHref } from "@/lib/urls";
 import { LandingContainer } from "./landing-container";
 import { LandingSection } from "./landing-section";
 
@@ -34,7 +35,7 @@ export async function LandingClosing() {
             <p className="mx-auto mt-4 max-w-[420px] text-[15px] leading-[1.55] text-white/80 sm:text-[16px]">
               {c.body}
             </p>
-            <Link href="/register" className="mt-7 inline-flex">
+            <Link href={appHref("/register")} className="mt-7 inline-flex">
               <Button
                 variant="primary"
                 className="!h-auto !w-auto !rounded-[14px] !bg-surface !px-[22px] !py-3 !text-[14px] !text-accent-deep"

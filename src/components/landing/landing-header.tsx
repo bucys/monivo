@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getT } from "@/i18n/server";
+import { appHref } from "@/lib/urls";
 import { LandingLanguageToggle } from "./landing-language-toggle";
 
 export async function LandingHeader() {
@@ -50,12 +51,12 @@ export async function LandingHeader() {
         <div className="flex items-center gap-1 sm:gap-2">
           <LandingLanguageToggle />
           <Link
-            href="/login"
+            href={appHref("/login")}
             className="hidden px-3 py-2 text-[13px] font-medium tracking-tight text-ink-900 sm:inline-block"
           >
             {t.landing.nav.login}
           </Link>
-          <Link href="/register">
+          <Link href={appHref("/register")}>
             <Button
               variant="primary"
               className="!h-auto !w-auto !rounded-[12px] !px-3.5 !py-2.5 !text-[13px] sm:!px-4 sm:!py-2.5 sm:!text-[13px]"

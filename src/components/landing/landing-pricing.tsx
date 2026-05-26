@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getT } from "@/i18n/server";
+import { appHref } from "@/lib/urls";
 import { LandingContainer } from "./landing-container";
 import { LandingSection } from "./landing-section";
 
@@ -74,7 +75,7 @@ export async function LandingPricing() {
               ))}
             </ul>
 
-            <Link href="/register" className="mt-8 block">
+            <Link href={appHref("/register")} className="mt-8 block">
               <Button
                 variant="primary"
                 className="!h-auto !rounded-[14px] !px-5 !py-[14px] !text-[14px]"

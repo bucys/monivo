@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { AppScreen } from "@/components/app/app-screen";
+import { BillingReturnToast } from "@/components/settings/billing-return-toast";
 import { LogoutRow } from "@/components/settings/logout-row";
 import {
   ProfileCard,
@@ -106,6 +107,8 @@ export default async function SettingsPage() {
             {t.settings.title}
           </h1>
         </div>
+
+        <BillingReturnToast />
 
         <ProfileCard
           displayName={displayName}

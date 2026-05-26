@@ -1,37 +1,6 @@
 import type Stripe from "stripe";
 import type { SupabaseClient } from "@supabase/supabase-js";
-
-/**
- * Stripe → Monivo subscription_status mapping.
- *
- * Monivo's minimal status set is:
- *   trialing | active | past_due | canceled | expired
- *
- * Stripe statuses we don't map ("incomplete", "incomplete_expired", "unpaid",
- * "paused") all collapse to "past_due" or "canceled" depending on whether the
- * customer might still recover.
- */
-function mapSubscriptionStatus(
-  stripeStatus: Stripe.Subscription.Status,
-): "trialing" | "active" | "past_due" | "canceled" | "expired" {
-  switch (stripeStatus) {
-    case "trialing":
-      return "trialing";
-    case "active":
-      return "active";
-    case "past_due":
-    case "incomplete":
-    case "unpaid":
-      return "past_due";
-    case "canceled":
-    case "incomplete_expired":
-      return "canceled";
-    case "paused":
-      return "expired";
-    default:
-      return "expired";
-  }
-}
+import { mapStripeStatus } from "./status";
 
 function isoFromUnix(unix: number | null | undefined): string | null {
   if (!unix) return null;
@@ -52,7 +21,7 @@ async function applySubscriptionState(
   supabase: SupabaseClient,
   subscription: Stripe.Subscription,
 ): Promise<void> {
-  const status = mapSubscriptionStatus(subscription.status);
+  const status = mapStripeStatus(subscription.status);
   const customerId =
     typeof subscription.customer === "string"
       ? subscription.customer
@@ -69,20 +38,32 @@ async function applySubscriptionState(
   } as const;
 
   if (userIdFromMeta) {
-    const { error } = await supabase
+    const { error, data } = await supabase
       .from("profiles")
       .update(patch)
-      .eq("id", userIdFromMeta);
+      .eq("id", userIdFromMeta)
+      .select("id");
     if (error) throw new Error(`profile update by user_id failed: ${error.message}`);
+    if (!data || data.length === 0) {
+      console.warn(
+        `[stripe-webhook] no profile matched user_id=${userIdFromMeta} for subscription ${subscription.id}`,
+      );
+    }
     return;
   }
 
-  const { error } = await supabase
+  const { error, data } = await supabase
     .from("profiles")
     .update(patch)
-    .eq("stripe_customer_id", customerId);
+    .eq("stripe_customer_id", customerId)
+    .select("id");
   if (error) {
     throw new Error(`profile update by customer_id failed: ${error.message}`);
+  }
+  if (!data || data.length === 0) {
+    console.warn(
+      `[stripe-webhook] no profile matched stripe_customer_id=${customerId} for subscription ${subscription.id}`,
+    );
   }
 }
 

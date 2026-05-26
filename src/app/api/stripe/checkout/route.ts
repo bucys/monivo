@@ -6,21 +6,33 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
+  const origin = safeOrigin(request.url);
+  const errorRedirect = () =>
+    NextResponse.redirect(`${origin}/settings?billing=error`, 303);
+
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user || !user.email) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    console.warn("[stripe-checkout] no authenticated user");
+    return NextResponse.redirect(`${origin}/login`, 303);
   }
 
-  const { data: profile } = await supabase
+  // Optional column — may not exist if the Stripe migration hasn't been
+  // applied. Tolerate the error; Stripe will create a fresh customer and
+  // the webhook will reconcile.
+  const { data: profile, error: profileErr } = await supabase
     .from("profiles")
     .select("stripe_customer_id")
     .eq("id", user.id)
     .maybeSingle();
-
-  const origin = safeOrigin(request.url);
+  if (profileErr) {
+    console.warn(
+      "[stripe-checkout] profile lookup failed:",
+      profileErr.message,
+    );
+  }
 
   try {
     const session = await createCheckoutSession({
@@ -33,11 +45,13 @@ export async function POST(request: Request) {
       cancelUrl: `${origin}/settings?billing=canceled`,
     });
     if (!session.url) {
-      return NextResponse.json({ error: "no session url" }, { status: 500 });
+      console.warn("[stripe-checkout] session missing url");
+      return errorRedirect();
     }
     return NextResponse.redirect(session.url, 303);
   } catch (e) {
     const message = e instanceof Error ? e.message : "checkout failed";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[stripe-checkout]", message);
+    return errorRedirect();
   }
 }

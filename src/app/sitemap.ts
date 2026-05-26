@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 
-const siteUrl = "https://monivo.lt";
+const siteUrl =
+  process.env.NEXT_PUBLIC_MARKETING_URL?.replace(/\/$/, "") ??
+  "https://monivo.lt";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

@@ -255,6 +255,11 @@ export type Dictionary = {
         pastDue: string;
         expired: string;
       };
+      returnToast: {
+        success: string;
+        canceled: string;
+        error: string;
+      };
     };
     account: {
       account: string;
@@ -743,11 +748,11 @@ export const lt: Dictionary = {
     },
     generated: {
       trialEnding: {
-        title: "Bandymas baigiasi",
+        title: "Bandomasis laikotarpis baigiasi",
         body: "Liko {days} d. bandomojo laikotarpio.",
       },
       trialEnded: {
-        title: "Bandymas pasibaigė",
+        title: "Bandomasis laikotarpis pasibaigė",
         body: "Pasirink planą, kad galėtum tęsti darbą su Monivo.",
       },
       emptyActivity: {
@@ -929,7 +934,7 @@ export const lt: Dictionary = {
       statusPastDue: "Mokėjimas vėluoja",
       statusCanceled: "Atšauktas",
       trialDaysLeft: "Liko {n} d.",
-      trialEnded: "Bandymas pasibaigė",
+      trialEnded: "Bandomasis laikotarpis pasibaigė",
       subscribeCta: "Užsisakyti",
       manageCta: "Tvarkyti",
       activeUntil: "Galioja iki {date}",
@@ -942,6 +947,11 @@ export const lt: Dictionary = {
           "Bandomasis laikotarpis baigėsi — užsisakyk, kad galėtum pridėti įrašų.",
         pastDue: "Mokėjimas vėluoja — atnaujink kortelę.",
         expired: "Prenumerata neaktyvi — užsisakyk, kad galėtum pridėti įrašų.",
+      },
+      returnToast: {
+        success: "Prenumerata aktyvuota.",
+        canceled: "Mokėjimas atšauktas.",
+        error: "Nepavyko atidaryti mokėjimų.",
       },
     },
     account: {

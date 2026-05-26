@@ -115,11 +115,11 @@ export const en: Dictionary = {
     },
     generated: {
       trialEnding: {
-        title: "Trial ending soon",
+        title: "Free trial ending soon",
         body: "{days} days left on your trial.",
       },
       trialEnded: {
-        title: "Trial ended",
+        title: "Free trial ended",
         body: "Pick a plan to keep using Monivo.",
       },
       emptyActivity: {
@@ -299,7 +299,7 @@ export const en: Dictionary = {
       statusPastDue: "Payment overdue",
       statusCanceled: "Canceled",
       trialDaysLeft: "{n} days left",
-      trialEnded: "Trial ended",
+      trialEnded: "Free trial ended",
       subscribeCta: "Subscribe",
       manageCta: "Manage",
       activeUntil: "Active until {date}",
@@ -309,9 +309,14 @@ export const en: Dictionary = {
         trialEnding:
           "{days} days left in your trial. Subscribe to keep adding records.",
         trialEnded:
-          "Trial ended — subscribe to continue adding records.",
+          "Free trial ended — subscribe to continue adding records.",
         pastDue: "Payment overdue — update your card to keep your subscription active.",
         expired: "Subscription inactive — subscribe to continue adding records.",
+      },
+      returnToast: {
+        success: "Subscription activated.",
+        canceled: "Checkout canceled.",
+        error: "Something went wrong opening billing.",
       },
     },
     account: {
