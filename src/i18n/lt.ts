@@ -138,6 +138,14 @@ export type Dictionary = {
       displayNamePlaceholder: string;
       businessType: string;
       individualActivity: string;
+      nameRow: string;
+      emailRow: string;
+      planRow: string;
+      changeAction: string;
+      emailModalTitle: string;
+      emailPlaceholder: string;
+      emailHelper: string;
+      emailSent: string;
     };
     profession: {
       sheetTitle: string;
@@ -779,6 +787,14 @@ export const lt: Dictionary = {
       displayNamePlaceholder: "Įvesk vardą",
       businessType: "Veiklos rūšis",
       individualActivity: "Individuali veikla",
+      nameRow: "Vardas",
+      emailRow: "El. paštas",
+      planRow: "Planas",
+      changeAction: "Keisti",
+      emailModalTitle: "Keisti el. paštą",
+      emailPlaceholder: "tu@example.com",
+      emailHelper: "Atsiųsime patvirtinimą į naują adresą.",
+      emailSent: "Patikrink savo el. paštą — išsiuntėme patvirtinimo nuorodą.",
     },
     profession: {
       sheetTitle: "Pasirink veiklos sritį",

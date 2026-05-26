@@ -1,16 +1,17 @@
 import { redirect } from "next/navigation";
 import { AppScreen } from "@/components/app/app-screen";
 import { LogoutRow } from "@/components/settings/logout-row";
-import { ProfileCard } from "@/components/settings/profile-card";
+import {
+  ProfileCard,
+  type ProfileSubscriptionStatus,
+} from "@/components/settings/profile-card";
 import {
   SettingsRow,
   SettingsSection,
 } from "@/components/settings/settings-card";
 import {
-  IconCrown,
   IconGlobe,
   IconList,
-  IconPerson,
   IconSparkle,
 } from "@/components/settings/settings-icons";
 import { ExportRow } from "@/components/settings/export-row";
@@ -60,7 +61,12 @@ export default async function SettingsPage() {
 
   const displayName = profile?.display_name ?? "";
   const taxProfile = toTaxProfile(profile as ProfileTaxFields | null);
-  const status = profile?.subscription_status ?? "trialing";
+  const rawStatus = profile?.subscription_status ?? "trialing";
+  const status: ProfileSubscriptionStatus = (
+    ["active", "trialing", "expired", "past_due", "canceled"] as const
+  ).includes(rawStatus as ProfileSubscriptionStatus)
+    ? (rawStatus as ProfileSubscriptionStatus)
+    : "trialing";
   const daysLeft = trialDaysLeft(profile?.trial_ends_at ?? null);
 
   const statusLabel = (() => {
@@ -101,8 +107,10 @@ export default async function SettingsPage() {
 
         <ProfileCard
           displayName={displayName}
-          subline={t.settings.profile.individualActivity}
-          editLabel={t.settings.profile.editTitle}
+          email={user.email ?? ""}
+          status={status}
+          trialNote={trialNote}
+          statusLabel={statusLabel}
         />
 
         <SettingsSection label={t.settings.sections.business}>
@@ -126,30 +134,9 @@ export default async function SettingsPage() {
           <ExportRow last />
         </SettingsSection>
 
-        <SettingsSection label={t.settings.sections.subscription}>
-          <SettingsRow
-            icon={<IconCrown />}
-            label={t.settings.subscription.title}
-            detail={trialNote ?? statusLabel}
-            chevron={false}
-            right={
-              <span className="inline-flex items-center rounded-full bg-accent-soft px-3 py-1 text-[12px] font-semibold text-accent-deep">
-                {statusLabel}
-              </span>
-            }
-            last
-          />
-        </SettingsSection>
-
-        <SettingsSection label={t.settings.sections.account}>
-          <SettingsRow
-            icon={<IconPerson />}
-            label={t.settings.account.email}
-            detail={user.email ?? ""}
-            chevron={false}
-          />
+        <div className="overflow-hidden rounded-[22px] bg-surface shadow-[0_1px_2px_rgba(23,33,29,0.04),_0_8px_24px_rgba(23,33,29,0.05)]">
           <LogoutRow label={t.settings.account.logout} />
-        </SettingsSection>
+        </div>
       </div>
     </AppScreen>
   );

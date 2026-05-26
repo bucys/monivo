@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { updateProfile } from "@/app/(app)/settings/actions";
 import { useLocale } from "@/i18n/locale-provider";
+import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 export function DisplayNameField({
   initial,
@@ -50,6 +51,104 @@ export function DisplayNameField({
         placeholder={t.settings.profile.displayNamePlaceholder}
         className="rounded-[14px] border border-hair bg-surface px-4 py-3 text-[15px] text-ink-900/90 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
       />
+      {error ? (
+        <p className="text-[12px] text-expense">{error}</p>
+      ) : null}
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={onDone}
+          disabled={pending}
+          className="flex-1 rounded-[14px] bg-cream px-4 py-3 text-[14px] font-medium text-ink-700 transition-colors hover:bg-cream/80"
+        >
+          {t.common.cancel}
+        </button>
+        <button
+          type="submit"
+          disabled={pending}
+          className="flex-1 rounded-[14px] bg-inverse px-4 py-3 text-[14px] font-medium text-white transition-colors hover:bg-inverse/90 disabled:opacity-60"
+        >
+          {pending ? t.common.loading : t.common.save}
+        </button>
+      </div>
+    </form>
+  );
+}
+
+export function EmailField({
+  initial,
+  onDone,
+}: {
+  initial: string;
+  onDone?: () => void;
+}) {
+  const { t } = useLocale();
+  const [value, setValue] = useState(initial);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [sent, setSent] = useState(false);
+
+  const submit = async () => {
+    if (pending) return;
+    setError(null);
+    const trimmed = value.trim();
+    if (trimmed === "" || trimmed === initial) {
+      onDone?.();
+      return;
+    }
+    setPending(true);
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { error: updateError } = await supabase.auth.updateUser({
+        email: trimmed,
+      });
+      if (updateError) throw updateError;
+      setSent(true);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : t.common.genericError);
+    } finally {
+      setPending(false);
+    }
+  };
+
+  if (sent) {
+    return (
+      <div className="flex flex-col gap-3">
+        <p className="rounded-[12px] bg-accent-soft/60 px-3.5 py-2.5 text-[13px] text-accent-deep">
+          {t.settings.profile.emailSent}
+        </p>
+        <button
+          type="button"
+          onClick={onDone}
+          className="self-stretch rounded-[14px] bg-inverse px-4 py-3 text-[14px] font-medium text-white transition-colors hover:bg-inverse/90"
+        >
+          {t.common.close}
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        submit();
+      }}
+      className="flex flex-col gap-3"
+    >
+      <input
+        type="email"
+        inputMode="email"
+        autoComplete="email"
+        autoFocus
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder={t.settings.profile.emailPlaceholder}
+        className="rounded-[14px] border border-hair bg-surface px-4 py-3 text-[15px] text-ink-900/90 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
+      />
+      <p className="text-[12px] leading-[1.5] text-ink-500">
+        {t.settings.profile.emailHelper}
+      </p>
       {error ? (
         <p className="text-[12px] text-expense">{error}</p>
       ) : null}
