@@ -85,6 +85,7 @@ export default async function RootLayout({
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
         <LocaleProvider initialLocale={locale}>{children}</LocaleProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
