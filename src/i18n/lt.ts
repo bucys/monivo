@@ -194,6 +194,8 @@ export type Dictionary = {
       appearanceValue: string;
       themeAria: string;
       themeOptions: { light: string; dark: string; device: string };
+      darkOn: string;
+      darkOff: string;
       language: string;
       export: string;
       exportValue: string;
@@ -841,10 +843,12 @@ export const lt: Dictionary = {
       },
     },
     app: {
-      appearance: "Išvaizda",
+      appearance: "Tema",
       appearanceValue: "Šviesi",
-      themeAria: "Pasirinkti išvaizdą",
+      themeAria: "Tema",
       themeOptions: { light: "Šviesi", dark: "Tamsi", device: "Įrenginio" },
+      darkOn: "Įjungta",
+      darkOff: "Išjungta",
       language: "Kalba",
       export: "Eksportuoti duomenis",
       exportValue: "CSV",

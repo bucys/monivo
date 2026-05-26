@@ -116,12 +116,7 @@ export default async function SettingsPage() {
         </SettingsSection>
 
         <SettingsSection label={t.settings.sections.app}>
-          <SettingsRow
-            icon={<IconSparkle />}
-            label={t.settings.app.appearance}
-            right={<ThemeToggle />}
-            chevron={false}
-          />
+          <ThemeToggle icon={<IconSparkle />} />
           <SettingsRow
             icon={<IconGlobe />}
             label={t.settings.app.language}
