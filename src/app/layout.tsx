@@ -3,7 +3,8 @@ import { Inter } from "next/font/google";
 import { LocaleProvider } from "@/i18n/locale-provider";
 import { getServerLocale } from "@/i18n/server";
 import "./globals.css";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
   subsets: ["latin", "latin-ext"],
@@ -86,6 +87,7 @@ export default async function RootLayout({
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
         <LocaleProvider initialLocale={locale}>{children}</LocaleProvider>
+        <Analytics />
       </body>
     </html>
   );
