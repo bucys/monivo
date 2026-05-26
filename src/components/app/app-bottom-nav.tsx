@@ -27,7 +27,7 @@ export function AppBottomNav() {
   return (
     <nav
       aria-label={t.nav.mobileNavAria}
-      className="fixed inset-x-4 bottom-6 z-30 rounded-[32px] border border-hair bg-surface/90 px-2 pb-[env(safe-area-inset-bottom)] shadow-card backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-surface/75 lg:hidden"
+      className="fixed inset-x-4 bottom-6 z-30 rounded-[32px] border border-hair bg-surface px-2 pb-[env(safe-area-inset-bottom)] shadow-card lg:hidden"
     >
       <ul className="relative flex items-center">
         {leftTabs.map((tab) => (

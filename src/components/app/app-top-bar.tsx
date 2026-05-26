@@ -11,7 +11,7 @@ export function AppTopBar() {
   const { title } = getAppRouteMeta(t, pathname);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-hair bg-cream/85 pt-[env(safe-area-inset-top)] backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-cream/70 lg:hidden">
+    <header className="sticky top-0 z-30 border-b border-hair bg-cream pt-[env(safe-area-inset-top)] lg:hidden">
       <div className="mx-auto flex h-14 max-w-screen-sm items-center justify-between gap-3 px-5">
         <h1 className="text-[18px] font-semibold tracking-tight text-ink-900/90">
           {title}

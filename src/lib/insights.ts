@@ -4,7 +4,9 @@ export type IncomeRow = {
   amount_cents: number;
   service_id: string | null;
   service_name: string | null;
-  payment_method: string | null;
+  /** Optional — Insights doesn't select this column; only `paymentMethodTally`
+   *  consumers do. Keeping it optional lets that page trim the projection. */
+  payment_method?: string | null;
   occurred_at: string;
 };
 

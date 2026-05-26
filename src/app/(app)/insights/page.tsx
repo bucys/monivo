@@ -41,9 +41,7 @@ export default async function InsightsPage() {
     supabase.from("services").select("id, name").eq("user_id", user.id),
     supabase
       .from("income_entries")
-      .select(
-        "amount_cents, service_id, service_name, payment_method, occurred_at",
-      )
+      .select("amount_cents, service_id, service_name, occurred_at")
       .eq("user_id", user.id)
       .gte("occurred_at", monthStart)
       .lt("occurred_at", nextMonthStart),
