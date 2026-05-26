@@ -69,7 +69,7 @@ export const en: Dictionary = {
     statsIncome: "Income",
     statsExpense: "Expenses",
     statsTaxReserve: "Reserved",
-    reservePlannedTitle: "Planned tax reserve",
+    reservePlannedTitle: "Recommended reserve",
     reserveAboutPrefix: "about",
     reserveTapHint: "Tap to see the breakdown.",
     reserveBreakdownGpm: "Income tax",
@@ -179,21 +179,21 @@ export const en: Dictionary = {
     },
     business: {
       services: "Services & prices",
-      taxRate: "Tax reserve",
+      taxRate: "Reserve",
       activityType: "Business type",
       activityForm: "Activity form",
     },
     tax: {
-      sectionTitle: "Tax reserve",
+      sectionTitle: "Reserve",
       sectionHint:
-        "These figures are estimates — they help you plan how much to set aside.",
+        "Helps Monivo suggest how much to set aside each month.",
       modalSubtitle:
-        "This information is used to calculate your tax reserve.",
+        "We use this to suggest a monthly reserve. It's a planning estimate, not official advice.",
       modeLabel: "Business form",
       modes: {
         iv: "Self-Employed",
         vl: "Business Certificate",
-        custom: "Custom %",
+        custom: "Simple %",
       },
       iv: {
         expenseModeLabel: "Expense method",
@@ -218,12 +218,13 @@ export const en: Dictionary = {
       custom: {
         percentLabel: "Percent of income",
         percentPlaceholder: "e.g. 20",
-        helper: "Use this if you handle taxes a different way.",
+        helper:
+          "A simple flat share of income — same idea you picked during onboarding.",
       },
       saveCta: "Save",
       savedToast: "Saved",
       disclaimer:
-        "This is a planning tool, not official accounting. Final figures are set by the tax authority.",
+        "Planning estimate, not official tax advice.",
       explain: {
         gpm: "Income tax on taxable profit. Uses a safer 15% planning reserve so you always have a small cushion.",
         vsd: "Social insurance contribution. Estimated at 12.52% of the Sodra base (90% of taxable profit).",
@@ -655,12 +656,26 @@ export const en: Dictionary = {
       },
     },
     tax: {
-      title: "How much to set aside for tax?",
+      title: "What type of activity do you use?",
       subtitle:
-        "Monivo will reserve this share of every payment. The money stays in your account.",
-      customLabel: "Or enter your own",
-      customPlaceholder: "e.g. 27",
-      outOfRange: "Enter a number between 0 and 35.",
+        "Monivo will suggest how much to set aside each month. You can change this later in Settings.",
+      cards: {
+        iv: {
+          title: "Individual activity",
+          sub: "Certificate-based. We'll plan tax using your income and expenses.",
+        },
+        vl: {
+          title: "Business certificate",
+          sub: "Licensed certificate. Add the yearly cost later in Settings.",
+        },
+        simple: {
+          title: "Not sure / simple reserve",
+          sub: "We'll set aside a safe share of income. You can change it anytime.",
+        },
+      },
+      hint: "Planning estimate — the money stays in your account.",
+      vlHelper:
+        "If you know it now, add it here. You can change it later in Settings.",
     },
     actions: {
       continue: "Continue →",

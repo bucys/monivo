@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import { format } from "@/i18n";
 import { useT } from "@/i18n/locale-provider";
 import type { Dictionary } from "@/i18n";
@@ -26,7 +27,17 @@ const PROFESSIONS: ReadonlyArray<ProfessionCard> = [
 
 const FALLBACK_KEY = "none";
 
-const TAX_PRESETS: ReadonlyArray<number> = [20, 25, 30];
+type ActivityType = "iv" | "vl" | "simple";
+
+function cleanAmount(raw: string) {
+  const normalized = raw.replace(/[^\d.,]/g, "").replace(/\./g, ",");
+  const first = normalized.indexOf(",");
+  if (first === -1) return normalized;
+  return (
+    normalized.slice(0, first + 1) +
+    normalized.slice(first + 1).replace(/,/g, "").slice(0, 2)
+  );
+}
 
 export default function OnboardingPage() {
   const t = useT();
@@ -35,29 +46,22 @@ export default function OnboardingPage() {
   const [professionKey, setProfessionKey] = useState<string>(FALLBACK_KEY);
   const profession: Profession =
     PROFESSIONS.find((p) => p.key === professionKey)?.id ?? "other";
-  const [presetPercent, setPresetPercent] = useState<number | null>(25);
-  const [customPercent, setCustomPercent] = useState<string>("");
+  const [activity, setActivity] = useState<ActivityType>("simple");
+  const [vlYearly, setVlYearly] = useState<string>("");
+  const [vlValidUntil, setVlValidUntil] = useState<string>("");
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  const customParsed =
-    customPercent === "" ? null : parseInt(customPercent, 10);
-  const customOutOfRange =
-    customParsed !== null &&
-    (Number.isFinite(customParsed) ? customParsed < 0 || customParsed > 35 : true);
-
-  const submitDisabled =
-    pending ||
-    customOutOfRange ||
-    (presetPercent === null && (customParsed === null || !Number.isFinite(customParsed)));
-
   const submit = () => {
-    if (submitDisabled) return;
+    if (pending) return;
     setError(null);
-    const value = presetPercent !== null ? presetPercent : customParsed!;
     const fd = new FormData();
     fd.set("profession", profession);
-    fd.set("taxPercent", String(value));
+    fd.set("activity", activity);
+    if (activity === "vl") {
+      if (vlYearly.trim() !== "") fd.set("vl_yearly_cost", vlYearly);
+      if (vlValidUntil) fd.set("vl_valid_until", vlValidUntil);
+    }
     startTransition(async () => {
       try {
         await completeOnboarding(fd);
@@ -100,19 +104,13 @@ export default function OnboardingPage() {
             t={t}
           />
         ) : (
-          <TaxStep
-            preset={presetPercent}
-            custom={customPercent}
-            customOutOfRange={customOutOfRange}
-            submitDisabled={submitDisabled}
-            onPickPreset={(p) => {
-              setPresetPercent(p);
-              setCustomPercent("");
-            }}
-            onCustomChange={(v) => {
-              setCustomPercent(v);
-              setPresetPercent(null);
-            }}
+          <ActivityStep
+            value={activity}
+            onChange={setActivity}
+            vlYearly={vlYearly}
+            onVlYearlyChange={setVlYearly}
+            vlValidUntil={vlValidUntil}
+            onVlValidUntilChange={setVlValidUntil}
             onBack={() => setStep(1)}
             onSubmit={submit}
             pending={pending}
@@ -246,25 +244,27 @@ function ProfessionStep({
   );
 }
 
-function TaxStep({
-  preset,
-  custom,
-  customOutOfRange,
-  submitDisabled,
-  onPickPreset,
-  onCustomChange,
+const ACTIVITY_OPTIONS: ReadonlyArray<ActivityType> = ["iv", "vl", "simple"];
+
+function ActivityStep({
+  value,
+  onChange,
+  vlYearly,
+  onVlYearlyChange,
+  vlValidUntil,
+  onVlValidUntilChange,
   onBack,
   onSubmit,
   pending,
   error,
   t,
 }: {
-  preset: number | null;
-  custom: string;
-  customOutOfRange: boolean;
-  submitDisabled: boolean;
-  onPickPreset: (v: number) => void;
-  onCustomChange: (v: string) => void;
+  value: ActivityType;
+  onChange: (v: ActivityType) => void;
+  vlYearly: string;
+  onVlYearlyChange: (v: string) => void;
+  vlValidUntil: string;
+  onVlValidUntilChange: (v: string) => void;
   onBack: () => void;
   onSubmit: () => void;
   pending: boolean;
@@ -285,71 +285,97 @@ function TaxStep({
         {to.tax.subtitle}
       </p>
 
-      <div className="mt-6 grid grid-cols-3 gap-2">
-        {TAX_PRESETS.map((p) => {
-          const active = preset === p;
+      <div className="mt-6 flex flex-col gap-2">
+        {ACTIVITY_OPTIONS.map((option) => {
+          const card = to.tax.cards[option];
+          const active = value === option;
+          const vlExpanded = option === "vl" && active;
           return (
-            <button
-              key={p}
-              type="button"
-              onClick={() => onPickPreset(p)}
-              aria-pressed={active}
-              className={`flex flex-col items-center rounded-[16px] border px-3 py-4 transition-colors ${
+            <div
+              key={option}
+              className={`overflow-hidden rounded-[18px] border transition-colors ${
                 active
                   ? "border-accent bg-accent-soft"
                   : "border-hair bg-cream hover:border-accent/40"
               }`}
             >
-              <span
-                className={`text-[26px] font-semibold leading-none tracking-tight tabular-nums ${
-                  active ? "text-accent-deep" : "text-ink-900/90"
-                }`}
+              <button
+                type="button"
+                onClick={() => onChange(option)}
+                aria-pressed={active}
+                aria-expanded={option === "vl" ? active : undefined}
+                className="flex w-full flex-col items-start gap-1 px-5 py-4 text-left"
               >
-                {p}%
-              </span>
-            </button>
+                <span
+                  className={`text-[15px] font-semibold tracking-[-0.012em] ${
+                    active ? "text-accent-deep" : "text-ink-900/90"
+                  }`}
+                >
+                  {card.title}
+                </span>
+                <span className="text-[12px] leading-[1.45] text-ink-500">
+                  {card.sub}
+                </span>
+              </button>
+
+              {option === "vl" ? (
+                <div
+                  className={`grid transition-[grid-template-rows] duration-200 ease-out ${
+                    vlExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                  }`}
+                  aria-hidden={!vlExpanded}
+                >
+                  <div className="overflow-hidden">
+                    <div className="flex flex-col gap-3 border-t border-accent/20 px-5 pb-5 pt-4">
+                      <p className="text-[12px] leading-[1.5] text-ink-500">
+                        {to.tax.vlHelper}
+                      </p>
+                      <label className="flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
+                        {t.settings.tax.vl.yearlyCostLabel}
+                        <div className="flex items-center rounded-[14px] border border-hair bg-surface px-3.5 py-2.5 focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/30">
+                          <input
+                            type="text"
+                            inputMode="decimal"
+                            value={vlYearly}
+                            onChange={(e) =>
+                              onVlYearlyChange(cleanAmount(e.target.value))
+                            }
+                            placeholder={t.settings.tax.vl.yearlyCostPlaceholder}
+                            tabIndex={vlExpanded ? 0 : -1}
+                            className="w-full bg-transparent text-[16px] font-medium tabular-nums text-ink-900/90 placeholder:text-ink-500 focus:outline-none"
+                          />
+                          <span
+                            aria-hidden
+                            className="ml-2 text-[14px] font-medium text-ink-500"
+                          >
+                            €
+                          </span>
+                        </div>
+                      </label>
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-[12px] font-medium text-ink-500">
+                          {t.settings.tax.vl.validUntilLabel}
+                        </span>
+                        <DatePicker
+                          value={vlValidUntil}
+                          onChange={onVlValidUntilChange}
+                          placeholder={t.settings.tax.vl.validUntilLabel}
+                          ariaLabel={t.settings.tax.vl.validUntilLabel}
+                          disabled={!vlExpanded}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+            </div>
           );
         })}
       </div>
 
-      <label className="mt-5 flex flex-col gap-1.5 text-[12px] font-medium text-ink-500">
-        {to.tax.customLabel}
-        <div
-          className={`flex items-center rounded-[14px] border bg-surface px-3.5 py-2.5 transition-colors focus-within:ring-2 focus-within:ring-accent/30 ${
-            customOutOfRange
-              ? "border-expense focus-within:border-expense focus-within:ring-expense/20"
-              : custom !== ""
-                ? "border-accent focus-within:border-accent"
-                : "border-hair focus-within:border-accent"
-          }`}
-        >
-          <input
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            maxLength={2}
-            value={custom}
-            onChange={(e) => {
-              const cleaned = e.target.value.replace(/\D/g, "").slice(0, 2);
-              onCustomChange(cleaned);
-            }}
-            aria-invalid={customOutOfRange || undefined}
-            placeholder={to.tax.customPlaceholder}
-            className="w-full bg-transparent text-[16px] font-medium tabular-nums text-ink-900/90 placeholder:text-ink-500 focus:outline-none"
-          />
-          <span
-            aria-hidden
-            className="ml-2 text-[14px] font-medium text-ink-500"
-          >
-            %
-          </span>
-        </div>
-        {customOutOfRange ? (
-          <span className="text-[12px] font-normal text-expense">
-            {to.tax.outOfRange}
-          </span>
-        ) : null}
-      </label>
+      <p className="mt-4 text-[12px] leading-[1.5] text-ink-500">
+        {to.tax.hint}
+      </p>
 
       {error ? (
         <p className="mt-5 rounded-[12px] bg-expense-bg px-3.5 py-2.5 text-[13px] text-expense">
@@ -363,7 +389,7 @@ function TaxStep({
           type="button"
           onClick={onSubmit}
           isLoading={pending}
-          disabled={submitDisabled}
+          disabled={pending}
           className="!h-auto !rounded-[14px] !px-5 !py-3 !text-[14px]"
         >
           {to.actions.finish}

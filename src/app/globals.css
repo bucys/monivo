@@ -85,9 +85,43 @@
   }
 }
 
+/*
+ * Landing page is always light. When the user's saved theme is dark,
+ * `.dark` is set on <html> by the bootstrap script — but landing/marketing
+ * pages should keep the original light palette so the public site stays
+ * polished regardless of the in-app preference. We re-pin every token to
+ * its light value inside `.landing-scroll`, and switch color-scheme so
+ * form controls / scrollbars / autofill render light too.
+ */
+.dark .landing-scroll {
+  --c-surface: 255 255 255;
+  --c-cream: 250 248 244;
+  --c-shell: 244 241 234;
+  --c-ink-100: 239 237 233;
+  --c-ink-300: 201 201 201;
+  --c-ink-500: 110 122 116;
+  --c-ink-700: 61 61 61;
+  --c-ink-900: 23 33 29;
+  --c-accent: 31 122 107;
+  --c-accent-deep: 24 94 83;
+  --c-accent-soft: 221 244 236;
+  --c-income: 31 122 75;
+  --c-income-bg: 216 245 229;
+  --c-expense: 160 58 58;
+  --c-expense-bg: 255 231 231;
+  --c-tax: 138 100 24;
+  --c-tax-bg: 255 242 217;
+  --c-hair: 23 33 29;
+  --a-hair: 0.06;
+  --c-inverse: 23 33 29;
+  color-scheme: light;
+  color: rgb(var(--c-ink-900));
+}
+
 @layer utilities {
   .landing-scroll {
     scroll-behavior: smooth;
+    color-scheme: light;
   }
   .landing-bg {
     background-image: linear-gradient(

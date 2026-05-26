@@ -340,7 +340,15 @@ function CalendarPanel({
             <button
               key={toIso(d)}
               type="button"
-              onClick={() => !disabled && onPick(d)}
+              onClick={(e) => {
+                if (disabled) return;
+                // Stop the click from bubbling past the calendar — if the
+                // picker is rendered inside a <label>, the label's activation
+                // behavior can otherwise dispatch a synthetic click back to
+                // the trigger button and re-open the picker.
+                e.stopPropagation();
+                onPick(d);
+              }}
               disabled={disabled}
               aria-pressed={isSelected}
               aria-label={d.toDateString()}

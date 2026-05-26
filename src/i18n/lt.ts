@@ -484,9 +484,13 @@ export type Dictionary = {
     tax: {
       title: string;
       subtitle: string;
-      customLabel: string;
-      customPlaceholder: string;
-      outOfRange: string;
+      cards: {
+        iv: { title: string; sub: string };
+        vl: { title: string; sub: string };
+        simple: { title: string; sub: string };
+      };
+      hint: string;
+      vlHelper: string;
     };
     actions: {
       continue: string;
@@ -670,7 +674,7 @@ export const lt: Dictionary = {
     statsIncome: "Pajamos",
     statsExpense: "Išlaidos",
     statsTaxReserve: "Atidėta",
-    reservePlannedTitle: "Planuojamas mokesčių rezervas",
+    reservePlannedTitle: "Rekomenduojamas rezervas",
     reserveAboutPrefix: "apie",
     reserveTapHint: "Paspauskite, kad pamatytumėte detalizaciją.",
     reserveBreakdownGpm: "GPM",
@@ -780,21 +784,21 @@ export const lt: Dictionary = {
     },
     business: {
       services: "Paslaugos ir kainos",
-      taxRate: "Mokesčių rezervas",
+      taxRate: "Rezervas",
       activityType: "Veiklos rūšis",
       activityForm: "Veiklos forma",
     },
     tax: {
-      sectionTitle: "Mokesčių rezervas",
+      sectionTitle: "Rezervas",
       sectionHint:
-        "Skaičiavimai yra orientaciniai — padeda planuoti, kiek atsidėti.",
+        "Padeda Monivo pasiūlyti, kiek atsidėti per mėnesį.",
       modalSubtitle:
-        "Ši informacija naudojama mokesčių rezervo skaičiavimui.",
+        "Pagal tai siūlome mėnesinį rezervą. Tai planavimo įvertis, ne oficialus patarimas.",
       modeLabel: "Veiklos forma",
       modes: {
         iv: "Individuali veikla",
         vl: "Verslo liudijimas",
-        custom: "Pasirinktinis %",
+        custom: "Paprastas %",
       },
       iv: {
         expenseModeLabel: "Išlaidų metodas",
@@ -821,12 +825,13 @@ export const lt: Dictionary = {
       custom: {
         percentLabel: "Procentas nuo pajamų",
         percentPlaceholder: "Pvz. 20",
-        helper: "Naudok, jei tvarkai mokesčius kitu būdu.",
+        helper:
+          "Paprasta dalis nuo pajamų — tas pats principas kaip onboardinge.",
       },
       saveCta: "Išsaugoti",
       savedToast: "Išsaugota",
       disclaimer:
-        "Tai planavimo įrankis, ne oficiali apskaita. Tikslius mokesčius patvirtina VMI.",
+        "Planavimo įvertis, ne oficialus mokesčių patarimas.",
       explain: {
         gpm: "Pajamų mokestis nuo apmokestinamojo pelno. Naudojamas saugesnis 15% planavimo rezervas — taip lieka šiek tiek atsargos.",
         vsd: "Socialinio draudimo įmoka. Skaičiuojama 12,52% nuo Sodros bazės (90% apmokestinamojo pelno).",
@@ -1262,12 +1267,26 @@ export const lt: Dictionary = {
       },
     },
     tax: {
-      title: "Kiek atidėti mokesčiams?",
+      title: "Kokia tavo veiklos forma?",
       subtitle:
-        "Monivo nuo kiekvienos pajamos paskaičiuos, kiek verta atsidėti. Pinigai lieka tavo banko sąskaitoje.",
-      customLabel: "Arba įvesk savo",
-      customPlaceholder: "Pvz. 27",
-      outOfRange: "Įvesk skaičių nuo 0 iki 35.",
+        "Monivo pasiūlys, kiek atsidėti per mėnesį. Vėliau galėsi pakeisti nustatymuose.",
+      cards: {
+        iv: {
+          title: "Individuali veikla",
+          sub: "Pažyma. Mokesčius skaičiuosime pagal pajamas ir išlaidas.",
+        },
+        vl: {
+          title: "Verslo liudijimas",
+          sub: "Liudijimas. VL kainą įvesi vėliau nustatymuose.",
+        },
+        simple: {
+          title: "Nežinau / paprastas rezervas",
+          sub: "Paimsime saugią dalį nuo pajamų. Visada galėsi pakeisti.",
+        },
+      },
+      hint: "Tai planavimo įvertis — pinigai lieka tavo sąskaitoje.",
+      vlHelper:
+        "Jei žinai dabar — įvesk čia. Vėliau galėsi pakeisti nustatymuose.",
     },
     actions: {
       continue: "Tęsti →",
