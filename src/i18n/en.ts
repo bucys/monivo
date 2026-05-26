@@ -141,6 +141,18 @@ export const en: Dictionary = {
         title: "10 entries this month",
         body: "Consistency pays off — keep it going.",
       },
+      weeklySummary: {
+        title: "Weekly summary",
+        body: "This week you earned {amount} € across {count} entries.",
+      },
+      monthlyReview: {
+        title: "Last month in review",
+        body: "Last month you earned {amount} € across {count} services.",
+      },
+      bestDay: {
+        title: "Best day of the week",
+        body: "{day} — {amount} € this month.",
+      },
     },
   },
   settings: {
@@ -287,6 +299,7 @@ export const en: Dictionary = {
       choose: "Choose month",
       ariaLabel: "Period",
       modalTitle: "Choose month",
+      empty: "No entries yet.",
     },
     day: { today: "Today", yesterday: "Yesterday" },
     empty: {
@@ -691,7 +704,6 @@ export const en: Dictionary = {
     countOne: "service",
     countFew: "services",
     countMany: "services",
-    averagePrefix: "avg.",
     emptyTitle: "No services yet.",
     emptyBody:
       "Add the services you offer most often — you'll add income in one tap.",

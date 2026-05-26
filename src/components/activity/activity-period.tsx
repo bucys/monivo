@@ -4,23 +4,21 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { ModalSheet } from "@/components/ui/modal-sheet";
 import { useLocale } from "@/i18n/locale-provider";
-import {
-  lastTwelveMonths,
-  type PeriodMode,
-} from "@/lib/activity";
+import type { MonthOption, PeriodMode } from "@/lib/activity";
 
 export function ActivityPeriod({
   mode,
   monthValue,
+  months,
 }: {
   mode: PeriodMode;
   monthValue?: string;
+  months: ReadonlyArray<MonthOption>;
 }) {
   const router = useRouter();
-  const { t, locale } = useLocale();
+  const { t } = useLocale();
   const [pending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
-  const months = lastTwelveMonths(new Date(), locale);
   const items: ReadonlyArray<{ mode: PeriodMode; label: string }> = [
     { mode: "week", label: t.activity.period.week },
     { mode: "month", label: t.activity.period.month },
@@ -86,6 +84,7 @@ export function ActivityPeriod({
           monthValue={monthValue}
           months={months}
           title={t.activity.period.modalTitle}
+          emptyLabel={t.activity.period.empty}
           closeLabel={t.common.close}
           onClose={() => setOpen(false)}
           onPick={handleMonthPick}
@@ -99,6 +98,7 @@ function MonthPicker({
   monthValue,
   months,
   title,
+  emptyLabel,
   closeLabel,
   onClose,
   onPick,
@@ -106,6 +106,7 @@ function MonthPicker({
   monthValue?: string;
   months: ReadonlyArray<{ value: string; label: string }>;
   title: string;
+  emptyLabel: string;
   closeLabel: string;
   onClose: () => void;
   onPick: (value: string) => void;
@@ -115,6 +116,11 @@ function MonthPicker({
       <h2 className="px-1 pb-3 text-[15px] font-semibold tracking-[-0.012em] text-ink-900/90">
         {title}
       </h2>
+      {months.length === 0 ? (
+        <p className="px-3 py-6 text-center text-[14px] text-ink-500">
+          {emptyLabel}
+        </p>
+      ) : (
       <ul className="flex flex-col pb-2">
         {months.map((m) => {
           const selected = m.value === monthValue;
@@ -134,6 +140,7 @@ function MonthPicker({
           );
         })}
       </ul>
+      )}
     </ModalSheet>
   );
 }

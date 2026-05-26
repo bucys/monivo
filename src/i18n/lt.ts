@@ -116,6 +116,9 @@ export type Dictionary = {
       topService: { title: string; body: string };
       milestoneFirst: { title: string; body: string };
       milestoneTen: { title: string; body: string };
+      weeklySummary: { title: string; body: string };
+      monthlyReview: { title: string; body: string };
+      bestDay: { title: string; body: string };
     };
   };
   settings: {
@@ -244,6 +247,7 @@ export type Dictionary = {
       choose: string;
       ariaLabel: string;
       modalTitle: string;
+      empty: string;
     };
     day: { today: string; yesterday: string };
     empty: {
@@ -523,7 +527,6 @@ export type Dictionary = {
     countOne: string;
     countFew: string;
     countMany: string;
-    averagePrefix: string;
     emptyTitle: string;
     emptyBody: string;
     addFirst: string;
@@ -735,6 +738,18 @@ export const lt: Dictionary = {
         title: "10 įrašų šį mėnesį",
         body: "Konsistencija atsiperka — taip ir laikykis.",
       },
+      weeklySummary: {
+        title: "Savaitės santrauka",
+        body: "Šią savaitę uždirbai {amount} € ir turėjai {count} įrašų.",
+      },
+      monthlyReview: {
+        title: "Praėjusio mėnesio apžvalga",
+        body: "Praėjusį mėnesį uždirbai {amount} € ir aptarnavai {count} kartų.",
+      },
+      bestDay: {
+        title: "Geriausia savaitės diena",
+        body: "{day} — {amount} € šį mėnesį.",
+      },
     },
   },
   settings: {
@@ -883,6 +898,7 @@ export const lt: Dictionary = {
       choose: "Pasirinkti",
       ariaLabel: "Periodas",
       modalTitle: "Pasirinkti mėnesį",
+      empty: "Įrašų dar nėra.",
     },
     day: { today: "Šiandien", yesterday: "Vakar" },
     empty: {
@@ -1290,7 +1306,6 @@ export const lt: Dictionary = {
     countOne: "paslauga",
     countFew: "paslaugos",
     countMany: "paslaugų",
-    averagePrefix: "vid.",
     emptyTitle: "Dar nepridėjai paslaugų.",
     emptyBody:
       "Pridėk dažniausiai teikiamas paslaugas — jas vienu paliestimu pridėsi prie pajamų.",

@@ -7,7 +7,7 @@ import type {
   RecentEntry,
 } from "@/components/dashboard/recent-activity";
 import { getT } from "@/i18n/server";
-import { resolvePeriod } from "@/lib/activity";
+import { monthsFromIsoDates, resolvePeriod } from "@/lib/activity";
 import { canWriteProfile } from "@/lib/profile";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -36,6 +36,8 @@ export default async function ActivityPage({
     { data: serviceRows },
     { data: incomeRows },
     { data: expenseRows },
+    { data: incomeMonthRows },
+    { data: expenseMonthRows },
   ] = await Promise.all([
     supabase
       .from("profiles")
@@ -69,7 +71,31 @@ export default async function ActivityPage({
       .order("occurred_at", { ascending: false })
       .order("created_at", { ascending: false })
       .order("id", { ascending: false }),
+    supabase
+      .from("income_entries")
+      .select("occurred_at")
+      .eq("user_id", user.id),
+    supabase
+      .from("expense_entries")
+      .select("occurred_at")
+      .eq("user_id", user.id),
   ]);
+
+  const availableMonths = monthsFromIsoDates(
+    [
+      ...((incomeMonthRows ?? []).map((r) => r.occurred_at as string)),
+      ...((expenseMonthRows ?? []).map((r) => r.occurred_at as string)),
+    ],
+    locale,
+  );
+
+  if (
+    period.mode === "custom" &&
+    period.monthValue &&
+    !availableMonths.some((m) => m.value === period.monthValue)
+  ) {
+    redirect("/activity");
+  }
 
   const incomes = incomeRows ?? [];
   const expenses = expenseRows ?? [];
@@ -113,6 +139,7 @@ export default async function ActivityPage({
         periodMode={period.mode}
         periodLabel={period.label}
         monthValue={period.monthValue}
+        availableMonths={availableMonths}
         services={services}
         canWrite={canWrite}
       />

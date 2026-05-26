@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { formatEur } from "@/lib/format";
 import type { RecentEntry, PaymentMethod } from "./recent-activity";
 
@@ -47,7 +48,12 @@ function SectionHeader({ title, seeAll }: { title: string; seeAll: string }) {
       <h2 className="text-[14px] font-semibold tracking-[-0.012em] text-ink-900/90">
         {title}
       </h2>
-      <span className="text-[13px] font-medium text-accent">{seeAll}</span>
+      <Link
+        href="/activity"
+        className="rounded-[8px] text-[13px] font-medium text-accent transition-colors hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+      >
+        {seeAll}
+      </Link>
     </div>
   );
 }

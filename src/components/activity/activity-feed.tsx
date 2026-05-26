@@ -10,6 +10,7 @@ import {
   filterEntries,
   groupByDay,
   type ActivityKind,
+  type MonthOption,
   type PeriodMode,
 } from "@/lib/activity";
 import { ActivityDayGroup } from "./activity-day-group";
@@ -25,6 +26,7 @@ export function ActivityFeed({
   periodMode,
   periodLabel,
   monthValue,
+  availableMonths,
   services,
   canWrite,
 }: {
@@ -32,6 +34,7 @@ export function ActivityFeed({
   periodMode: PeriodMode;
   periodLabel: string;
   monthValue?: string;
+  availableMonths: ReadonlyArray<MonthOption>;
   services: ReadonlyArray<ServiceChip>;
   canWrite: boolean;
 }) {
@@ -92,7 +95,11 @@ export function ActivityFeed({
       </div>
 
       <div className="flex flex-col gap-3">
-        <ActivityPeriod mode={periodMode} monthValue={monthValue} />
+        <ActivityPeriod
+          mode={periodMode}
+          monthValue={monthValue}
+          months={availableMonths}
+        />
         <ActivityFilters value={kind} onChange={setKind} counts={counts} />
       </div>
 

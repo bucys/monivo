@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { ModalSheet } from "@/components/ui/modal-sheet";
 import { useT } from "@/i18n/locale-provider";
@@ -60,12 +60,6 @@ export function ServicesClient({
     return () => window.removeEventListener(OPEN_ADD_EVENT, handler);
   }, [canWrite]);
 
-  const avg = useMemo(() => {
-    if (services.length === 0) return 0;
-    const sum = services.reduce((acc, s) => acc + s.price_cents, 0);
-    return Math.round(sum / services.length);
-  }, [services]);
-
   const close = () => setMode({ kind: "closed" });
 
   if (services.length === 0) {
@@ -86,11 +80,6 @@ export function ServicesClient({
       <div className="flex items-center justify-between rounded-[16px] border border-hair bg-surface px-4 py-3">
         <span className="text-[13px] text-ink-500">
           {services.length} {countLabel(services.length, t)}
-          {" · "}
-          {t.services.averagePrefix}{" "}
-          <span className="font-medium tabular-nums text-ink-900/90">
-            {formatEur(avg)}
-          </span>
         </span>
         {canWrite ? (
           <button

@@ -174,17 +174,22 @@ export function resolvePeriod(
   };
 }
 
-export function lastTwelveMonths(
-  now: Date = new Date(),
+export function monthsFromIsoDates(
+  isoDates: ReadonlyArray<string>,
   locale: SupportedLocale = "lt",
 ): MonthOption[] {
-  const out: MonthOption[] = [];
-  for (let i = 0; i < 12; i++) {
-    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-    out.push({ value, label: formatMonth(d, locale) });
+  const seen = new Set<string>();
+  for (const iso of isoDates) {
+    if (typeof iso !== "string" || iso.length < 7) continue;
+    seen.add(iso.slice(0, 7));
   }
-  return out;
+  return Array.from(seen)
+    .sort((a, b) => (a < b ? 1 : a > b ? -1 : 0))
+    .map((value) => {
+      const [y, m] = value.split("-").map(Number);
+      const d = new Date(y!, (m ?? 1) - 1, 1);
+      return { value, label: formatMonth(d, locale) };
+    });
 }
 
 export function filterEntries(
