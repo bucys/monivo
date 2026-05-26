@@ -225,8 +225,11 @@ export function TaxProfileCard({
             <AccordionRow header={<ExplainTitle>{t.dashboard.reserveBreakdownVl}</ExplainTitle>}>
               {tx.explain.vl}
             </AccordionRow>
+            <AccordionRow header={<ExplainTitle>{t.dashboard.reserveBreakdownVsd}</ExplainTitle>}>
+              {tx.explain.vlVsd}
+            </AccordionRow>
             <AccordionRow header={<ExplainTitle>{t.dashboard.reserveBreakdownPsd}</ExplainTitle>}>
-              {tx.explain.psd}
+              {tx.explain.vlPsd}
             </AccordionRow>
           </>
         ) : null}

@@ -243,6 +243,8 @@ export const en: Dictionary = {
         vsd: "Social insurance contribution. Estimated at 12.52% of the Sodra base (90% of taxable profit).",
         psd: "Health insurance — 6.98% of the Sodra base. A monthly minimum floor applies when income is low. Turn this off if PSD is paid by your employer or another role.",
         vl: "The certificate cost is spread across the remaining validity period so the monthly reserve reflects what's actually left to plan for.",
+        vlVsd: "Social insurance contribution. For a Business Certificate, a simplified 8.72% of income reserve is used.",
+        vlPsd: "Health insurance. For a Business Certificate, the monthly minimum floor applies (MMA × 6.98% ≈ €80.48/mo).",
         footnote: "Planning estimate, not official tax advice.",
       },
     },

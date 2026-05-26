@@ -196,6 +196,8 @@ export type Dictionary = {
         vsd: string;
         psd: string;
         vl: string;
+        vlVsd: string;
+        vlPsd: string;
         footnote: string;
       };
     };
@@ -878,6 +880,8 @@ export const lt: Dictionary = {
         vsd: "Socialinio draudimo įmoka. Skaičiuojama 12,52% nuo Sodros bazės (90% apmokestinamojo pelno).",
         psd: "Sveikatos draudimas — 6,98% nuo Sodros bazės. Jei suma maža, taikoma mėnesinė minimumo riba. Jei PSD moka darbdavys ar kita veikla, gali PSD rezervą išjungti.",
         vl: "Verslo liudijimo kaina paskirstoma per likusį galiojimo laikotarpį, kad mėnesinis rezervas atspindėtų realų likutį.",
+        vlVsd: "Socialinio draudimo įmoka. Verslo liudijimui naudojamas supaprastintas 8,72% nuo pajamų rezervas.",
+        vlPsd: "Sveikatos draudimas. Verslo liudijimui taikoma minimali mėnesinė riba (MMA × 6,98% ≈ 80,48 €/mėn).",
         footnote: "Planavimo įvertis, ne oficialus mokesčių patarimas.",
       },
     },
