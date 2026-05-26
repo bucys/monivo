@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -156,6 +157,12 @@ export async function completeOnboarding(formData: FormData): Promise<void> {
     console.error("[onboarding] profile update failed:", error.message);
     throw new Error(error.message);
   }
+
+  // Invalidate the router cache for every layout — the (app) layout's
+  // onboarding gate was likely prefetched while `onboarding_completed_at` was
+  // still null, so without this the post-redirect navigation to /dashboard
+  // can replay that stale 307 → /onboarding and bounce the user back.
+  revalidatePath("/", "layout");
 
   redirect("/dashboard");
 }
