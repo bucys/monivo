@@ -236,6 +236,8 @@ export const en: Dictionary = {
       savedToast: "Saved",
       disclaimer:
         "Planning estimate, not official tax advice.",
+      readOnly:
+        "Reserve setup unlocks once your subscription is active.",
       explain: {
         gpm: "Income tax on taxable profit. Uses a safer 15% planning reserve so you always have a small cushion.",
         vsd: "Social insurance contribution. Estimated at 12.52% of the Sodra base (90% of taxable profit).",

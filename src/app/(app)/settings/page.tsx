@@ -21,9 +21,11 @@ import { ThemeToggle } from "@/components/settings/theme-toggle";
 import { getDictionary } from "@/i18n";
 import { getServerLocale } from "@/i18n/server";
 import {
+  canWriteProfile,
   TAX_PROFILE_COLUMNS,
   toTaxProfile,
   type ProfileTaxFields,
+  type ProfileWriteFields,
 } from "@/lib/profile";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -41,12 +43,21 @@ export default async function SettingsPage() {
   const locale = await getServerLocale();
   const t = getDictionary(locale);
 
-  const [{ data: profile }, servicesCount] = await Promise.all([
+  // Split the profile read: core columns must succeed; Stripe-era columns
+  // are optional. If the Stripe migration hasn't landed in this environment,
+  // the second query can fail and we fall back to nulls without breaking
+  // display_name / tax_mode / trial / subscription_status rendering.
+  const [coreResult, stripeResult, servicesCount] = await Promise.all([
     supabase
       .from("profiles")
       .select(
-        `display_name, profession, tax_rate, subscription_status, trial_ends_at, past_due_since, stripe_customer_id, current_period_ends_at, ${TAX_PROFILE_COLUMNS}`,
+        `display_name, profession, tax_rate, subscription_status, trial_ends_at, past_due_since, ${TAX_PROFILE_COLUMNS}`,
       )
+      .eq("id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("profiles")
+      .select("stripe_customer_id, current_period_ends_at")
       .eq("id", user.id)
       .maybeSingle(),
     supabase
@@ -54,10 +65,30 @@ export default async function SettingsPage() {
       .select("id", { count: "exact", head: true })
       .eq("user_id", user.id),
   ]);
+
+  const profile = coreResult.data;
+  if (coreResult.error) {
+    console.warn(
+      "[settings] core profile read failed:",
+      coreResult.error.message,
+    );
+  }
+
+  const stripeExtras = stripeResult.data as
+    | { stripe_customer_id: string | null; current_period_ends_at: string | null }
+    | null;
+  if (stripeResult.error) {
+    console.warn(
+      "[settings] stripe extras read failed:",
+      stripeResult.error.message,
+    );
+  }
+
   const serviceCount = servicesCount.count ?? 0;
 
   const displayName = profile?.display_name ?? "";
   const taxProfile = toTaxProfile(profile as ProfileTaxFields | null);
+  const canWrite = canWriteProfile(profile as ProfileWriteFields | null);
   const rawStatus = profile?.subscription_status ?? "trialing";
   const status: ProfileSubscriptionStatus = (
     ["active", "trialing", "expired", "past_due", "canceled"] as const
@@ -81,14 +112,8 @@ export default async function SettingsPage() {
           email={user.email ?? ""}
           status={status}
           trialEndsAt={profile?.trial_ends_at ?? null}
-          currentPeriodEndsAt={
-            (profile as { current_period_ends_at?: string | null } | null)
-              ?.current_period_ends_at ?? null
-          }
-          hasStripeCustomer={Boolean(
-            (profile as { stripe_customer_id?: string | null } | null)
-              ?.stripe_customer_id,
-          )}
+          currentPeriodEndsAt={stripeExtras?.current_period_ends_at ?? null}
+          hasStripeCustomer={Boolean(stripeExtras?.stripe_customer_id)}
         />
 
         <SettingsSection label={t.settings.sections.business}>
@@ -98,7 +123,7 @@ export default async function SettingsPage() {
             detail={String(serviceCount)}
             href="/services"
           />
-          <TaxFormSheet initial={taxProfile} last />
+          <TaxFormSheet initial={taxProfile} canWrite={canWrite} last />
         </SettingsSection>
 
         <SettingsSection label={t.settings.sections.app}>

@@ -52,7 +52,13 @@ export function ProfileCard({
   const [nameOpen, setNameOpen] = useState(false);
   const [emailOpen, setEmailOpen] = useState(false);
 
-  const visibleName = displayName.trim() || "—";
+  // Resolution order for the user-visible name:
+  //   1. Saved display_name if non-empty after trim.
+  //   2. Email local-part (everything before the "@") if email is present.
+  //   3. Em-dash placeholder.
+  const trimmedName = displayName.trim();
+  const emailLocal = email.includes("@") ? email.split("@")[0]!.trim() : "";
+  const visibleName = trimmedName || emailLocal || "—";
 
   return (
     <>
@@ -68,7 +74,7 @@ export function ProfileCard({
             className="flex h-[52px] w-[52px] items-center justify-center rounded-full border border-hair text-[18px] font-semibold text-accent-deep"
             style={{ background: "linear-gradient(135deg, #DDF4EC, #C9EBDF)" }}
           >
-            {initials(displayName)}
+            {initials(visibleName)}
           </span>
           <span className="min-w-0 flex-1">
             <span className="block truncate text-[16px] font-semibold tracking-[-0.012em] text-ink-900/90">
@@ -282,7 +288,16 @@ function PlanRow({
         <span className="w-[64px] shrink-0 text-[12px] font-medium uppercase tracking-[0.05em] text-ink-500 sm:w-[80px]">
           {label}
         </span>
-        <span className="min-w-0 flex-1 truncate text-[14px] tracking-[-0.008em] text-ink-900/90">
+        <span
+          className={cn(
+            "min-w-0 flex-1 truncate text-[14px] tracking-[-0.008em]",
+            effectiveStatus === "expired" ||
+              effectiveStatus === "canceled" ||
+              effectiveStatus === "past_due"
+              ? "font-medium text-expense"
+              : "text-ink-900/90",
+          )}
+        >
           {collapsedValue}
         </span>
         <span
@@ -327,7 +342,7 @@ function PlanRow({
               </p>
             ) : null}
 
-            <div className="flex">
+            <div className="flex justify-end">
               {showManage ? <ManageSubscriptionButton /> : null}
               {showSubscribe ? <SubscribeButton /> : null}
             </div>

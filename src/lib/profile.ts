@@ -25,15 +25,45 @@ export type ProfileTaxFields = {
 export const TAX_PROFILE_COLUMNS =
   "tax_mode, iv_expense_mode, include_psd, custom_tax_percent, vl_yearly_cost_cents, vl_valid_until";
 
+/**
+ * Map a profiles row into a TaxProfile.
+ *
+ * Source-of-truth order:
+ *   1. row.tax_mode if explicitly set ('iv' | 'vl' | 'custom').
+ *   2. If tax_mode is null but VL columns are populated → infer 'vl'.
+ *   3. If tax_mode is null but custom_tax_percent is populated → infer 'custom'.
+ *   4. Otherwise default to 'custom' (the safe planning path).
+ *
+ * The inference matters for profiles that pre-date the activity-type
+ * onboarding write: their tax_mode is null, but the VL fields they filled
+ * in still exist. Without inference, the UI silently fell back to "Simple %"
+ * even though the user is a Verslo liudijimas holder.
+ */
 export function toTaxProfile(row: ProfileTaxFields | null | undefined): TaxProfile {
+  const customPct =
+    row?.custom_tax_percent === null || row?.custom_tax_percent === undefined
+      ? null
+      : Number(row.custom_tax_percent);
+  const hasVlData =
+    (row?.vl_yearly_cost_cents ?? null) !== null ||
+    (row?.vl_valid_until ?? null) !== null;
+
+  let taxMode: TaxProfile["taxMode"];
+  if (row?.tax_mode === "iv" || row?.tax_mode === "vl" || row?.tax_mode === "custom") {
+    taxMode = row.tax_mode;
+  } else if (hasVlData) {
+    taxMode = "vl";
+  } else if (customPct !== null) {
+    taxMode = "custom";
+  } else {
+    taxMode = "custom";
+  }
+
   return {
-    taxMode: row?.tax_mode ?? "custom",
+    taxMode,
     ivExpenseMode: row?.iv_expense_mode ?? "fixed_30",
     includePsd: row?.include_psd ?? true,
-    customTaxPercent:
-      row?.custom_tax_percent === null || row?.custom_tax_percent === undefined
-        ? null
-        : Number(row.custom_tax_percent),
+    customTaxPercent: customPct,
     vlYearlyCostCents: row?.vl_yearly_cost_cents ?? null,
     vlValidUntil: row?.vl_valid_until ?? null,
   };

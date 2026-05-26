@@ -14,9 +14,11 @@ type IvExpense = TaxProfile["ivExpenseMode"];
 
 export function TaxProfileCard({
   initial,
+  canWrite = true,
   onSaved,
 }: {
   initial: TaxProfile;
+  canWrite?: boolean;
   onSaved?: () => void;
 }) {
   const router = useRouter();
@@ -231,11 +233,17 @@ export function TaxProfileCard({
       </div>
 
       <div className="mt-5 flex flex-col gap-3">
+        {!canWrite ? (
+          <p className="rounded-[12px] bg-accent-soft/60 px-3.5 py-2.5 text-[13px] text-accent-deep">
+            {tx.readOnly}
+          </p>
+        ) : null}
         <Button
           variant="primary"
           type="button"
           onClick={submit}
           isLoading={pending}
+          disabled={pending || !canWrite}
           className="!h-auto !rounded-[14px] !px-5 !py-3 !text-[14px]"
         >
           {tx.saveCta}

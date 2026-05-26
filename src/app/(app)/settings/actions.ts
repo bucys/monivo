@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { requireWritableProfile } from "@/lib/profile";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const EXPENSE_CATEGORY_LABEL: Record<string, string> = {
@@ -322,14 +323,11 @@ function parseTaxRate(raw: unknown): number {
 }
 
 export async function updateProfile(formData: FormData) {
-  const displayName = parseDisplayName(formData.get("display_name"));
-
-  // tax rate input is percent (e.g. "15" → 0.15). Skip if not present.
-  const rawTax = formData.get("tax_rate_percent");
-  const taxRate =
-    rawTax !== null && String(rawTax).trim() !== ""
-      ? parseTaxRate(Number(String(rawTax).replace(",", ".")) / 100)
-      : null;
+  // Display-name + email are account-level edits — intentionally NOT gated by
+  // requireWritableProfile so expired-trial users can still maintain their
+  // own account. Business-affecting writes (tax profile, profession,
+  // services, entries) ARE guarded; see updateTaxProfile / updateProfession
+  // and the entries/services actions.
 
   const supabase = await createSupabaseServerClient();
   const {
@@ -340,8 +338,26 @@ export async function updateProfile(formData: FormData) {
   if (!user) redirect("/login");
 
   const patch: Record<string, unknown> = {};
-  if (formData.has("display_name")) patch.display_name = displayName;
+
+  // display_name is NOT NULL in the DB. If the form explicitly includes the
+  // field but the trimmed value is empty, that's a validation error — we
+  // reject rather than writing null and tripping the constraint.
+  if (formData.has("display_name")) {
+    const displayName = parseDisplayName(formData.get("display_name"));
+    if (!displayName) {
+      throw new Error("Įvesk vardą.");
+    }
+    patch.display_name = displayName;
+  }
+
+  // tax rate input is percent (e.g. "15" → 0.15). Skip if not present.
+  const rawTax = formData.get("tax_rate_percent");
+  const taxRate =
+    rawTax !== null && String(rawTax).trim() !== ""
+      ? parseTaxRate(Number(String(rawTax).replace(",", ".")) / 100)
+      : null;
   if (taxRate !== null) patch.tax_rate = taxRate;
+
   if (Object.keys(patch).length === 0) return;
 
   const { error } = await supabase
@@ -408,6 +424,8 @@ export async function updateProfession(formData: FormData) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
+  // Profession drives reserve calculations downstream — business mutation.
+  await requireWritableProfile(supabase, user.id);
 
   const { error } = await supabase
     .from("profiles")
@@ -457,6 +475,8 @@ export async function updateTaxProfile(formData: FormData) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
+  // Tax profile drives reserve calculations — business mutation.
+  await requireWritableProfile(supabase, user.id);
 
   const { error } = await supabase
     .from("profiles")

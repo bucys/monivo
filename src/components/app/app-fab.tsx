@@ -36,6 +36,7 @@ export function AppFab({ canWrite }: { canWrite: boolean }) {
   }, [menuOpen]);
 
   const handleFabClick = () => {
+    if (!canWrite) return;
     if (onServices) {
       dispatchOpenAddService();
       return;
@@ -49,15 +50,14 @@ export function AppFab({ canWrite }: { canWrite: boolean }) {
     else dispatchOpenExpenseEntry();
   };
 
-  const showMenu = menuOpen && !onServices;
+  const showMenu = menuOpen && !onServices && canWrite;
 
-  // Read-only (expired trial / canceled): hide the FAB entirely. Tapping a
-  // disabled FAB would be confusing — the user has nothing to do here until
-  // they reactivate their subscription.
-  //
-  // Also hide while a ModalSheet is open so the FAB doesn't overlap modal
-  // surfaces or steal keyboard focus from the dialog.
-  if (!canWrite || chromeSuppressed) return null;
+  // Hide while a ModalSheet is open so the FAB doesn't overlap modal
+  // surfaces or steal keyboard focus from the dialog. Read-only users
+  // (expired trial / canceled) still see the FAB — it just doesn't
+  // respond to taps, which keeps the layout stable and signals the
+  // missing capability rather than the missing button.
+  if (chromeSuppressed) return null;
 
   // Stacking: topbar z-30 · FAB backdrop z-40 (above topbar when open) ·
   // FAB button + menu z-50 (above backdrop, but below any open ModalSheet
@@ -103,6 +103,8 @@ export function AppFab({ canWrite }: { canWrite: boolean }) {
           e.stopPropagation();
           handleFabClick();
         }}
+        disabled={!canWrite}
+        aria-disabled={!canWrite}
         aria-label={
           onServices
             ? t.services.addSheetTitle
@@ -111,9 +113,15 @@ export function AppFab({ canWrite }: { canWrite: boolean }) {
               : t.addEntry.fab.openMenuAria
         }
         aria-expanded={onServices ? undefined : showMenu}
-        className="fixed bottom-[40px] left-1/2 z-50 -translate-x-1/2 touch-manipulation"
+        className="fixed bottom-[40px] left-1/2 z-50 -translate-x-1/2 touch-manipulation disabled:cursor-not-allowed"
       >
-        <span className="flex h-[58px] w-[58px] items-center justify-center rounded-full bg-gradient-to-br from-[#2E8E7D] via-accent to-accent-deep text-white shadow-fab transition-transform active:scale-95">
+        <span
+          className={`flex h-[58px] w-[58px] items-center justify-center rounded-full text-white shadow-fab transition-transform ${
+            canWrite
+              ? "bg-gradient-to-br from-[#2E8E7D] via-accent to-accent-deep active:scale-95"
+              : "bg-ink-300/80"
+          }`}
+        >
           <svg
             width="26"
             height="26"

@@ -11,9 +11,11 @@ import type { TaxProfile } from "@/lib/tax";
 export function TaxFormSheet({
   initial,
   last,
+  canWrite = true,
 }: {
   initial: TaxProfile;
   last?: boolean;
+  canWrite?: boolean;
 }) {
   const t = useT();
   const tx = t.settings.tax;
@@ -44,7 +46,11 @@ export function TaxFormSheet({
             {tx.modalSubtitle}
           </p>
         </header>
-        <TaxProfileCard initial={initial} onSaved={() => setOpen(false)} />
+        <TaxProfileCard
+          initial={initial}
+          canWrite={canWrite}
+          onSaved={() => setOpen(false)}
+        />
       </ModalSheet>
     </>
   );

@@ -190,6 +190,7 @@ export type Dictionary = {
       saveCta: string;
       savedToast: string;
       disclaimer: string;
+      readOnly: string;
       explain: {
         gpm: string;
         vsd: string;
@@ -865,6 +866,8 @@ export const lt: Dictionary = {
       savedToast: "Išsaugota",
       disclaimer:
         "Planavimo įvertis, ne oficialus mokesčių patarimas.",
+      readOnly:
+        "Mokesčių/rezervo nustatymus galėsi keisti, kai prenumerata bus aktyvi.",
       explain: {
         gpm: "Pajamų mokestis nuo apmokestinamojo pelno. Naudojamas saugesnis 15% planavimo rezervas — taip lieka šiek tiek atsargos.",
         vsd: "Socialinio draudimo įmoka. Skaičiuojama 12,52% nuo Sodros bazės (90% apmokestinamojo pelno).",
@@ -922,7 +925,7 @@ export const lt: Dictionary = {
       title: "Tavo planas",
       statusActive: "Aktyvus planas",
       statusTrialing: "Bandomasis laikotarpis",
-      statusExpired: "Pasibaigė",
+      statusExpired: "Baigėsi",
       statusPastDue: "Mokėjimas vėluoja",
       statusCanceled: "Atšauktas",
       trialDaysLeft: "Liko {n} d.",

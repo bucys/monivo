@@ -41,18 +41,22 @@ export default async function AppLayout({
     redirect("/onboarding");
   }
 
-  // Wider read for shell/tax/sidebar data. If it errors (e.g. a column doesn't
-  // exist yet on this environment) we log and fall back to safe defaults
-  // instead of redirecting.
+  // Core profile read. These columns have been stable since pre-Stripe; if
+  // this fails the whole layout degrades to read-only defaults, so we keep
+  // the column list narrow and stable here. Stripe-era columns
+  // (stripe_customer_id, current_period_ends_at) are intentionally NOT
+  // selected here — the layout doesn't consume them, and including them
+  // would couple every page load to whether the Stripe migration has been
+  // applied. Settings fetches those separately when it actually needs them.
   const { data: profile, error: profileErr } = await supabase
     .from("profiles")
     .select(
-      `display_name, profession, tax_rate, subscription_status, trial_ends_at, past_due_since, current_period_ends_at, ${TAX_PROFILE_COLUMNS}`,
+      `display_name, profession, tax_rate, subscription_status, trial_ends_at, past_due_since, ${TAX_PROFILE_COLUMNS}`,
     )
     .eq("id", user.id)
     .maybeSingle();
   if (profileErr) {
-    console.warn("[app-layout] profile read failed:", profileErr.message);
+    console.warn("[app-layout] core profile read failed:", profileErr.message);
   }
 
   const { t } = await getT();
