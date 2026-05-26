@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
 import { format } from "@/i18n";
@@ -42,6 +43,7 @@ function cleanAmount(raw: string) {
 export default function OnboardingPage() {
   const t = useT();
   const to = t.onboarding;
+  const router = useRouter();
   const [step, setStep] = useState<1 | 2>(1);
   const [professionKey, setProfessionKey] = useState<string>(FALLBACK_KEY);
   const profession: Profession =
@@ -63,11 +65,16 @@ export default function OnboardingPage() {
       if (vlValidUntil) fd.set("vl_valid_until", vlValidUntil);
     }
     startTransition(async () => {
-      try {
-        await completeOnboarding(fd);
-      } catch (e) {
-        setError(e instanceof Error ? e.message : to.errors.generic);
+      const result = await completeOnboarding(fd);
+      if (result.ok) {
+        router.replace("/dashboard");
+        return;
       }
+      if (result.reason === "UNAUTHENTICATED") {
+        router.replace("/login?next=/onboarding");
+        return;
+      }
+      setError(to.errors.generic);
     });
   };
 
