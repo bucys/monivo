@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { AppPageHeader } from "@/components/app/app-page-header";
 import { AppScreen } from "@/components/app/app-screen";
 import { canWriteProfile } from "@/lib/profile";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -30,6 +31,7 @@ export default async function ServicesPage() {
 
   return (
     <AppScreen>
+      <AppPageHeader />
       <ServicesClient services={rows} canWrite={canWrite} />
     </AppScreen>
   );

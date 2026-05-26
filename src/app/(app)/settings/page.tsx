@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { AppPageHeader } from "@/components/app/app-page-header";
 import { AppScreen } from "@/components/app/app-screen";
 import { BillingReturnToast } from "@/components/settings/billing-return-toast";
 import { LogoutRow } from "@/components/settings/logout-row";
@@ -98,6 +99,7 @@ export default async function SettingsPage() {
     : "trialing";
   return (
     <AppScreen>
+      <AppPageHeader />
       <div className="flex flex-col gap-[18px] lg:gap-[22px]">
         <div className="lg:hidden">
           <p className="text-[13px] font-medium tracking-[0.01em] text-ink-500">

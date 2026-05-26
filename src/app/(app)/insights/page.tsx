@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { AppPageHeader } from "@/components/app/app-page-header";
 import { AppScreen } from "@/components/app/app-screen";
 import { BestDayCard } from "@/components/insights/best-day-card";
 import { ServicesPerformedCard } from "@/components/insights/clients-week-card";
@@ -61,6 +62,7 @@ export default async function InsightsPage() {
 
   return (
     <AppScreen>
+      <AppPageHeader />
       <div className="flex flex-col gap-[18px] lg:gap-[22px]">
         <div className="lg:hidden">
           <p className="text-[13px] font-medium tracking-[0.01em] text-ink-500">

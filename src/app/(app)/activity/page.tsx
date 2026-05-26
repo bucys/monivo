@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { AppPageHeader } from "@/components/app/app-page-header";
 import { AppScreen } from "@/components/app/app-screen";
 import { ActivityFeed } from "@/components/activity/activity-feed";
 import type { ServiceChip } from "@/components/add-entry/income-form";
@@ -134,6 +135,7 @@ export default async function ActivityPage({
 
   return (
     <AppScreen>
+      <AppPageHeader />
       <ActivityFeed
         entries={entries}
         periodMode={period.mode}
