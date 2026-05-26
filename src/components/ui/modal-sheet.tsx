@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, type ReactNode } from "react";
 import { useChromeBlocker } from "@/components/app/ui-chrome";
 import { cn } from "@/lib/cn";
 
@@ -35,6 +36,26 @@ export function ModalSheet({
       document.removeEventListener("keydown", handleKey);
     };
   }, [open, onClose]);
+
+  // Auto-close on navigation: record the pathname when the sheet opens and
+  // close as soon as it changes. Guarantees overlays don't survive a route
+  // transition (e.g. tapping a link inside the sheet), so every consumer
+  // gets this for free without wiring up a router listener.
+  const pathname = usePathname();
+  const openedAtPath = useRef<string | null>(null);
+  useEffect(() => {
+    if (!open) {
+      openedAtPath.current = null;
+      return;
+    }
+    if (openedAtPath.current === null) {
+      openedAtPath.current = pathname;
+      return;
+    }
+    if (pathname !== openedAtPath.current) {
+      onClose();
+    }
+  }, [open, pathname, onClose]);
 
   return (
     <div
