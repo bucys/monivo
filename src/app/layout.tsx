@@ -82,6 +82,7 @@ export default async function RootLayout({
   const locale = await getServerLocale();
   return (
     <html lang={locale} className={inter.variable}>
+      <SpeedInsights />
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
         <LocaleProvider initialLocale={locale}>{children}</LocaleProvider>
