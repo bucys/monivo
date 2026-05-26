@@ -245,6 +245,9 @@ export type Dictionary = {
       trialEnded: string;
       subscribeCta: string;
       manageCta: string;
+      activeUntil: string;
+      pastDueDetail: string;
+      expiredDetail: string;
       banner: {
         trialEnding: string;
         trialEnded: string;
@@ -926,6 +929,9 @@ export const lt: Dictionary = {
       trialEnded: "Bandymas pasibaigė",
       subscribeCta: "Užsisakyti",
       manageCta: "Tvarkyti",
+      activeUntil: "Galioja iki {date}",
+      pastDueDetail: "Mokėjimas vėluoja — atnaujink kortelę.",
+      expiredDetail: "Prenumerata neaktyvi. Užsisakyk, kad galėtum tęsti.",
       banner: {
         trialEnding:
           "Bandomajam laikotarpiui liko {days} d. Užsisakyk, kad galėtum tęsti.",

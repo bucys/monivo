@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { ModalSheet } from "@/components/ui/modal-sheet";
-import { useT } from "@/i18n/locale-provider";
+import { format } from "@/i18n";
+import { useLocale, useT } from "@/i18n/locale-provider";
 import { cn } from "@/lib/cn";
 import { DisplayNameField, EmailField } from "./profile-form";
 import { IconChevron } from "./settings-icons";
@@ -31,15 +32,17 @@ export function ProfileCard({
   displayName,
   email,
   status,
-  trialNote,
-  statusLabel,
+  trialEndsAt,
+  currentPeriodEndsAt,
   hasStripeCustomer = false,
 }: {
   displayName: string;
   email: string;
   status?: ProfileSubscriptionStatus;
-  trialNote?: string;
-  statusLabel: string;
+  /** ISO date string from profiles.trial_ends_at, or null. */
+  trialEndsAt?: string | null;
+  /** ISO date string from profiles.current_period_ends_at, or null. */
+  currentPeriodEndsAt?: string | null;
   /** True when a Stripe customer link exists — controls Manage vs Subscribe. */
   hasStripeCustomer?: boolean;
 }) {
@@ -50,7 +53,6 @@ export function ProfileCard({
   const [emailOpen, setEmailOpen] = useState(false);
 
   const visibleName = displayName.trim() || "—";
-  const planDetail = trialNote ?? statusLabel;
 
   return (
     <>
@@ -110,22 +112,12 @@ export function ProfileCard({
                 onAction={() => setEmailOpen(true)}
                 actionTabIndex={expanded ? 0 : -1}
               />
-              <ProfileDetailRow
+              <PlanRow
                 label={labels.planRow}
-                value={planDetail}
-                badge={
-                  <span className="inline-flex items-center rounded-full bg-accent-soft px-2.5 py-1 text-[11px] font-semibold text-accent-deep">
-                    {statusLabel}
-                  </span>
-                }
-                rightAction={
-                  status === "active" || hasStripeCustomer ? (
-                    <ManageSubscriptionButton />
-                  ) : (
-                    <SubscribeButton compact />
-                  )
-                }
-                last
+                status={status}
+                trialEndsAt={trialEndsAt ?? null}
+                currentPeriodEndsAt={currentPeriodEndsAt ?? null}
+                hasStripeCustomer={hasStripeCustomer}
               />
             </div>
           </div>
@@ -210,6 +202,138 @@ function ProfileDetailRow({
         </button>
       ) : null}
       {rightAction ?? null}
+    </div>
+  );
+}
+
+function PlanRow({
+  label,
+  status,
+  trialEndsAt,
+  currentPeriodEndsAt,
+  hasStripeCustomer,
+}: {
+  label: string;
+  status?: ProfileSubscriptionStatus;
+  trialEndsAt: string | null;
+  currentPeriodEndsAt: string | null;
+  hasStripeCustomer: boolean;
+}) {
+  const t = useT();
+  const { locale } = useLocale();
+  const sub = t.settings.subscription;
+  const [open, setOpen] = useState(false);
+
+  // Resolve the *effective* state — a trialing user with a past trial date
+  // should render as expired in the UI even if the server hasn't flipped
+  // subscription_status yet.
+  const effectiveStatus: ProfileSubscriptionStatus = (() => {
+    if (status === "trialing" && trialEndsAt) {
+      const ms = Date.parse(trialEndsAt) - Date.now();
+      if (Number.isFinite(ms) && ms <= 0) return "expired";
+    }
+    return status ?? "trialing";
+  })();
+
+  const trialDays = (() => {
+    if (effectiveStatus !== "trialing" || !trialEndsAt) return null;
+    const ms = Date.parse(trialEndsAt) - Date.now();
+    if (!Number.isFinite(ms) || ms <= 0) return 0;
+    return Math.max(0, Math.ceil(ms / 86_400_000));
+  })();
+
+  const formattedPeriodEnd = (() => {
+    if (!currentPeriodEndsAt) return null;
+    const d = new Date(currentPeriodEndsAt);
+    if (Number.isNaN(d.getTime())) return null;
+    return new Intl.DateTimeFormat(locale === "en" ? "en-US" : "lt-LT", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }).format(d);
+  })();
+
+  // Collapsed value text — just the status, no dates / no buttons.
+  const collapsedValue = (() => {
+    if (effectiveStatus === "trialing") return sub.statusTrialing;
+    if (effectiveStatus === "active") return sub.statusActive;
+    if (effectiveStatus === "past_due") return sub.statusPastDue;
+    if (effectiveStatus === "canceled") return sub.statusCanceled;
+    return sub.statusExpired;
+  })();
+
+  const showSubscribe =
+    effectiveStatus !== "active" &&
+    effectiveStatus !== "past_due" &&
+    !hasStripeCustomer;
+  const showManage =
+    effectiveStatus === "active" ||
+    effectiveStatus === "past_due" ||
+    hasStripeCustomer;
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors hover:bg-cream/30"
+      >
+        <span className="w-[64px] shrink-0 text-[12px] font-medium uppercase tracking-[0.05em] text-ink-500 sm:w-[80px]">
+          {label}
+        </span>
+        <span className="min-w-0 flex-1 truncate text-[14px] tracking-[-0.008em] text-ink-900/90">
+          {collapsedValue}
+        </span>
+        <span
+          aria-hidden
+          className={cn(
+            "shrink-0 text-ink-500 transition-transform duration-200 ease-out",
+            open ? "rotate-90" : "rotate-0",
+          )}
+        >
+          <IconChevron />
+        </span>
+      </button>
+
+      <div
+        className={cn(
+          "grid transition-[grid-template-rows] duration-200 ease-out",
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+        )}
+        aria-hidden={!open}
+      >
+        <div className="overflow-hidden">
+          <div className="flex flex-col gap-3 border-t border-hair px-5 py-4">
+            {effectiveStatus === "trialing" && trialDays !== null ? (
+              <p className="text-[13px] leading-[1.5] text-ink-500">
+                {format(sub.trialDaysLeft, { n: trialDays })}
+              </p>
+            ) : null}
+            {effectiveStatus === "active" && formattedPeriodEnd ? (
+              <p className="text-[13px] leading-[1.5] text-ink-500">
+                {format(sub.activeUntil, { date: formattedPeriodEnd })}
+              </p>
+            ) : null}
+            {effectiveStatus === "past_due" ? (
+              <p className="text-[13px] leading-[1.5] text-ink-500">
+                {sub.pastDueDetail}
+              </p>
+            ) : null}
+            {(effectiveStatus === "expired" ||
+              effectiveStatus === "canceled") ? (
+              <p className="text-[13px] leading-[1.5] text-ink-500">
+                {sub.expiredDetail}
+              </p>
+            ) : null}
+
+            <div className="flex">
+              {showManage ? <ManageSubscriptionButton /> : null}
+              {showSubscribe ? <SubscribeButton /> : null}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

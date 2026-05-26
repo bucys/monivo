@@ -27,12 +27,9 @@ import {
 } from "@/lib/profile";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-function trialDaysLeft(trialEndsAt: string | null): number | null {
-  if (!trialEndsAt) return null;
-  const ms = Date.parse(trialEndsAt) - Date.now();
-  if (Number.isNaN(ms)) return null;
-  return Math.max(0, Math.ceil(ms / 86_400_000));
-}
+// Always hit the database fresh. Without this, manual edits in Supabase
+// (or webhook-driven updates) can read through a cached server render.
+export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
   const supabase = await createSupabaseServerClient();
@@ -48,7 +45,7 @@ export default async function SettingsPage() {
     supabase
       .from("profiles")
       .select(
-        `display_name, profession, tax_rate, subscription_status, trial_ends_at, past_due_since, stripe_customer_id, ${TAX_PROFILE_COLUMNS}`,
+        `display_name, profession, tax_rate, subscription_status, trial_ends_at, past_due_since, stripe_customer_id, current_period_ends_at, ${TAX_PROFILE_COLUMNS}`,
       )
       .eq("id", user.id)
       .maybeSingle(),
@@ -67,32 +64,6 @@ export default async function SettingsPage() {
   ).includes(rawStatus as ProfileSubscriptionStatus)
     ? (rawStatus as ProfileSubscriptionStatus)
     : "trialing";
-  const daysLeft = trialDaysLeft(profile?.trial_ends_at ?? null);
-
-  const statusLabel = (() => {
-    switch (status) {
-      case "active":
-        return t.settings.subscription.statusActive;
-      case "trialing":
-        return t.settings.subscription.statusTrialing;
-      case "expired":
-        return t.settings.subscription.statusExpired;
-      case "past_due":
-        return t.settings.subscription.statusPastDue;
-      case "canceled":
-        return t.settings.subscription.statusCanceled;
-      default:
-        return status;
-    }
-  })();
-
-  const trialNote =
-    status === "trialing"
-      ? daysLeft !== null && daysLeft > 0
-        ? t.settings.subscription.trialDaysLeft.replace("{n}", String(daysLeft))
-        : t.settings.subscription.trialEnded
-      : undefined;
-
   return (
     <AppScreen>
       <div className="flex flex-col gap-[18px] lg:gap-[22px]">
@@ -109,8 +80,11 @@ export default async function SettingsPage() {
           displayName={displayName}
           email={user.email ?? ""}
           status={status}
-          trialNote={trialNote}
-          statusLabel={statusLabel}
+          trialEndsAt={profile?.trial_ends_at ?? null}
+          currentPeriodEndsAt={
+            (profile as { current_period_ends_at?: string | null } | null)
+              ?.current_period_ends_at ?? null
+          }
           hasStripeCustomer={Boolean(
             (profile as { stripe_customer_id?: string | null } | null)
               ?.stripe_customer_id,

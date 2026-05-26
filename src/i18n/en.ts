@@ -300,6 +300,9 @@ export const en: Dictionary = {
       trialEnded: "Trial ended",
       subscribeCta: "Subscribe",
       manageCta: "Manage",
+      activeUntil: "Active until {date}",
+      pastDueDetail: "Payment overdue — update your card.",
+      expiredDetail: "Subscription inactive. Subscribe to keep adding records.",
       banner: {
         trialEnding:
           "{days} days left in your trial. Subscribe to keep adding records.",

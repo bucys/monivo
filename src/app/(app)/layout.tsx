@@ -47,7 +47,7 @@ export default async function AppLayout({
   const { data: profile, error: profileErr } = await supabase
     .from("profiles")
     .select(
-      `display_name, profession, tax_rate, subscription_status, trial_ends_at, past_due_since, ${TAX_PROFILE_COLUMNS}`,
+      `display_name, profession, tax_rate, subscription_status, trial_ends_at, past_due_since, current_period_ends_at, ${TAX_PROFILE_COLUMNS}`,
     )
     .eq("id", user.id)
     .maybeSingle();
