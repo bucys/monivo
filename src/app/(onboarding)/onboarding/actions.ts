@@ -83,7 +83,7 @@ function parseEuroToCents(raw: string): number | null {
   return Math.round(value * 100);
 }
 
-export async function completeOnboarding(formData: FormData) {
+export async function completeOnboarding(formData: FormData): Promise<void> {
   const profession = String(formData.get("profession") ?? "other");
   const activity = parseActivity(formData.get("activity"));
 
@@ -96,7 +96,7 @@ export async function completeOnboarding(formData: FormData) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    redirect("/login");
+    redirect("/login?next=/onboarding");
   }
 
   const defaults = ACTIVITY_DEFAULTS[activity];
@@ -153,6 +153,7 @@ export async function completeOnboarding(formData: FormData) {
     .eq("id", user.id);
 
   if (error) {
+    console.error("[onboarding] profile update failed:", error.message);
     throw new Error(error.message);
   }
 
