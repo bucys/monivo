@@ -50,8 +50,8 @@ export default async function DashboardPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { t } = await getT();
-  const { monthStart, nextMonthStart, label } = monthRange();
+  const { t, locale } = await getT();
+  const { monthStart, nextMonthStart, label } = monthRange(new Date(), locale);
   const today = todayIso();
 
   const [

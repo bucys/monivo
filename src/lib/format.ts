@@ -38,7 +38,10 @@ export function intlLocale(locale: SupportedLocale = "lt") {
   return INTL_LOCALE[locale];
 }
 
-export function monthRange(now: Date = new Date()) {
+export function monthRange(
+  now: Date = new Date(),
+  locale: SupportedLocale = "lt",
+) {
   const start = new Date(now.getFullYear(), now.getMonth(), 1);
   const next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
   const toIsoDate = (x: Date) => {
@@ -50,6 +53,6 @@ export function monthRange(now: Date = new Date()) {
   return {
     monthStart: toIsoDate(start),
     nextMonthStart: toIsoDate(next),
-    label: formatMonth(start),
+    label: formatMonth(start, locale),
   };
 }
