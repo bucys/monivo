@@ -28,35 +28,28 @@ export default async function AppLayout({
     redirect("/login");
   }
 
-  // Routing gate first — keep this query narrow so missing optional columns
-  // (e.g. a pending tax-profile migration) can never break the redirect logic
-  // and bounce the user into an onboarding loop.
-  const { data: gate } = await supabase
-    .from("profiles")
-    .select("onboarding_completed_at")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  if (!gate?.onboarding_completed_at) {
-    redirect("/onboarding");
-  }
-
-  // Core profile read. These columns have been stable since pre-Stripe; if
-  // this fails the whole layout degrades to read-only defaults, so we keep
-  // the column list narrow and stable here. Stripe-era columns
-  // (stripe_customer_id, current_period_ends_at) are intentionally NOT
-  // selected here — the layout doesn't consume them, and including them
-  // would couple every page load to whether the Stripe migration has been
-  // applied. Settings fetches those separately when it actually needs them.
+  // Single profile read — covers the onboarding gate, the canWrite check,
+  // sidebar copy, and the tax-reserve sidebar number. Previously this was
+  // split into a narrow "gate" query and a wider "core" query, which cost
+  // an extra sequential round-trip on every navigation between app tabs.
+  // Stripe-era columns (stripe_customer_id, current_period_ends_at) are
+  // intentionally NOT selected here — Settings fetches them separately.
   const { data: profile, error: profileErr } = await supabase
     .from("profiles")
     .select(
-      `display_name, profession, tax_rate, subscription_status, trial_ends_at, past_due_since, ${TAX_PROFILE_COLUMNS}`,
+      `onboarding_completed_at, display_name, profession, tax_rate, subscription_status, trial_ends_at, past_due_since, ${TAX_PROFILE_COLUMNS}`,
     )
     .eq("id", user.id)
     .maybeSingle();
   if (profileErr) {
     console.warn("[app-layout] core profile read failed:", profileErr.message);
+  }
+
+  if (
+    !(profile as { onboarding_completed_at?: string | null } | null)
+      ?.onboarding_completed_at
+  ) {
+    redirect("/onboarding");
   }
 
   const { t } = await getT();
@@ -77,7 +70,14 @@ export default async function AppLayout({
         .eq("user_id", user.id)
         .gte("occurred_at", monthStart)
         .lt("occurred_at", nextMonthStart),
-      loadNotifications(supabase, user.id, t.notifications.generated),
+      loadNotifications(supabase, user.id, t.notifications.generated, {
+        subscription_status:
+          (profile as { subscription_status?: string | null } | null)
+            ?.subscription_status ?? null,
+        trial_ends_at:
+          (profile as { trial_ends_at?: string | null } | null)
+            ?.trial_ends_at ?? null,
+      }),
     ]);
 
   const incomeCents = (monthIncome ?? []).reduce(

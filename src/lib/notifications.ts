@@ -118,6 +118,13 @@ export async function loadNotifications(
   supabase: SupabaseClient,
   userId: string,
   labels: NotificationLabels,
+  /**
+   * Optional pre-fetched profile (subscription_status + trial_ends_at). When
+   * provided, this function skips its own `profiles` round-trip — callers
+   * that already read these fields (e.g. the app layout) save a query per
+   * navigation.
+   */
+  preFetchedProfile?: ProfileShape,
 ): Promise<AppNotification[]> {
   const now = new Date();
   const fourDaysAgo = isoNDaysAgo(4);
@@ -127,6 +134,14 @@ export async function loadNotifications(
   const isSunday = now.getDay() === 0;
   const isEarlyMonth = now.getDate() <= 3;
 
+  const profilePromise = preFetchedProfile !== undefined
+    ? Promise.resolve({ data: preFetchedProfile })
+    : supabase
+        .from("profiles")
+        .select("subscription_status, trial_ends_at")
+        .eq("id", userId)
+        .maybeSingle();
+
   const [
     { data: profile },
     recentCountResult,
@@ -135,11 +150,7 @@ export async function loadNotifications(
     prevMonthIncomeResult,
     servicesCountResult,
   ] = await Promise.all([
-    supabase
-      .from("profiles")
-      .select("subscription_status, trial_ends_at")
-      .eq("id", userId)
-      .maybeSingle(),
+    profilePromise,
     supabase
       .from("income_entries")
       .select("id", { count: "exact", head: true })
