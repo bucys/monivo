@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ModalSheet } from "@/components/ui/modal-sheet";
 import { useT, useLocale } from "@/i18n/locale-provider";
 import { cn } from "@/lib/cn";
@@ -116,6 +116,37 @@ export function DatePicker({
   }, [open, selected]);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
+  // Desktop popover uses `position: fixed` (not absolute) so it escapes any
+  // ancestor with `overflow: hidden` (e.g. the onboarding VL card, which uses
+  // a CSS-grid expansion animation that requires clipping). Track the
+  // trigger's viewport rect to anchor the popover under it.
+  const [triggerRect, setTriggerRect] = useState<{
+    left: number;
+    top: number;
+    width: number;
+  } | null>(null);
+
+  useLayoutEffect(() => {
+    if (!open) {
+      setTriggerRect(null);
+      return;
+    }
+    const update = () => {
+      const el = triggerRef.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      setTriggerRect({ left: r.left, top: r.bottom + 6, width: r.width });
+    };
+    update();
+    window.addEventListener("scroll", update, true);
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update, true);
+      window.removeEventListener("resize", update);
+    };
+  }, [open]);
 
   // Desktop: close on outside click + Escape. Mobile path uses ModalSheet.
   useEffect(() => {
@@ -168,6 +199,7 @@ export function DatePicker({
   return (
     <div ref={containerRef} className={cn("relative", className)}>
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => !disabled && setOpen((v) => !v)}
         disabled={disabled}
@@ -191,9 +223,17 @@ export function DatePicker({
         </span>
       </button>
 
-      {/* Desktop popover */}
-      {open ? (
-        <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-40 hidden lg:block">
+      {/* Desktop popover — fixed-positioned so it escapes ancestors with
+          `overflow: hidden` (e.g. the onboarding VL expansion card). */}
+      {open && triggerRect ? (
+        <div
+          className="fixed z-50 hidden lg:block"
+          style={{
+            left: triggerRect.left,
+            top: triggerRect.top,
+            width: triggerRect.width,
+          }}
+        >
           <CalendarPanel
             viewMonth={viewMonth}
             setViewMonth={setViewMonth}
