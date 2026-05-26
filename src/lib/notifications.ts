@@ -21,6 +21,7 @@ export type NotificationKind =
   | "top_service"
   | "milestone_first"
   | "milestone_ten"
+  | "setup_services"
   // future — type literals reserved, generation intentionally not implemented
   // until the underlying features land:
   //   bank_income / bank_expense → require bank sync
@@ -132,6 +133,7 @@ export async function loadNotifications(
     lifetimeCountResult,
     weekIncomeResult,
     prevMonthIncomeResult,
+    servicesCountResult,
   ] = await Promise.all([
     supabase
       .from("profiles")
@@ -166,10 +168,15 @@ export async function loadNotifications(
           .gte("occurred_at", prevMonth.startDate)
           .lt("occurred_at", prevMonth.endDate)
       : Promise.resolve({ data: [] as Array<{ amount_cents: number }> }),
+    supabase
+      .from("services")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", userId),
   ]);
 
   const recentEntries = recentCountResult.count ?? 0;
   const lifetimeEntries = lifetimeCountResult.count ?? 0;
+  const servicesCount = servicesCountResult.count ?? 0;
   const weekIncomeRows = (weekIncomeResult.data ?? []) as Array<{
     amount_cents: number;
   }>;
@@ -205,6 +212,21 @@ export async function loadNotifications(
         href: "/settings",
       });
     }
+  }
+
+  // --- setup: no services yet (welcome / quick-record onboarding hint) ---
+  // The notification self-clears as soon as the user adds a service — the
+  // generator simply stops emitting it. Stable ID so the read state survives.
+  if (servicesCount === 0) {
+    out.push({
+      id: "setup_services:welcome",
+      kind: "setup_services",
+      tone: "accent",
+      title: labels.setupServices.title,
+      body: labels.setupServices.body,
+      occurredAt: now.toISOString(),
+      href: "/services",
+    });
   }
 
   // --- inactivity (gentle reminder; no entries in the last 4 days) ---

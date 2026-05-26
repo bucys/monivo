@@ -76,14 +76,14 @@ export function ThemeToggle({ icon }: { icon?: ReactNode }) {
             aria-checked={isDark}
             aria-label={labels.themeAria}
             onClick={toggle}
-            className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
-              isDark ? "bg-accent" : "bg-ink-100"
-            }`}
+            className="relative h-6 w-11 shrink-0 rounded-full bg-ink-100 transition-colors"
           >
             <span
               aria-hidden
-              className={`absolute top-0.5 h-5 w-5 rounded-full bg-surface shadow-[0_1px_2px_rgba(23,33,29,0.2)] transition-transform ${
-                isDark ? "translate-x-[22px]" : "translate-x-0.5"
+              className={`absolute top-0.5 h-5 w-5 rounded-full shadow-[0_1px_2px_rgba(23,33,29,0.2)] transition-[transform,background-color] ${
+                isDark
+                  ? "translate-x-[22px] bg-accent"
+                  : "translate-x-0.5 bg-surface"
               }`}
             />
           </button>

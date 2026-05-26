@@ -15,16 +15,18 @@ export function NotificationBell() {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // Desktop only: close dropdown on outside click / Escape.
+  // Close on outside click / Escape. The mobile panel is portaled to <body>
+  // so it lives outside `containerRef` — we also accept any element marked
+  // with `data-notif-panel` as "inside the panel" so taps within the mobile
+  // sheet don't accidentally close it.
   useEffect(() => {
     if (!open) return;
     const onPointer = (e: PointerEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
-        setOpen(false);
-      }
+      const target = e.target as Element | null;
+      if (!target) return;
+      if (containerRef.current && containerRef.current.contains(target)) return;
+      if (target.closest("[data-notif-panel]")) return;
+      setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
@@ -46,27 +48,45 @@ export function NotificationBell() {
     <div ref={containerRef} className="relative">
       <button
         type="button"
-        aria-label={t.topbar.notificationsAria}
+        aria-label={
+          open ? t.common.close : t.topbar.notificationsAria
+        }
         aria-haspopup="dialog"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
         className="relative inline-flex h-10 w-10 touch-manipulation items-center justify-center rounded-full bg-surface/80 text-ink-700 ring-1 ring-hair transition-colors hover:bg-surface hover:text-ink-900"
       >
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden
-        >
-          <path d="M6 8a6 6 0 0 1 12 0c0 4.5 1.5 6 1.5 6h-15S6 12.5 6 8Z" />
-          <path d="M10 19a2 2 0 0 0 4 0" />
-        </svg>
-        {unreadCount > 0 ? (
+        {open ? (
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+          >
+            <path d="M6 6l12 12M6 18L18 6" />
+          </svg>
+        ) : (
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+          >
+            <path d="M6 8a6 6 0 0 1 12 0c0 4.5 1.5 6 1.5 6h-15S6 12.5 6 8Z" />
+            <path d="M10 19a2 2 0 0 0 4 0" />
+          </svg>
+        )}
+        {!open && unreadCount > 0 ? (
           <span
             aria-label={format(t.notifications.unreadCount, { n: unreadCount })}
             className="absolute right-[7px] top-[7px] h-2 w-2 rounded-full bg-accent ring-2 ring-cream"
@@ -76,7 +96,10 @@ export function NotificationBell() {
 
       {/* Desktop dropdown */}
       {open ? (
-        <div className="absolute right-0 top-[calc(100%+8px)] z-40 hidden w-[360px] lg:block">
+        <div
+          data-notif-panel
+          className="absolute right-0 top-[calc(100%+8px)] z-40 hidden w-[360px] lg:block"
+        >
           <PanelCard
             items={visible}
             isRead={isRead}
@@ -156,6 +179,7 @@ function MobileTopPanel({
         role="dialog"
         aria-modal="true"
         aria-label={ariaLabel}
+        data-notif-panel
         className={cn(
           "absolute inset-x-0 top-0 max-h-[80dvh] overflow-y-auto rounded-b-[24px] bg-surface pt-[env(safe-area-inset-top)] shadow-[0_18px_40px_-12px_rgba(23,33,29,0.25),_0_2px_6px_rgba(23,33,29,0.06)] transition-transform duration-200 ease-out",
           entered ? "translate-y-0" : "-translate-y-full",

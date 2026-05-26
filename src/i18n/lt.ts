@@ -121,6 +121,7 @@ export type Dictionary = {
       weeklySummary: { title: string; body: string };
       monthlyReview: { title: string; body: string };
       bestDay: { title: string; body: string };
+      setupServices: { title: string; body: string };
     };
   };
   settings: {
@@ -769,6 +770,10 @@ export const lt: Dictionary = {
       bestDay: {
         title: "Geriausia savaitės diena",
         body: "{day} — {amount} € šį mėnesį.",
+      },
+      setupServices: {
+        title: "Sveiki atvykę į Monivo",
+        body: "Pridėk pirmas paslaugas, kad galėtum greitai registruoti pajamas.",
       },
     },
   },

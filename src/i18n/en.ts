@@ -155,6 +155,10 @@ export const en: Dictionary = {
         title: "Best day of the week",
         body: "{day} — {amount} € this month.",
       },
+      setupServices: {
+        title: "Welcome to Monivo",
+        body: "Add your first services so you can quickly record income.",
+      },
     },
   },
   settings: {
