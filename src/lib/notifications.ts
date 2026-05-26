@@ -1,13 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { format, type Dictionary, type Locale } from "@/i18n";
-import {
-  bestWeekday,
-  rankServices,
-  WEEKDAY_LONG_EN,
-  WEEKDAY_LONG_LT,
-  type IncomeRow,
-} from "@/lib/insights";
-import { monthRange } from "@/lib/format";
+import { format, type Dictionary } from "@/i18n";
 
 export type NotificationLabels = Dictionary["notifications"]["generated"];
 
@@ -125,10 +117,8 @@ export async function loadNotifications(
   supabase: SupabaseClient,
   userId: string,
   labels: NotificationLabels,
-  locale: Locale = "lt",
 ): Promise<AppNotification[]> {
   const now = new Date();
-  const { monthStart, nextMonthStart } = monthRange();
   const fourDaysAgo = isoNDaysAgo(4);
   const week = isoWeekRange(now);
   const prevMonth = previousMonthRange(now);
@@ -138,8 +128,6 @@ export async function loadNotifications(
 
   const [
     { data: profile },
-    { data: serviceRows },
-    { data: monthIncomeRows },
     recentCountResult,
     lifetimeCountResult,
     weekIncomeResult,
@@ -150,15 +138,6 @@ export async function loadNotifications(
       .select("subscription_status, trial_ends_at")
       .eq("id", userId)
       .maybeSingle(),
-    supabase.from("services").select("id, name").eq("user_id", userId),
-    supabase
-      .from("income_entries")
-      .select(
-        "amount_cents, service_id, service_name, payment_method, occurred_at",
-      )
-      .eq("user_id", userId)
-      .gte("occurred_at", monthStart)
-      .lt("occurred_at", nextMonthStart),
     supabase
       .from("income_entries")
       .select("id", { count: "exact", head: true })
@@ -189,9 +168,6 @@ export async function loadNotifications(
       : Promise.resolve({ data: [] as Array<{ amount_cents: number }> }),
   ]);
 
-  const monthKey = `${now.getFullYear()}-${pad2(now.getMonth() + 1)}`;
-  const incomes: IncomeRow[] = monthIncomeRows ?? [];
-  const services = serviceRows ?? [];
   const recentEntries = recentCountResult.count ?? 0;
   const lifetimeEntries = lifetimeCountResult.count ?? 0;
   const weekIncomeRows = (weekIncomeResult.data ?? []) as Array<{
@@ -279,69 +255,6 @@ export async function loadNotifications(
         amount: EUR(prevCents),
         count: prevMonthRows.length,
       }),
-      occurredAt: now.toISOString(),
-      href: "/insights",
-    });
-  }
-
-  // --- best day (current month, only when there's enough data + a clear leader) ---
-  if (lifetimeEntries >= 10 && incomes.length >= 5) {
-    const best = bestWeekday(incomes);
-    if (best && best.totalCents > 0) {
-      const dayNames = locale === "en" ? WEEKDAY_LONG_EN : WEEKDAY_LONG_LT;
-      const dayLabel = dayNames[best.index];
-      out.push({
-        id: `best_day:${monthKey}:${best.index}`,
-        kind: "best_day",
-        tone: "accent",
-        title: labels.bestDay.title,
-        body: format(labels.bestDay.body, {
-          day: dayLabel ?? "",
-          amount: EUR(best.totalCents),
-        }),
-        occurredAt: now.toISOString(),
-        href: "/insights",
-      });
-    }
-  }
-
-  // --- top service this month ---
-  const ranked = rankServices(incomes, services);
-  const top = ranked[0];
-  if (top && top.totalCents > 0 && incomes.length >= 3) {
-    out.push({
-      id: `top_service:${monthKey}:${top.key}`,
-      kind: "top_service",
-      tone: "success",
-      title: labels.topService.title,
-      body: format(labels.topService.body, {
-        name: top.name,
-        amount: EUR(top.totalCents),
-      }),
-      occurredAt: now.toISOString(),
-      href: "/insights",
-    });
-  }
-
-  // --- milestones ---
-  if (lifetimeEntries === 1) {
-    out.push({
-      id: `milestone_first:${monthKey}`,
-      kind: "milestone_first",
-      tone: "success",
-      title: labels.milestoneFirst.title,
-      body: labels.milestoneFirst.body,
-      occurredAt: now.toISOString(),
-      href: "/activity",
-    });
-  }
-  if (incomes.length >= 10) {
-    out.push({
-      id: `milestone_ten:${monthKey}`,
-      kind: "milestone_ten",
-      tone: "success",
-      title: labels.milestoneTen.title,
-      body: labels.milestoneTen.body,
       occurredAt: now.toISOString(),
       href: "/insights",
     });

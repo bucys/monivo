@@ -54,7 +54,7 @@ export default async function AppLayout({
     console.warn("[app-layout] profile read failed:", profileErr.message);
   }
 
-  const { t, locale } = await getT();
+  const { t } = await getT();
   const canWrite = canWriteProfile(profile as ProfileWriteFields | null);
 
   const { monthStart, nextMonthStart } = monthRange();
@@ -72,7 +72,7 @@ export default async function AppLayout({
         .eq("user_id", user.id)
         .gte("occurred_at", monthStart)
         .lt("occurred_at", nextMonthStart),
-      loadNotifications(supabase, user.id, t.notifications.generated, locale),
+      loadNotifications(supabase, user.id, t.notifications.generated),
     ]);
 
   const incomeCents = (monthIncome ?? []).reduce(

@@ -56,9 +56,9 @@ export function ReserveBreakdownCard({ reserve }: { reserve: ReserveBreakdown })
               {formatEur(roundToEuro(reserve.totalCents))}
             </span>
           </div>
-          {!open && lines.length > 0 ? (
+          {!open ? (
             <p className="mt-2 text-[12px] leading-[1.5] text-ink-500">
-              {labels.reserveTapHint}
+              {explain.footnote}
             </p>
           ) : null}
         </div>

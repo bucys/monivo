@@ -18,6 +18,8 @@ export const en: Dictionary = {
     taxReserve: "Reserved",
     seeAll: "See all",
     thisMonth: "This month",
+    showMore: "Show more",
+    showLess: "Show less",
   },
   nav: {
     dashboard: "Overview",
@@ -671,6 +673,8 @@ export const en: Dictionary = {
   },
   insights: {
     title: "Insights",
+    moreToggle: "More insights",
+    lessToggle: "Show less",
     earnings: {
       eyebrow: "Earnings",
       emptyBody: "Add a few more entries to see earnings by week here.",

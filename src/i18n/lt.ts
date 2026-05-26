@@ -16,6 +16,8 @@ export type Dictionary = {
     taxReserve: string;
     seeAll: string;
     thisMonth: string;
+    showMore: string;
+    showLess: string;
   };
   nav: {
     dashboard: string;
@@ -497,6 +499,8 @@ export type Dictionary = {
   };
   insights: {
     title: string;
+    moreToggle: string;
+    lessToggle: string;
     earnings: {
       eyebrow: string;
       emptyBody: string;
@@ -615,6 +619,8 @@ export const lt: Dictionary = {
     taxReserve: "Atidėta",
     seeAll: "Visi įrašai",
     thisMonth: "Šis mėnuo",
+    showMore: "Rodyti daugiau",
+    showLess: "Rodyti mažiau",
   },
   nav: {
     dashboard: "Apžvalga",
@@ -1274,6 +1280,8 @@ export const lt: Dictionary = {
   },
   insights: {
     title: "Įžvalgos",
+    moreToggle: "Daugiau įžvalgų",
+    lessToggle: "Mažiau įžvalgų",
     earnings: {
       eyebrow: "Uždarbis",
       emptyBody: "Kai pridėsi daugiau įrašų, čia matysi pajamas pagal savaites.",

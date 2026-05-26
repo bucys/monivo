@@ -4,6 +4,7 @@ import { BestDayCard } from "@/components/insights/best-day-card";
 import { ServicesPerformedCard } from "@/components/insights/clients-week-card";
 import { TopServicesCard } from "@/components/insights/top-services";
 import { WeeklyEarningsCard } from "@/components/insights/weekly-earnings-card";
+import { Disclosure } from "@/components/ui/disclosure";
 import { getT } from "@/i18n/server";
 import { formatMonth, monthRange } from "@/lib/format";
 import {
@@ -70,16 +71,28 @@ export default async function InsightsPage() {
           </h1>
         </div>
 
-        <div className="grid grid-cols-1 gap-[18px] lg:grid-cols-[2fr_1fr] lg:grid-rows-[auto_auto] lg:gap-[22px]">
-          <div className="lg:col-start-1 lg:row-span-2">
+        <ServicesPerformedCard
+          count={servicesPerformed}
+          labels={t.insights.clients}
+        />
+
+        <TopServicesCard
+          services={rankedServices}
+          totalCents={incomeCents}
+          labels={t.insights.topServices}
+        />
+
+        <Disclosure
+          label={t.insights.moreToggle}
+          labelOpen={t.insights.lessToggle}
+        >
+          <div className="grid grid-cols-1 gap-[18px] lg:grid-cols-[2fr_1fr] lg:gap-[22px]">
             <WeeklyEarningsCard
               weeks={weeks}
               totalCents={incomeCents}
               currentWeekIndex={currentWeekIndex}
               labels={t.insights.earnings}
             />
-          </div>
-          <div className="lg:col-start-2 lg:row-start-1">
             <BestDayCard
               tallies={weekdayTallies}
               best={best}
@@ -87,19 +100,7 @@ export default async function InsightsPage() {
               locale={locale}
             />
           </div>
-          <div className="lg:col-start-2 lg:row-start-2">
-            <ServicesPerformedCard
-              count={servicesPerformed}
-              labels={t.insights.clients}
-            />
-          </div>
-        </div>
-
-        <TopServicesCard
-          services={rankedServices}
-          totalCents={incomeCents}
-          labels={t.insights.topServices}
-        />
+        </Disclosure>
       </div>
     </AppScreen>
   );

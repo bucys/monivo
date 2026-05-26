@@ -5,6 +5,7 @@ import { MobileQuickActions } from "@/components/dashboard/mobile-quick-actions"
 import { MonthlyStats } from "@/components/dashboard/monthly-stats";
 import { ReserveBreakdownCard } from "@/components/dashboard/reserve-breakdown-card";
 import { NotificationBell } from "@/components/notifications/notification-bell";
+import { Disclosure } from "@/components/ui/disclosure";
 import {
   QuickActions,
   type QuickService,
@@ -251,14 +252,7 @@ export default async function DashboardPage() {
 
         <MobileQuickActions services={serviceList} canWrite={canWrite} />
 
-        <div className="hidden grid-cols-[1.5fr_1fr] items-stretch gap-[22px] lg:grid">
-          <WeeklyEarnings
-            weeks={weeks}
-            totalCents={incomeCents}
-            currentWeekIndex={currentWeekIndex}
-            title={t.dashboard.weeklyTitle}
-            weekLabel={t.dashboard.weeklyWeekShort}
-          />
+        <div className="hidden lg:block">
           <QuickActions services={serviceList} canWrite={canWrite} />
         </div>
 
@@ -280,6 +274,21 @@ export default async function DashboardPage() {
         </div>
 
         <MobileTodayList entries={todayEntries} labels={mobileTodayLabels} />
+
+        <div className="hidden lg:block">
+          <Disclosure
+            label={t.common.showMore}
+            labelOpen={t.common.showLess}
+          >
+            <WeeklyEarnings
+              weeks={weeks}
+              totalCents={incomeCents}
+              currentWeekIndex={currentWeekIndex}
+              title={t.dashboard.weeklyTitle}
+              weekLabel={t.dashboard.weeklyWeekShort}
+            />
+          </Disclosure>
+        </div>
       </div>
     </AppScreen>
   );
