@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 import { safeOrigin } from "@/lib/origin";
-import { APP_URL, MARKETING_URL } from "@/lib/urls";
+import { APP_URL, MARKETING_URL, isLanOrLocalHost } from "@/lib/urls";
 
 const PROTECTED_PREFIXES = [
   "/dashboard",
@@ -74,17 +74,28 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const { pathname, search } = request.nextUrl;
-  const requestHost = (request.headers.get("host") ?? "").toLowerCase();
+  const requestHostRaw = (request.headers.get("host") ?? "").toLowerCase();
+  // Strip the port — the configured APP_URL / MARKETING_URL have no port at
+  // their public surface, but the request's `Host` header carries it on dev
+  // (`192.168.x.x:3000`). Without this, the equality check never matched on
+  // LAN and dev hosts silently fell into the "neither surface" branch.
+  const requestHostname = requestHostRaw.split(":")[0] ?? "";
   const appHost = hostnameOf(APP_URL);
   const marketingHost = hostnameOf(MARKETING_URL);
 
-  // Two-domain routing only activates when both surface URLs are configured
-  // and the request actually arrived on one of them. Local dev (single host)
-  // continues to serve both surfaces from one origin.
-  const isAppHost = appHost !== "" && requestHost === appHost;
+  // Treat localhost / 127.0.0.1 / private LAN IPs / *.local as the app
+  // surface — never as marketing. This makes `/onboarding`, `/login`, and the
+  // other app routes work for on-device dev testing without depending on the
+  // exact value of NEXT_PUBLIC_SITE_URL.
+  const isDevHost = isLanOrLocalHost(requestHostRaw);
+
+  const isAppHost =
+    isDevHost || (appHost !== "" && requestHostname === appHost);
   const isMarketingHost =
+    !isDevHost &&
     marketingHost !== "" &&
-    (requestHost === marketingHost || requestHost === `www.${marketingHost}`);
+    (requestHostname === marketingHost ||
+      requestHostname === `www.${marketingHost}`);
 
   if (isMarketingHost && matchesPrefix(pathname, APP_PREFIXES)) {
     return NextResponse.redirect(`${APP_URL}${pathname}${search}`);
