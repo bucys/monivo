@@ -131,7 +131,7 @@ export function ExpenseForm({
             value={amount}
             onChange={(e) => setAmount(cleanAmount(e.target.value))}
             placeholder="0,00"
-            autoFocus
+            autoFocus={!initial}
             className="w-full bg-transparent text-[32px] font-semibold leading-none tracking-[-0.02em] tabular-nums text-ink-900/90 placeholder:text-ink-300 focus:outline-none"
           />
           <span className="ml-2 text-[18px] font-medium text-ink-500">€</span>
@@ -171,6 +171,7 @@ export function ExpenseForm({
             onChange={(e) => setNote(e.target.value)}
             maxLength={200}
             placeholder={tx.notePlaceholder}
+            autoFocus={!initial}
             className="rounded-[14px] border border-hair bg-surface px-3.5 py-2.5 text-[14px] text-ink-900/90 placeholder:text-ink-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
           />
         </label>

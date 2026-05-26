@@ -38,7 +38,7 @@ export const en: Dictionary = {
     dashboardSub: "This month",
     activitySub: "This month",
     insightsSub: "This month",
-    servicesSub: "Your presets",
+    servicesSub: "Quick services",
     settingsSub: "Account",
     taxReserveMini: "Tax reserve",
     taxReserveSubline: "of income",
@@ -78,7 +78,7 @@ export const en: Dictionary = {
     reserveBreakdownVl: "Business certificate cost",
     weeklyTitle: "Earnings this month",
     weeklyWeekShort: "Wk",
-    quickActions: "Quick actions",
+    quickActions: "Quick services",
     quickActionsHint: "Tap — add",
     quickActionsSeeAll: "See all",
     quickActionsEmptyTitle: "No quick-add services yet.",
@@ -105,8 +105,7 @@ export const en: Dictionary = {
     allRead: "All caught up",
     markAllRead: "Mark all as read",
     emptyTitle: "No notifications yet.",
-    emptyBody:
-      "Tax reminders, monthly insights and account messages will appear here.",
+    emptyBody: "Important account messages will appear here.",
     relative: {
       now: "just now",
       minutesAgo: "{n} min ago",
@@ -706,13 +705,12 @@ export const en: Dictionary = {
     lessToggle: "Show less",
     earnings: {
       eyebrow: "Earnings",
-      emptyBody: "Add a few more entries to see earnings by week here.",
+      emptyBody: "Weekly earnings appear once you add entries.",
       weekShort: "Wk",
     },
     bestDay: {
       eyebrow: "Best day",
-      emptyBody:
-        "Once you have a few entries, you'll see the day of the week you earn most.",
+      emptyBody: "Your busiest weekday appears once you add a few entries.",
       summary: "{amount} € · {count} {label} this month",
       countOne: "entry",
       countFew: "entries",
@@ -721,14 +719,12 @@ export const en: Dictionary = {
     clients: {
       eyebrow: "Services this month",
       subtitle: "based on income entries",
-      emptyBody:
-        "Start logging income — your monthly service count will show up here.",
+      emptyBody: "Appears once you add income this month.",
     },
     topServices: {
       eyebrow: "Top services",
       subtitle: "By revenue",
-      emptyBody:
-        "Once you link income entries to services, your top performers will show up here.",
+      emptyBody: "Appears once income entries are linked to services.",
       share: "{pct}% of income",
       footer: "See all services",
     },
@@ -786,7 +782,7 @@ export const en: Dictionary = {
       addNote: "+ Add note",
       noteLabel: "Note",
       notePlaceholder: "Optional",
-      cta: "Add expense",
+      cta: "Add",
       editCta: "Save",
       categories: {
         supplies: "Supplies",

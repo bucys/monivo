@@ -654,7 +654,7 @@ export const lt: Dictionary = {
     dashboardSub: "Šis mėnuo",
     activitySub: "Šis mėnuo",
     insightsSub: "Šis mėnuo",
-    servicesSub: "Tavo presetai",
+    servicesSub: "Greitos paslaugos",
     settingsSub: "Paskyra",
     taxReserveMini: "Mokesčių rezervas",
     taxReserveSubline: "nuo pajamų",
@@ -694,7 +694,7 @@ export const lt: Dictionary = {
     reserveBreakdownVl: "Verslo liudijimo dalis",
     weeklyTitle: "Uždarbis šį mėnesį",
     weeklyWeekShort: "sav.",
-    quickActions: "Greiti veiksmai",
+    quickActions: "Greitos paslaugos",
     quickActionsHint: "Spustelėk — pridėk",
     quickActionsSeeAll: "Žiūrėti visas",
     quickActionsEmptyTitle: "Dar nėra paslaugų greitam įvedimui.",
@@ -721,8 +721,7 @@ export const lt: Dictionary = {
     allRead: "Viskas perskaityta",
     markAllRead: "Pažymėti perskaitytus",
     emptyTitle: "Kol kas pranešimų nėra.",
-    emptyBody:
-      "Čia matysi mokesčių priminimus, mėnesio įžvalgas ir paskyros žinutes.",
+    emptyBody: "Svarbios žinutės apie paskyrą atsiras čia.",
     relative: {
       now: "ką tik",
       minutesAgo: "prieš {n} min.",
@@ -1328,13 +1327,12 @@ export const lt: Dictionary = {
     lessToggle: "Mažiau įžvalgų",
     earnings: {
       eyebrow: "Uždarbis",
-      emptyBody: "Kai pridėsi daugiau įrašų, čia matysi pajamas pagal savaites.",
+      emptyBody: "Pajamos pagal savaites atsiras pridėjus įrašų.",
       weekShort: "sav.",
     },
     bestDay: {
       eyebrow: "Geriausia diena",
-      emptyBody:
-        "Kai pridėsi įrašų, pamatysi savaitės dieną, kurią uždirbi daugiausia.",
+      emptyBody: "Geriausia savaitės diena atsiras pridėjus įrašų.",
       summary: "{amount} € · {count} {label} šį mėnesį",
       countOne: "įrašas",
       countFew: "įrašai",
@@ -1343,13 +1341,12 @@ export const lt: Dictionary = {
     clients: {
       eyebrow: "Aptarnavimai šį mėnesį",
       subtitle: "pagal pajamų įrašus",
-      emptyBody:
-        "Pradėk registruoti pajamas — čia matysi mėnesio aptarnavimų skaičių.",
+      emptyBody: "Atsiras pridėjus pajamų šį mėnesį.",
     },
     topServices: {
       eyebrow: "Populiariausios paslaugos",
       subtitle: "Pagal pajamas",
-      emptyBody: "Kai pridėsi įrašų prie paslaugų, čia matysi populiariausias.",
+      emptyBody: "Atsiras, kai pajamų įrašus susiesi su paslaugomis.",
       share: "{pct}% pajamų",
       footer: "Žiūrėti visas paslaugas",
     },
@@ -1407,7 +1404,7 @@ export const lt: Dictionary = {
       addNote: "+ Pridėti pastabą",
       noteLabel: "Pastaba",
       notePlaceholder: "Nebūtina",
-      cta: "Pridėti išlaidas",
+      cta: "Pridėti",
       editCta: "Išsaugoti",
       categories: {
         supplies: "Priemonės",
