@@ -6,6 +6,10 @@ import { useT } from "@/i18n/locale-provider";
 import { cn } from "@/lib/cn";
 import { DisplayNameField, EmailField } from "./profile-form";
 import { IconChevron } from "./settings-icons";
+import {
+  ManageSubscriptionButton,
+  SubscribeButton,
+} from "./subscription-actions";
 
 function initials(name: string) {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -26,16 +30,18 @@ export type ProfileSubscriptionStatus =
 export function ProfileCard({
   displayName,
   email,
+  status,
   trialNote,
   statusLabel,
+  hasStripeCustomer = false,
 }: {
   displayName: string;
   email: string;
-  /** Reserved for future billing/cancel UI — keep typed at the boundary so
-   *  callers don't have to refactor when we wire up Stripe. */
   status?: ProfileSubscriptionStatus;
   trialNote?: string;
   statusLabel: string;
+  /** True when a Stripe customer link exists — controls Manage vs Subscribe. */
+  hasStripeCustomer?: boolean;
 }) {
   const t = useT();
   const labels = t.settings.profile;
@@ -112,6 +118,13 @@ export function ProfileCard({
                     {statusLabel}
                   </span>
                 }
+                rightAction={
+                  status === "active" || hasStripeCustomer ? (
+                    <ManageSubscriptionButton />
+                  ) : (
+                    <SubscribeButton compact />
+                  )
+                }
                 last
               />
             </div>
@@ -160,6 +173,7 @@ function ProfileDetailRow({
   onAction,
   actionTabIndex,
   badge,
+  rightAction,
   last,
 }: {
   label: string;
@@ -168,6 +182,7 @@ function ProfileDetailRow({
   onAction?: () => void;
   actionTabIndex?: number;
   badge?: React.ReactNode;
+  rightAction?: React.ReactNode;
   last?: boolean;
 }) {
   return (
@@ -194,6 +209,7 @@ function ProfileDetailRow({
           {actionLabel}
         </button>
       ) : null}
+      {rightAction ?? null}
     </div>
   );
 }

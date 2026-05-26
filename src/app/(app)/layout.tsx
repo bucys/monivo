@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { AppShell, type SidebarData } from "@/components/app/app-shell";
+import { SubscriptionBanner } from "@/components/app/subscription-banner";
 import { getT } from "@/i18n/server";
 import { monthRange } from "@/lib/format";
 import { loadNotifications } from "@/lib/notifications";
@@ -108,6 +109,14 @@ export default async function AppLayout({
       canWrite={canWrite}
       sidebar={sidebar}
     >
+      <div className="mb-3 lg:mb-4">
+        <SubscriptionBanner
+          status={profile?.subscription_status ?? "trialing"}
+          trialEndsAt={profile?.trial_ends_at ?? null}
+          canWrite={canWrite}
+          t={t}
+        />
+      </div>
       {children}
     </AppShell>
   );

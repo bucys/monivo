@@ -87,6 +87,7 @@ export async function updateService(id: string, formData: FormData) {
 export async function deleteService(id: string) {
   if (!id) throw new Error("Trūksta paslaugos ID.");
   const { supabase, userId } = await getUserOrRedirect();
+  await requireWritableProfile(supabase, userId);
 
   const { error } = await supabase
     .from("services")

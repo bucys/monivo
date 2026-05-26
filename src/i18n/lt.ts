@@ -243,6 +243,14 @@ export type Dictionary = {
       statusCanceled: string;
       trialDaysLeft: string;
       trialEnded: string;
+      subscribeCta: string;
+      manageCta: string;
+      banner: {
+        trialEnding: string;
+        trialEnded: string;
+        pastDue: string;
+        expired: string;
+      };
     };
     account: {
       account: string;
@@ -916,6 +924,16 @@ export const lt: Dictionary = {
       statusCanceled: "Atšauktas",
       trialDaysLeft: "Liko {n} d.",
       trialEnded: "Bandymas pasibaigė",
+      subscribeCta: "Užsisakyti",
+      manageCta: "Tvarkyti",
+      banner: {
+        trialEnding:
+          "Bandomajam laikotarpiui liko {days} d. Užsisakyk, kad galėtum tęsti.",
+        trialEnded:
+          "Bandomasis laikotarpis baigėsi — užsisakyk, kad galėtum pridėti įrašų.",
+        pastDue: "Mokėjimas vėluoja — atnaujink kortelę.",
+        expired: "Prenumerata neaktyvi — užsisakyk, kad galėtum pridėti įrašų.",
+      },
     },
     account: {
       account: "Paskyra",

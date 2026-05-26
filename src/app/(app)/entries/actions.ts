@@ -189,6 +189,7 @@ export async function updateExpenseEntry(id: string, formData: FormData) {
 
 export async function deleteIncomeEntry(id: string) {
   const { supabase, user } = await authedClient();
+  await requireWritableProfile(supabase, user.id);
   const { error } = await supabase
     .from("income_entries")
     .delete()
@@ -200,6 +201,7 @@ export async function deleteIncomeEntry(id: string) {
 
 export async function deleteExpenseEntry(id: string) {
   const { supabase, user } = await authedClient();
+  await requireWritableProfile(supabase, user.id);
   const { error } = await supabase
     .from("expense_entries")
     .delete()

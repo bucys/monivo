@@ -48,7 +48,7 @@ export default async function SettingsPage() {
     supabase
       .from("profiles")
       .select(
-        `display_name, profession, tax_rate, subscription_status, trial_ends_at, past_due_since, ${TAX_PROFILE_COLUMNS}`,
+        `display_name, profession, tax_rate, subscription_status, trial_ends_at, past_due_since, stripe_customer_id, ${TAX_PROFILE_COLUMNS}`,
       )
       .eq("id", user.id)
       .maybeSingle(),
@@ -111,6 +111,10 @@ export default async function SettingsPage() {
           status={status}
           trialNote={trialNote}
           statusLabel={statusLabel}
+          hasStripeCustomer={Boolean(
+            (profile as { stripe_customer_id?: string | null } | null)
+              ?.stripe_customer_id,
+          )}
         />
 
         <SettingsSection label={t.settings.sections.business}>

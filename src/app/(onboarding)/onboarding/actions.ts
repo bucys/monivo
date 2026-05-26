@@ -101,6 +101,27 @@ export async function completeOnboarding(formData: FormData) {
 
   const defaults = ACTIVITY_DEFAULTS[activity];
 
+  // Check existing trial state. Onboarding may run after a profile row was
+  // created on signup — we only seed the 30-day trial if it hasn't been set
+  // yet. Existing users keep whatever they have.
+  const { data: existingTrial } = await supabase
+    .from("profiles")
+    .select("trial_ends_at, subscription_status")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  const TRIAL_DAYS = 30;
+  const seedTrial =
+    !(existingTrial as { trial_ends_at?: string | null } | null)
+      ?.trial_ends_at;
+  const trialEndsAt = seedTrial
+    ? new Date(Date.now() + TRIAL_DAYS * 86_400_000).toISOString()
+    : null;
+  const seedStatus =
+    seedTrial &&
+    !(existingTrial as { subscription_status?: string | null } | null)
+      ?.subscription_status;
+
   const vlYearlyCents =
     activity === "vl"
       ? parseEuroToCents(String(formData.get("vl_yearly_cost") ?? ""))
@@ -112,19 +133,23 @@ export async function completeOnboarding(formData: FormData) {
       ? vlValidUntilRaw
       : null;
 
+  const patch: Record<string, unknown> = {
+    profession: safeProfession,
+    tax_mode: defaults.tax_mode,
+    iv_expense_mode: defaults.iv_expense_mode,
+    include_psd: defaults.include_psd,
+    custom_tax_percent: defaults.custom_tax_percent,
+    tax_rate: defaults.tax_rate,
+    vl_yearly_cost_cents: vlYearlyCents,
+    vl_valid_until: vlValidUntil,
+    onboarding_completed_at: new Date().toISOString(),
+  };
+  if (trialEndsAt) patch.trial_ends_at = trialEndsAt;
+  if (seedStatus) patch.subscription_status = "trialing";
+
   const { error } = await supabase
     .from("profiles")
-    .update({
-      profession: safeProfession,
-      tax_mode: defaults.tax_mode,
-      iv_expense_mode: defaults.iv_expense_mode,
-      include_psd: defaults.include_psd,
-      custom_tax_percent: defaults.custom_tax_percent,
-      tax_rate: defaults.tax_rate,
-      vl_yearly_cost_cents: vlYearlyCents,
-      vl_valid_until: vlValidUntil,
-      onboarding_completed_at: new Date().toISOString(),
-    })
+    .update(patch)
     .eq("id", user.id);
 
   if (error) {

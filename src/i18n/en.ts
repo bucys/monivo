@@ -298,6 +298,16 @@ export const en: Dictionary = {
       statusCanceled: "Canceled",
       trialDaysLeft: "{n} days left",
       trialEnded: "Trial ended",
+      subscribeCta: "Subscribe",
+      manageCta: "Manage",
+      banner: {
+        trialEnding:
+          "{days} days left in your trial. Subscribe to keep adding records.",
+        trialEnded:
+          "Trial ended — subscribe to continue adding records.",
+        pastDue: "Payment overdue — update your card to keep your subscription active.",
+        expired: "Subscription inactive — subscribe to continue adding records.",
+      },
     },
     account: {
       account: "Account",
