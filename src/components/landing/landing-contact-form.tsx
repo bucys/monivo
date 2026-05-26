@@ -19,16 +19,20 @@ export function LandingContactForm() {
     setError(null);
     startTransition(async () => {
       try {
-        await sendContactMessage({
+        const result = await sendContactMessage({
           name: String(fd.get("name") ?? ""),
           email: String(fd.get("email") ?? ""),
           subject: String(fd.get("subject") ?? ""),
           message: String(fd.get("message") ?? ""),
           locale,
         });
-        setSubmitted(true);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : f.errorGeneric);
+        if (result.ok) {
+          setSubmitted(true);
+        } else {
+          setError(result.reason);
+        }
+      } catch {
+        setError("SEND_FAILED");
       }
     });
   };

@@ -25,15 +25,40 @@ function pad2(n: number) {
   return String(n).padStart(2, "0");
 }
 
-function toIso(d: Date) {
+function isValidDate(d: unknown): d is Date {
+  return d instanceof Date && !Number.isNaN(d.getTime());
+}
+
+function toIso(d: Date): string {
+  if (!isValidDate(d)) return "";
   return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
 }
 
-function fromIso(s: string): Date | null {
-  if (!ISO_DATE_RE.test(s)) return null;
-  const [y, m, d] = s.split("-").map(Number);
-  const dt = new Date(y!, (m ?? 1) - 1, d ?? 1);
-  return Number.isNaN(dt.getTime()) ? null : dt;
+function fromIso(s: string | null | undefined): Date | null {
+  if (typeof s !== "string" || !ISO_DATE_RE.test(s)) return null;
+  const parts = s.split("-").map(Number);
+  if (parts.length !== 3 || parts.some((n) => !Number.isFinite(n))) return null;
+  const [y, m, d] = parts as [number, number, number];
+  const dt = new Date(y, m - 1, d);
+  return isValidDate(dt) ? dt : null;
+}
+
+/** Wrap an `Intl.DateTimeFormat(...).format(d)` call. Returns `fallback` when
+ *  the date is invalid or the underlying formatter throws (e.g. RangeError on
+ *  an Invalid Date — which surfaces as a "Server Components render" error in
+ *  production when it happens during a "use client" SSR pass). */
+function safeFormatDate(
+  locale: string,
+  options: Intl.DateTimeFormatOptions,
+  d: Date | null | undefined,
+  fallback = "",
+): string {
+  if (!isValidDate(d)) return fallback;
+  try {
+    return new Intl.DateTimeFormat(locale, options).format(d);
+  } catch {
+    return fallback;
+  }
 }
 
 function startOfMonth(d: Date) {
@@ -76,12 +101,21 @@ function buildMonthGrid(viewMonth: Date): Date[] {
 function weekdayShortNames(intlLocale: string): string[] {
   // Pick any known Monday (2024-01-01) and walk 7 days.
   const monday = new Date(2024, 0, 1);
-  const fmt = new Intl.DateTimeFormat(intlLocale, { weekday: "short" });
+  let fmt: Intl.DateTimeFormat | null = null;
+  try {
+    fmt = new Intl.DateTimeFormat(intlLocale, { weekday: "short" });
+  } catch {
+    fmt = null;
+  }
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i);
-    const label = fmt.format(d);
-    // Strip trailing period some locales add (e.g. LT "pir.")
-    return label.replace(/\.$/, "");
+    if (!fmt) return "";
+    try {
+      // Strip trailing period some locales add (e.g. LT "pir.")
+      return fmt.format(d).replace(/\.$/, "");
+    } catch {
+      return "";
+    }
   });
 }
 
@@ -105,13 +139,15 @@ export function DatePicker({
 
   const [open, setOpen] = useState(false);
   const [viewMonth, setViewMonth] = useState<Date>(() =>
-    startOfMonth(selected ?? new Date()),
+    startOfMonth(isValidDate(selected) ? selected : new Date()),
   );
 
   // Re-anchor the calendar to the selected date each time the popup opens.
   useEffect(() => {
     if (open) {
-      setViewMonth(startOfMonth(selected ?? new Date()));
+      setViewMonth(
+        startOfMonth(isValidDate(selected) ? selected : new Date()),
+      );
     }
   }, [open, selected]);
 
@@ -170,21 +206,18 @@ export function DatePicker({
     };
   }, [open]);
 
-  const triggerLabel = (() => {
-    if (selected) {
-      return new Intl.DateTimeFormat(intlLocale, {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      }).format(selected);
-    }
-    return placeholder ?? "";
-  })();
+  const triggerLabel = safeFormatDate(
+    intlLocale,
+    { day: "numeric", month: "long", year: "numeric" },
+    selected,
+    placeholder ?? "",
+  );
 
-  const monthHeader = new Intl.DateTimeFormat(intlLocale, {
-    month: "long",
-    year: "numeric",
-  }).format(viewMonth);
+  const monthHeader = safeFormatDate(
+    intlLocale,
+    { month: "long", year: "numeric" },
+    isValidDate(viewMonth) ? viewMonth : null,
+  );
   // Capitalize first character (some locales — e.g. LT — return lowercase).
   const monthHeaderTitle = monthHeader.charAt(0).toUpperCase() + monthHeader.slice(1);
 
@@ -192,7 +225,9 @@ export function DatePicker({
   const canStepNext = !max || addMonths(viewMonth, 1).getTime() <= startOfMonth(max).getTime();
 
   const handlePick = (d: Date) => {
-    onChange(toIso(d));
+    if (!isValidDate(d)) return;
+    const iso = toIso(d);
+    if (iso) onChange(iso);
     setOpen(false);
   };
 

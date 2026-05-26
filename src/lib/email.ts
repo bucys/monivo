@@ -55,10 +55,35 @@ export function validateContact(raw: Partial<ContactPayload>): ContactPayload {
   return { name, email, subject, message, locale };
 }
 
-export async function sendContactEmail(input: ContactPayload): Promise<void> {
+export type ContactFailReason =
+  | "NOT_CONFIGURED"
+  | "UNVERIFIED_SENDER"
+  | "SEND_FAILED";
+
+export type SendResult =
+  | { ok: true }
+  | { ok: false; reason: ContactFailReason };
+
+/**
+ * Send a contact email via Resend. Never throws — returns a typed result so
+ * the server action can surface a calm UI error without escalating to a 500.
+ *
+ * Internal failures (missing env, Resend rejection, unverified sender) are
+ * logged on the server only; the client sees a generic reason code.
+ */
+export async function sendContactEmail(
+  input: ContactPayload,
+): Promise<SendResult> {
   const to = process.env.CONTACT_EMAIL;
   const from = process.env.CONTACT_FROM ?? "Monivo <onboarding@resend.dev>";
-  if (!to) throw new Error("CONTACT_EMAIL is not configured.");
+  if (!process.env.RESEND_API_KEY) {
+    console.error("[contact] RESEND_API_KEY is not configured");
+    return { ok: false, reason: "NOT_CONFIGURED" };
+  }
+  if (!to) {
+    console.error("[contact] CONTACT_EMAIL is not configured");
+    return { ok: false, reason: "NOT_CONFIGURED" };
+  }
 
   const safe = {
     name: escapeHtml(input.name),
@@ -86,13 +111,40 @@ export async function sendContactEmail(input: ContactPayload): Promise<void> {
 <pre style="white-space:pre-wrap;font:inherit;margin:0">${safe.message}</pre>
 </body></html>`;
 
-  const { error } = await resend().emails.send({
-    from,
-    to,
-    replyTo: input.email,
-    subject: `[Monivo contact] ${input.subject || input.name}`,
-    text,
-    html,
-  });
-  if (error) throw new Error(error.message ?? "Resend send failed");
+  try {
+    const { error } = await resend().emails.send({
+      from,
+      to,
+      replyTo: input.email,
+      subject: `[Monivo contact] ${input.subject || input.name}`,
+      text,
+      html,
+    });
+    if (error) {
+      const message = error.message ?? "unknown";
+      // Resend rejects sends from unverified domains and restricts the default
+      // `onboarding@resend.dev` to the account owner's own email. Flag those
+      // specifically — they're the most common production setup mistake.
+      const looksUnverified =
+        /verif|domain|only send testing|from address|sender/i.test(message);
+      console.error(
+        "[contact] resend send rejected:",
+        message,
+        looksUnverified
+          ? "(likely unverified sender domain — verify your domain at https://resend.com/domains, or set CONTACT_FROM to an address on a verified domain)"
+          : "",
+      );
+      return {
+        ok: false,
+        reason: looksUnverified ? "UNVERIFIED_SENDER" : "SEND_FAILED",
+      };
+    }
+    return { ok: true };
+  } catch (e) {
+    console.error(
+      "[contact] resend send threw:",
+      e instanceof Error ? e.message : String(e),
+    );
+    return { ok: false, reason: "SEND_FAILED" };
+  }
 }

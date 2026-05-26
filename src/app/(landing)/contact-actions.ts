@@ -1,6 +1,10 @@
 "use server";
 
-import { sendContactEmail, validateContact } from "@/lib/email";
+import {
+  sendContactEmail,
+  validateContact,
+  type ContactFailReason,
+} from "@/lib/email";
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX = 3;
@@ -33,16 +37,49 @@ export type ContactInput = {
   locale?: string;
 };
 
-export async function sendContactMessage(input: ContactInput): Promise<void> {
-  const payload = validateContact({
-    name: input.name,
-    email: input.email,
-    subject: input.subject ?? "",
-    message: input.message,
-    locale: input.locale ?? "lt",
-  });
-  if (!rateLimit(payload.email)) {
-    throw new Error("RATE_LIMITED");
+export type ContactActionResult =
+  | { ok: true }
+  | {
+      ok: false;
+      reason:
+        | "INVALID_NAME"
+        | "INVALID_EMAIL"
+        | "INVALID_MESSAGE"
+        | "RATE_LIMITED"
+        | ContactFailReason;
+    };
+
+/**
+ * Contact form server action. Never throws — returns a typed result so the
+ * client surfaces a calm error UI rather than a 500. All internal failure
+ * details are logged on the server only.
+ */
+export async function sendContactMessage(
+  input: ContactInput,
+): Promise<ContactActionResult> {
+  let payload;
+  try {
+    payload = validateContact({
+      name: input.name,
+      email: input.email,
+      subject: input.subject ?? "",
+      message: input.message,
+      locale: input.locale ?? "lt",
+    });
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "";
+    if (
+      message === "INVALID_NAME" ||
+      message === "INVALID_EMAIL" ||
+      message === "INVALID_MESSAGE"
+    ) {
+      return { ok: false, reason: message };
+    }
+    console.error("[contact] validation threw:", message);
+    return { ok: false, reason: "SEND_FAILED" };
   }
-  await sendContactEmail(payload);
+  if (!rateLimit(payload.email)) {
+    return { ok: false, reason: "RATE_LIMITED" };
+  }
+  return await sendContactEmail(payload);
 }

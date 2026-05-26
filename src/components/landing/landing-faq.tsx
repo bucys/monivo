@@ -78,16 +78,20 @@ function ContactCard({ t, locale }: { t: Dictionary; locale: Locale }) {
     setError(null);
     startTransition(async () => {
       try {
-        await sendContactMessage({
+        const result = await sendContactMessage({
           name: String(fd.get("name") ?? ""),
           email: String(fd.get("email") ?? ""),
           subject: "FAQ",
           message: String(fd.get("question") ?? ""),
           locale,
         });
-        setSubmitted(true);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : c.errorGeneric);
+        if (result.ok) {
+          setSubmitted(true);
+        } else {
+          setError(result.reason);
+        }
+      } catch {
+        setError("SEND_FAILED");
       }
     });
   };
