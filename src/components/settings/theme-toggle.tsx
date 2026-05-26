@@ -80,10 +80,8 @@ export function ThemeToggle({ icon }: { icon?: ReactNode }) {
           >
             <span
               aria-hidden
-              className={`absolute top-0.5 h-5 w-5 rounded-full shadow-[0_1px_2px_rgba(23,33,29,0.2)] transition-[transform,background-color] ${
-                isDark
-                  ? "translate-x-[22px] bg-accent"
-                  : "translate-x-0.5 bg-surface"
+              className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full shadow-[0_1px_2px_rgba(23,33,29,0.2)] transition-[transform,background-color] ${
+                isDark ? "translate-x-5 bg-accent" : "translate-x-0 bg-surface"
               }`}
             />
           </button>
