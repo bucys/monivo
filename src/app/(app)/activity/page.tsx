@@ -10,7 +10,7 @@ import type {
 import { getT } from "@/i18n/server";
 import { monthsFromIsoDates, resolvePeriod } from "@/lib/activity";
 import { canWriteProfile } from "@/lib/profile";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseServerClient, getAuthUser } from "@/lib/supabase/server";
 
 export default async function ActivityPage({
   searchParams,
@@ -18,9 +18,7 @@ export default async function ActivityPage({
   searchParams: Promise<{ period?: string }>;
 }) {
   const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAuthUser();
   if (!user) redirect("/login");
 
   const { period: periodParam } = await searchParams;

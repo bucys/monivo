@@ -27,7 +27,7 @@ import {
   toTaxProfile,
   type ProfileTaxFields,
 } from "@/lib/profile";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseServerClient, getAuthUser } from "@/lib/supabase/server";
 import { calculateTaxReserve } from "@/lib/tax";
 
 function todayIso() {
@@ -45,9 +45,7 @@ function weekBucket(isoDate: string) {
 
 export default async function DashboardPage() {
   const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAuthUser();
   if (!user) redirect("/login");
 
   const { t, locale } = await getT();

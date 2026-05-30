@@ -16,7 +16,7 @@ import {
   weekBucket,
   type IncomeRow,
 } from "@/lib/insights";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseServerClient, getAuthUser } from "@/lib/supabase/server";
 
 function todayIso() {
   const d = new Date();
@@ -28,9 +28,7 @@ function todayIso() {
 
 export default async function InsightsPage() {
   const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAuthUser();
   if (!user) redirect("/login");
 
   const { t, locale } = await getT();

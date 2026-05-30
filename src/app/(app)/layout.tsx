@@ -11,8 +11,9 @@ import {
   type ProfileTaxFields,
   type ProfileWriteFields,
 } from "@/lib/profile";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseServerClient, getAuthUser } from "@/lib/supabase/server";
 import { calculateTaxReserve } from "@/lib/tax";
+import type { ServiceChip } from "@/components/add-entry/income-form";
 
 export default async function AppLayout({
   children,
@@ -20,9 +21,7 @@ export default async function AppLayout({
   children: React.ReactNode;
 }) {
   const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAuthUser();
 
   if (!user) {
     redirect("/login");
@@ -56,8 +55,12 @@ export default async function AppLayout({
   const canWrite = canWriteProfile(profile as ProfileWriteFields | null);
 
   const { monthStart, nextMonthStart } = monthRange();
-  const [{ data: monthIncome }, { data: monthExpenses }, notifications] =
-    await Promise.all([
+  const [
+    { data: monthIncome },
+    { data: monthExpenses },
+    { data: serviceRows },
+    notifications,
+  ] = await Promise.all([
       supabase
         .from("income_entries")
         .select("amount_cents")
@@ -70,6 +73,14 @@ export default async function AppLayout({
         .eq("user_id", user.id)
         .gte("occurred_at", monthStart)
         .lt("occurred_at", nextMonthStart),
+      // Shared with the always-mounted quick-add sheet (AddEntryMount) so it no
+      // longer needs its own getUser + profile + services round-trips.
+      supabase
+        .from("services")
+        .select("id, name, price_cents")
+        .eq("user_id", user.id)
+        .order("sort_order", { ascending: true })
+        .order("created_at", { ascending: true }),
       loadNotifications(supabase, user.id, t.notifications.generated, {
         subscription_status:
           (profile as { subscription_status?: string | null } | null)
@@ -107,11 +118,14 @@ export default async function AppLayout({
     reserveCents: reserveCents > 0 ? reserveCents : null,
   };
 
+  const quickAddServices: ReadonlyArray<ServiceChip> = serviceRows ?? [];
+
   return (
     <AppShell
       notifications={notifications}
       canWrite={canWrite}
       sidebar={sidebar}
+      quickAddServices={quickAddServices}
     >
       <div className="mb-3 lg:mb-4">
         <SubscriptionBanner

@@ -29,7 +29,7 @@ import {
   type ProfileTaxFields,
   type ProfileWriteFields,
 } from "@/lib/profile";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseServerClient, getAuthUser } from "@/lib/supabase/server";
 
 // Always hit the database fresh. Without this, manual edits in Supabase
 // (or webhook-driven updates) can read through a cached server render.
@@ -37,9 +37,7 @@ export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
   const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAuthUser();
   if (!user) redirect("/login");
 
   const locale = await getServerLocale();

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { AddEntryMount } from "@/components/add-entry/add-entry-mount";
+import type { ServiceChip } from "@/components/add-entry/income-form";
 import { NotificationsProvider } from "@/components/notifications/notifications-provider";
 import type { AppNotification } from "@/lib/notifications";
 import { AppBottomNav } from "./app-bottom-nav";
@@ -21,11 +22,13 @@ export function AppShell({
   notifications,
   canWrite,
   sidebar,
+  quickAddServices,
 }: {
   children: ReactNode;
   notifications: AppNotification[];
   canWrite: boolean;
   sidebar: SidebarData;
+  quickAddServices: ReadonlyArray<ServiceChip>;
 }) {
   return (
     <UIChromeProvider>
@@ -38,7 +41,7 @@ export function AppShell({
           </div>
           <AppBottomNav />
           <AppFab canWrite={canWrite} />
-          <AddEntryMount />
+          <AddEntryMount services={quickAddServices} canWrite={canWrite} />
         </div>
       </NotificationsProvider>
     </UIChromeProvider>

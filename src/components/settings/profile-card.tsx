@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ModalSheet } from "@/components/ui/modal-sheet";
 import { format } from "@/i18n";
 import { useLocale, useT } from "@/i18n/locale-provider";
@@ -230,20 +230,32 @@ function PlanRow({
   const sub = t.settings.subscription;
   const [open, setOpen] = useState(false);
 
+  // Read the current time only after mount. Using `Date.now()` directly during
+  // render mismatches between server SSR and client hydration (React error
+  // #418) any time the trial-expiry or day-boundary math straddles those two
+  // moments. `null` means "haven't measured yet" — the initial render uses
+  // the server-provided `status` as-is, and the effective-status override
+  // kicks in on the post-hydration re-render.
+  const [nowMs, setNowMs] = useState<number | null>(null);
+  useEffect(() => {
+    setNowMs(Date.now());
+  }, []);
+
   // Resolve the *effective* state — a trialing user with a past trial date
   // should render as expired in the UI even if the server hasn't flipped
-  // subscription_status yet.
+  // subscription_status yet. Skipped pre-mount to keep SSR/CSR deterministic.
   const effectiveStatus: ProfileSubscriptionStatus = (() => {
-    if (status === "trialing" && trialEndsAt) {
-      const ms = Date.parse(trialEndsAt) - Date.now();
+    if (nowMs !== null && status === "trialing" && trialEndsAt) {
+      const ms = Date.parse(trialEndsAt) - nowMs;
       if (Number.isFinite(ms) && ms <= 0) return "expired";
     }
     return status ?? "trialing";
   })();
 
   const trialDays = (() => {
+    if (nowMs === null) return null;
     if (effectiveStatus !== "trialing" || !trialEndsAt) return null;
-    const ms = Date.parse(trialEndsAt) - Date.now();
+    const ms = Date.parse(trialEndsAt) - nowMs;
     if (!Number.isFinite(ms) || ms <= 0) return 0;
     return Math.max(0, Math.ceil(ms / 86_400_000));
   })();

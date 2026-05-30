@@ -2,14 +2,12 @@ import { redirect } from "next/navigation";
 import { AppPageHeader } from "@/components/app/app-page-header";
 import { AppScreen } from "@/components/app/app-screen";
 import { canWriteProfile } from "@/lib/profile";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseServerClient, getAuthUser } from "@/lib/supabase/server";
 import { ServicesClient, type ServiceRow } from "./services-client";
 
 export default async function ServicesPage() {
   const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAuthUser();
   if (!user) redirect("/login");
 
   const [{ data: profile }, { data: services }] = await Promise.all([
