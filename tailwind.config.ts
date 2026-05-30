@@ -19,6 +19,10 @@ const config: Config = {
         },
         cream: "rgb(var(--c-cream) / <alpha-value>)",
         shell: "rgb(var(--c-shell) / <alpha-value>)",
+        // Muted foreground used only on the sidebar's `shell` background, where
+        // plain ink-500 falls just under WCAG AA (4.38:1). Sidebar-scoped so
+        // it doesn't shift muted text on cream/surface elsewhere.
+        "shell-muted": "rgb(var(--c-shell-muted) / <alpha-value>)",
         surface: "rgb(var(--c-surface) / <alpha-value>)",
         inverse: "rgb(var(--c-inverse) / <alpha-value>)",
         accent: {

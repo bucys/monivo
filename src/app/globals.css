@@ -24,6 +24,9 @@
   --c-ink-100: 239 237 233;
   --c-ink-300: 201 201 201;
   --c-ink-500: 103 115 109;
+  /* Muted text on the sidebar's shell bg — ink-500 there is 4.38:1 (sub-AA);
+     this nudges to 4.64:1 while reading near-identically. Light mode only. */
+  --c-shell-muted: 99 111 105;
   --c-ink-700: 61 61 61;
   --c-ink-900: 23 33 29;
   --c-accent: 31 122 107;
@@ -51,6 +54,7 @@
   --c-ink-100: 47 40 32;        /* subtle filled chips */
   --c-ink-300: 90 82 71;        /* disabled borders */
   --c-ink-500: 178 170 158;     /* muted text — brighter for legibility */
+  --c-shell-muted: 178 170 158; /* sidebar muted — same as ink-500 in dark */
   --c-ink-700: 214 206 195;     /* secondary text */
   --c-ink-900: 240 233 222;     /* primary text — warm off-white */
   --c-accent: 64 188 165;       /* brighter teal for AA contrast */

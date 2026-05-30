@@ -102,7 +102,7 @@ export function AppSidebar({ sidebar }: { sidebar: SidebarData }) {
       <nav aria-label={t.nav.sidebarAria} className="flex flex-col gap-5">
         {groups.map((group) => (
           <div key={group.eyebrow} className="flex flex-col gap-1">
-            <span className="px-2.5 pb-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">
+            <span className="px-2.5 pb-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-shell-muted">
               {group.eyebrow}
             </span>
             {group.items.map((item) => {
@@ -115,12 +115,12 @@ export function AppSidebar({ sidebar }: { sidebar: SidebarData }) {
                   className={`flex items-center gap-3 rounded-[14px] px-3.5 py-2.5 text-[14px] font-medium tracking-tight transition-colors ${
                     active
                       ? "bg-surface text-ink-900/90 shadow-card"
-                      : "text-ink-500 hover:bg-surface/60 hover:text-ink-900/90"
+                      : "text-shell-muted hover:bg-surface/60 hover:text-ink-900/90"
                   }`}
                 >
                   <span
                     aria-hidden
-                    className={`block h-5 w-5 ${active ? "text-accent" : "text-ink-500"}`}
+                    className={`block h-5 w-5 ${active ? "text-accent" : "text-shell-muted"}`}
                   >
                     {item.icon}
                   </span>
@@ -165,7 +165,7 @@ export function AppSidebar({ sidebar }: { sidebar: SidebarData }) {
           <span className="truncate text-[13px] font-semibold text-ink-900/90">
             {sidebar.displayName}
           </span>
-          <span className="mt-0.5 text-[11px] text-ink-500">
+          <span className="mt-0.5 text-[11px] text-shell-muted">
             {sidebar.activityLabel}
           </span>
         </span>
@@ -174,7 +174,7 @@ export function AppSidebar({ sidebar }: { sidebar: SidebarData }) {
           height="11"
           viewBox="0 0 11 11"
           fill="none"
-          className="text-ink-500"
+          className="text-shell-muted"
           aria-hidden
         >
           <path
