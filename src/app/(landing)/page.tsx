@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { LandingClosing } from "@/components/landing/landing-closing";
 import { LandingFaq } from "@/components/landing/landing-faq";
@@ -10,11 +11,47 @@ import { LandingPricing } from "@/components/landing/landing-pricing";
 import { LandingProblem } from "@/components/landing/landing-problem";
 import { getT } from "@/i18n/server";
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_MARKETING_URL?.replace(/\/$/, "") ??
+  "https://monivo.lt";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
+// Organization + WebSite structured data. Helps Google build a Knowledge
+// Panel / brand entity and understand the site name. Kept to stable, factual
+// fields only — no marketing claims that could drift.
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
+      name: "Monivo",
+      url: siteUrl,
+      logo: `${siteUrl}/icons/icon-512.png`,
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      url: siteUrl,
+      name: "Monivo",
+      inLanguage: "lt-LT",
+      publisher: { "@id": `${siteUrl}/#organization` },
+    },
+  ],
+};
+
 export default async function LandingPage() {
   const { t } = await getT();
   const fo = t.landing.footer;
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <LandingHeader />
       <main>
         <LandingHero />

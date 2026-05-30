@@ -10,7 +10,18 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/dashboard", "/activity", "/insights", "/settings", "/login"],
+        // Authenticated product routes — they redirect crawlers to /login and
+        // hold only private data. Auth routes (/login, /register) are
+        // deliberately NOT disallowed: they carry a `noindex` meta tag, and a
+        // disallow would stop crawlers from fetching the page to see it.
+        disallow: [
+          "/dashboard",
+          "/activity",
+          "/insights",
+          "/services",
+          "/settings",
+          "/onboarding",
+        ],
       },
     ],
     sitemap: `${siteUrl}/sitemap.xml`,

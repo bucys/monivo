@@ -6,6 +6,7 @@ import { getT } from "@/i18n/server";
 export const metadata: Metadata = {
   title: "Kontaktai",
   description: "Kaip susisiekti su Monivo komanda.",
+  alternates: { canonical: "/kontaktai" },
 };
 
 export default async function ContactPage() {

@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Privatumas",
   description:
     "Kaip Monivo tvarko ir saugo individualiai dirbančių grožio specialistų duomenis.",
+  alternates: { canonical: "/privatumas" },
 };
 
 export default async function PrivacyPage() {

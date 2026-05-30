@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Naudojimo sąlygos",
   description:
     "Monivo naudojimo sąlygos individualiai dirbantiems grožio specialistams.",
+  alternates: { canonical: "/salygos" },
 };
 
 export default async function TermsPage() {
