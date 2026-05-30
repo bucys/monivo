@@ -102,26 +102,10 @@ export async function completeOnboarding(formData: FormData): Promise<void> {
 
   const defaults = ACTIVITY_DEFAULTS[activity];
 
-  // Check existing trial state. Onboarding may run after a profile row was
-  // created on signup — we only seed the 30-day trial if it hasn't been set
-  // yet. Existing users keep whatever they have.
-  const { data: existingTrial } = await supabase
-    .from("profiles")
-    .select("trial_ends_at, subscription_status")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  const TRIAL_DAYS = 30;
-  const seedTrial =
-    !(existingTrial as { trial_ends_at?: string | null } | null)
-      ?.trial_ends_at;
-  const trialEndsAt = seedTrial
-    ? new Date(Date.now() + TRIAL_DAYS * 86_400_000).toISOString()
-    : null;
-  const seedStatus =
-    seedTrial &&
-    !(existingTrial as { subscription_status?: string | null } | null)
-      ?.subscription_status;
+  // Trial + subscription_status are seeded by the `handle_new_user` signup
+  // trigger (NOT NULL defaults: 'trialing' / now() + 30d) and are NOT in the
+  // authenticated UPDATE allowlist — only the Stripe webhook (service role)
+  // may change subscription state. Onboarding therefore never writes them.
 
   const vlYearlyCents =
     activity === "vl"
@@ -145,8 +129,6 @@ export async function completeOnboarding(formData: FormData): Promise<void> {
     vl_valid_until: vlValidUntil,
     onboarding_completed_at: new Date().toISOString(),
   };
-  if (trialEndsAt) patch.trial_ends_at = trialEndsAt;
-  if (seedStatus) patch.subscription_status = "trialing";
 
   const { error } = await supabase
     .from("profiles")
