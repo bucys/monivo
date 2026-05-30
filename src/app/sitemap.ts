@@ -1,10 +1,28 @@
 import type { MetadataRoute } from "next";
+import { headers } from "next/headers";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_MARKETING_URL?.replace(/\/$/, "") ??
   "https://monivo.lt";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+const appHost = (() => {
+  try {
+    return new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "").hostname;
+  } catch {
+    return "";
+  }
+})();
+
+// Host-aware so app.monivo.lt never serves a sitemap of marketing URLs (a
+// cross-host sitemap Google would reject). Only the marketing surface lists
+// the public pages.
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const h = await headers();
+  const host = (h.get("host") ?? "").toLowerCase().split(":")[0];
+  if (appHost !== "" && host === appHost) {
+    return [];
+  }
+
   const lastModified = new Date();
   return [
     {

@@ -1,19 +1,43 @@
 import type { MetadataRoute } from "next";
+import { headers } from "next/headers";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_MARKETING_URL?.replace(/\/$/, "") ??
   "https://monivo.lt";
 
-export default function robots(): MetadataRoute.Robots {
+const appHost = (() => {
+  try {
+    return new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "").hostname;
+  } catch {
+    return "";
+  }
+})();
+
+// The same Next app answers monivo.lt, www.monivo.lt and app.monivo.lt, so
+// robots.txt must differ per host. Reading the Host header opts this route into
+// dynamic rendering, which is what lets one deploy serve the right rules to
+// each surface.
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const h = await headers();
+  const host = (h.get("host") ?? "").toLowerCase().split(":")[0];
+  const isAppHost = appHost !== "" && host === appHost;
+
+  // app.monivo.lt is entirely private (every route is auth-gated or noindex).
+  // Block the whole subdomain and don't advertise the marketing sitemap here.
+  if (isAppHost) {
+    return {
+      rules: [{ userAgent: "*", disallow: "/" }],
+    };
+  }
+
+  // Marketing surface (monivo.lt / www.monivo.lt): allow the public pages and
+  // point crawlers at the sitemap. The app product routes are listed here too
+  // as defence in depth, even though the marketing host redirects them away.
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
-        // Authenticated product routes — they redirect crawlers to /login and
-        // hold only private data. Auth routes (/login, /register) are
-        // deliberately NOT disallowed: they carry a `noindex` meta tag, and a
-        // disallow would stop crawlers from fetching the page to see it.
         disallow: [
           "/dashboard",
           "/activity",
