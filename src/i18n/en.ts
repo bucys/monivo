@@ -727,7 +727,7 @@ export const en: Dictionary = {
     lessToggle: "Show less",
     thisMonth: "this month",
     summary: {
-      remaining: "Left after expenses and taxes",
+      remaining: "Remaining",
       income: "Income",
       expense: "Expenses",
       taxReserve: "Reserved",

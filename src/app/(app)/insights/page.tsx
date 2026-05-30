@@ -157,10 +157,6 @@ export default async function InsightsPage({
     ? t.insights.thisMonth
     : monthAccusativePhrase(selStart, locale);
 
-  // Summary card heading: sentence-cased month phrase ("Šį mėnesį" / "Balandį").
-  const summaryTitle =
-    monthPhrase.charAt(0).toUpperCase() + monthPhrase.slice(1);
-
   const clientsLabels = {
     ...t.insights.clients,
     eyebrow: format(t.insights.clients.eyebrow, { month: monthPhrase }),
@@ -191,14 +187,17 @@ export default async function InsightsPage({
           currentLabel={currentLabel}
         />
 
-        <InsightsSummaryCard
-          title={summaryTitle}
-          incomeCents={incomeCents}
-          expenseCents={expenseCents}
-          taxReserveCents={taxReserveCents}
-          remainingCents={remainingCents}
-          labels={t.insights.summary}
-        />
+        {/* Financial summary only for PAST months — the current month already
+            has this on the dashboard, so showing it here would duplicate it. */}
+        {!isCurrent ? (
+          <InsightsSummaryCard
+            incomeCents={incomeCents}
+            expenseCents={expenseCents}
+            taxReserveCents={taxReserveCents}
+            remainingCents={remainingCents}
+            labels={t.insights.summary}
+          />
+        ) : null}
 
         <ServicesPerformedCard
           count={servicesPerformed}

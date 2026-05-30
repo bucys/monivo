@@ -1376,7 +1376,7 @@ export const lt: Dictionary = {
     lessToggle: "Mažiau įžvalgų",
     thisMonth: "šį mėnesį",
     summary: {
-      remaining: "Lieka po išlaidų ir mokesčių",
+      remaining: "Lieka",
       income: "Pajamos",
       expense: "Išlaidos",
       taxReserve: "Atidėta",
