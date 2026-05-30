@@ -4,6 +4,7 @@ import { AppScreen } from "@/components/app/app-screen";
 import { BestDayCard } from "@/components/insights/best-day-card";
 import { ServicesPerformedCard } from "@/components/insights/clients-week-card";
 import { InsightsMonth } from "@/components/insights/insights-month";
+import { InsightsSummaryCard } from "@/components/insights/insights-summary-card";
 import { TopServicesCard } from "@/components/insights/top-services";
 import { WeeklyEarningsCard } from "@/components/insights/weekly-earnings-card";
 import { Disclosure } from "@/components/ui/disclosure";
@@ -20,7 +21,13 @@ import {
   weekBucket,
   type IncomeRow,
 } from "@/lib/insights";
+import {
+  TAX_PROFILE_COLUMNS,
+  toTaxProfile,
+  type ProfileTaxFields,
+} from "@/lib/profile";
 import { createSupabaseServerClient, getAuthUser } from "@/lib/supabase/server";
+import { calculateTaxReserve } from "@/lib/tax";
 
 function todayIso() {
   const d = new Date();
@@ -69,15 +76,29 @@ export default async function InsightsPage({
   const monthLabel = formatMonth(selStart, locale);
 
   const [
+    { data: profileRow },
     { data: serviceRows },
     { data: incomeRows },
+    { data: monthExpenseRows },
     { data: incomeMonthRows },
     { data: expenseMonthRows },
   ] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select(TAX_PROFILE_COLUMNS)
+      .eq("id", user.id)
+      .maybeSingle(),
     supabase.from("services").select("id, name").eq("user_id", user.id),
     supabase
       .from("income_entries")
       .select("amount_cents, service_id, service_name, occurred_at")
+      .eq("user_id", user.id)
+      .gte("occurred_at", period.startDate)
+      .lt("occurred_at", period.endDate),
+    // Selected-month expenses — only for the summary card's totals.
+    supabase
+      .from("expense_entries")
+      .select("amount_cents")
       .eq("user_id", user.id)
       .gte("occurred_at", period.startDate)
       .lt("occurred_at", period.endDate),
@@ -111,6 +132,17 @@ export default async function InsightsPage({
   const services = serviceRows ?? [];
 
   const incomeCents = incomes.reduce((a, r) => a + (r.amount_cents ?? 0), 0);
+
+  // Monthly summary card — same selected-month window, shared tax-reserve calc.
+  const expenseCents = (monthExpenseRows ?? []).reduce(
+    (a, r) => a + (r.amount_cents ?? 0),
+    0,
+  );
+  const taxProfile = toTaxProfile(profileRow as ProfileTaxFields | null);
+  const reserve = calculateTaxReserve(taxProfile, { incomeCents, expenseCents });
+  const taxReserveCents = reserve.totalCents;
+  const remainingCents = incomeCents - expenseCents - taxReserveCents;
+
   const weeks = totalsByWeek(incomes);
   // Only highlight the live week when viewing the current month.
   const currentWeekIndex = isCurrent ? weekBucket(todayIso()) : -1;
@@ -124,6 +156,10 @@ export default async function InsightsPage({
   const monthPhrase = isCurrent
     ? t.insights.thisMonth
     : monthAccusativePhrase(selStart, locale);
+
+  // Summary card heading: sentence-cased month phrase ("Šį mėnesį" / "Balandį").
+  const summaryTitle =
+    monthPhrase.charAt(0).toUpperCase() + monthPhrase.slice(1);
 
   const clientsLabels = {
     ...t.insights.clients,
@@ -153,6 +189,15 @@ export default async function InsightsPage({
           selectedValue={selectedValue}
           currentValue={currentValue}
           currentLabel={currentLabel}
+        />
+
+        <InsightsSummaryCard
+          title={summaryTitle}
+          incomeCents={incomeCents}
+          expenseCents={expenseCents}
+          taxReserveCents={taxReserveCents}
+          remainingCents={remainingCents}
+          labels={t.insights.summary}
         />
 
         <ServicesPerformedCard

@@ -537,6 +537,12 @@ export type Dictionary = {
     lessToggle: string;
     /** Month phrase for current-month copy; substituted into {month} tokens. */
     thisMonth: string;
+    summary: {
+      remaining: string;
+      income: string;
+      expense: string;
+      taxReserve: string;
+    };
     earnings: {
       eyebrow: string;
       emptyBody: string;
@@ -1369,6 +1375,12 @@ export const lt: Dictionary = {
     moreToggle: "Daugiau įžvalgų",
     lessToggle: "Mažiau įžvalgų",
     thisMonth: "šį mėnesį",
+    summary: {
+      remaining: "Lieka po išlaidų ir mokesčių",
+      income: "Pajamos",
+      expense: "Išlaidos",
+      taxReserve: "Atidėta",
+    },
     earnings: {
       eyebrow: "Uždarbis",
       emptyBody: "Pajamos pagal savaites atsiras pridėjus įrašų.",

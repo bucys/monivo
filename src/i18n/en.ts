@@ -726,6 +726,12 @@ export const en: Dictionary = {
     moreToggle: "More insights",
     lessToggle: "Show less",
     thisMonth: "this month",
+    summary: {
+      remaining: "Left after expenses and taxes",
+      income: "Income",
+      expense: "Expenses",
+      taxReserve: "Reserved",
+    },
     earnings: {
       eyebrow: "Earnings",
       emptyBody: "Weekly earnings appear once you add entries.",
