@@ -69,6 +69,8 @@ export type Dictionary = {
     statsTaxReserve: string;
     reservePlannedTitle: string;
     reserveAboutPrefix: string;
+    reserveThisMonthLabel: string;
+    reserveYearlyLabel: string;
     reserveTapHint: string;
     reserveBreakdownGpm: string;
     reserveBreakdownVsd: string;
@@ -714,6 +716,8 @@ export const lt: Dictionary = {
     statsTaxReserve: "Atidėta",
     reservePlannedTitle: "Rekomenduojamas rezervas",
     reserveAboutPrefix: "apie",
+    reserveThisMonthLabel: "Šį mėnesį",
+    reserveYearlyLabel: "Šiemet rekomenduojama sukaupti:",
     reserveTapHint: "Paspauskite, kad pamatytumėte detalizaciją.",
     reserveBreakdownGpm: "GPM",
     reserveBreakdownVsd: "VSD",
@@ -770,8 +774,8 @@ export const lt: Dictionary = {
         body: "Per pastarąsias 7 d. įrašų nebuvo. Atnaujink veiklą vienu paliestimu.",
       },
       taxReminder: {
-        title: "Mokesčių priminimas",
-        body: "Šį mėnesį atidėjai {amount} € mokesčiams.",
+        title: "Mokesčių rezervo priminimas",
+        body: "{month} rekomenduojama atsidėti {amount} € mokesčiams. Pagal Monivo skaičiavimus šiuo metu jau turėtum būti sukaupęs apie {yearAmount} € rezervą.",
       },
       topService: {
         title: "Mėnesio lyderė",

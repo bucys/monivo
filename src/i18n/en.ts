@@ -71,6 +71,8 @@ export const en: Dictionary = {
     statsTaxReserve: "Reserved",
     reservePlannedTitle: "Recommended reserve",
     reserveAboutPrefix: "about",
+    reserveThisMonthLabel: "This month",
+    reserveYearlyLabel: "Recommended accumulated reserve this year:",
     reserveTapHint: "Tap to see the breakdown.",
     reserveBreakdownGpm: "Income tax",
     reserveBreakdownVsd: "Social (VSD)",
@@ -127,8 +129,8 @@ export const en: Dictionary = {
         body: "No entries in the last 7 days. Log something with one tap.",
       },
       taxReminder: {
-        title: "Tax reminder",
-        body: "You've set aside {amount} € for taxes this month.",
+        title: "Tax reserve reminder",
+        body: "Set aside {amount} € for taxes {month}. By Monivo's estimate you should already have about {yearAmount} € reserved by now.",
       },
       topService: {
         title: "Top service",

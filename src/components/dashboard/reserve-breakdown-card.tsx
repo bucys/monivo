@@ -14,7 +14,14 @@ function roundToEuro(cents: number) {
 
 type Line = { key: "vl" | "gpm" | "vsd" | "psd"; label: string; cents: number };
 
-export function ReserveBreakdownCard({ reserve }: { reserve: ReserveBreakdown }) {
+export function ReserveBreakdownCard({
+  reserve,
+  yearlyReserveCents,
+}: {
+  reserve: ReserveBreakdown;
+  /** Cumulative recommended reserve for the year so far (same calc as sidebar). */
+  yearlyReserveCents: number;
+}) {
   const t = useT();
   const labels = t.dashboard;
   const explain = t.settings.tax.explain;
@@ -56,8 +63,24 @@ export function ReserveBreakdownCard({ reserve }: { reserve: ReserveBreakdown })
               {formatEur(roundToEuro(reserve.totalCents))}
             </span>
           </div>
+          <div className="mt-1 text-[12px] font-medium text-ink-500">
+            {labels.reserveThisMonthLabel}
+          </div>
+
+          {/* Yearly accumulated reserve — mobile/tablet only. On lg+ the
+              sidebar already shows the year reserve, so hide it here to avoid
+              duplicating the same figure. */}
+          <div className="mt-3 lg:hidden">
+            <div className="text-[12px] leading-[1.4] text-ink-500">
+              {labels.reserveYearlyLabel}
+            </div>
+            <div className="mt-0.5 text-[15px] font-semibold tabular-nums tracking-[-0.01em] text-ink-900/90">
+              {formatEur(roundToEuro(yearlyReserveCents))}
+            </div>
+          </div>
+
           {!open ? (
-            <p className="mt-2 text-[12px] leading-[1.5] text-ink-500">
+            <p className="mt-3 text-[12px] leading-[1.5] text-ink-500">
               {explain.footnote}
             </p>
           ) : null}

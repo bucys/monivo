@@ -11,8 +11,8 @@ import {
   type ProfileTaxFields,
   type ProfileWriteFields,
 } from "@/lib/profile";
+import { loadYearlyReserve } from "@/lib/reserve";
 import { createSupabaseServerClient, getAuthUser } from "@/lib/supabase/server";
-import { calculateTaxReserve } from "@/lib/tax";
 import type { ServiceChip } from "@/components/add-entry/income-form";
 
 // The authenticated app (app.monivo.lt) is private user data — never index any
@@ -81,64 +81,40 @@ export default async function AppLayout({
     redirect("/onboarding");
   }
 
-  const { t } = await getT();
+  const { t, locale } = await getT();
   const canWrite = canWriteProfile(profile as ProfileWriteFields | null);
+  const taxProfile = toTaxProfile(profile as ProfileTaxFields | null);
 
   // Sidebar "Mokesčių rezervas" is the reserve for the WHOLE current tax year
-  // (Jan 1 → next Jan 1, exclusive), not the current month. Dashboard /
-  // insights / activity keep their own (monthly) ranges.
-  const currentYear = new Date().getFullYear();
-  const yearStart = `${currentYear}-01-01`;
-  const nextYearStart = `${currentYear + 1}-01-01`;
-  const [
-    { data: yearIncome },
-    { data: yearExpenses },
-    { data: serviceRows },
-    notifications,
-  ] = await Promise.all([
-      supabase
-        .from("income_entries")
-        .select("amount_cents")
-        .eq("user_id", user.id)
-        .gte("occurred_at", yearStart)
-        .lt("occurred_at", nextYearStart),
-      supabase
-        .from("expense_entries")
-        .select("amount_cents")
-        .eq("user_id", user.id)
-        .gte("occurred_at", yearStart)
-        .lt("occurred_at", nextYearStart),
-      // Shared with the always-mounted quick-add sheet (AddEntryMount) so it no
-      // longer needs its own getUser + profile + services round-trips.
-      supabase
-        .from("services")
-        .select("id, name, price_cents")
-        .eq("user_id", user.id)
-        .order("sort_order", { ascending: true })
-        .order("created_at", { ascending: true }),
-      loadNotifications(supabase, user.id, t.notifications.generated, {
+  // via the shared loadYearlyReserve. The monthly reminder reuses the same
+  // tax profile + calc inside loadNotifications. Dashboard / insights / activity
+  // keep their own (monthly) ranges.
+  const [reserve, { data: serviceRows }, notifications] = await Promise.all([
+    loadYearlyReserve(supabase, user.id, taxProfile),
+    // Shared with the always-mounted quick-add sheet (AddEntryMount) so it no
+    // longer needs its own getUser + profile + services round-trips.
+    supabase
+      .from("services")
+      .select("id, name, price_cents")
+      .eq("user_id", user.id)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true }),
+    loadNotifications(
+      supabase,
+      user.id,
+      t.notifications.generated,
+      {
         subscription_status:
           (profile as { subscription_status?: string | null } | null)
             ?.subscription_status ?? null,
         trial_ends_at:
           (profile as { trial_ends_at?: string | null } | null)
             ?.trial_ends_at ?? null,
-      }),
-    ]);
+      },
+      { taxProfile, locale },
+    ),
+  ]);
 
-  const incomeCents = (yearIncome ?? []).reduce(
-    (a, r) => a + (r.amount_cents ?? 0),
-    0,
-  );
-  const expenseCents = (yearExpenses ?? []).reduce(
-    (a, r) => a + (r.amount_cents ?? 0),
-    0,
-  );
-  const taxProfile = toTaxProfile(profile as ProfileTaxFields | null);
-  const reserve = calculateTaxReserve(taxProfile, {
-    incomeCents,
-    expenseCents,
-  });
   const reserveCents = reserve.totalCents;
 
   const displayName = profile?.display_name?.trim() ?? "";

@@ -56,3 +56,12 @@ export function monthRange(
     label: formatMonth(start, locale),
   };
 }
+
+/** Current calendar-year boundaries as YYYY-MM-DD: start inclusive, end exclusive. */
+export function yearRange(now: Date = new Date()) {
+  const year = now.getFullYear();
+  return {
+    yearStart: `${year}-01-01`,
+    nextYearStart: `${year + 1}-01-01`,
+  };
+}

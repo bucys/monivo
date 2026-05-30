@@ -20,7 +20,7 @@ import { MobileTodayList } from "@/components/dashboard/today-list";
 import { WeeklyEarnings } from "@/components/dashboard/weekly-earnings";
 import { format } from "@/i18n";
 import { getT } from "@/i18n/server";
-import { monthRange } from "@/lib/format";
+import { monthRange, yearRange } from "@/lib/format";
 import {
   TAX_PROFILE_COLUMNS,
   canWriteProfile,
@@ -50,6 +50,7 @@ export default async function DashboardPage() {
 
   const { t, locale } = await getT();
   const { monthStart, nextMonthStart, label } = monthRange(new Date(), locale);
+  const { yearStart, nextYearStart } = yearRange();
   const today = todayIso();
 
   const [
@@ -57,6 +58,8 @@ export default async function DashboardPage() {
     { data: services },
     { data: incomeRows },
     { data: expenseRows },
+    { data: yearIncomeRows },
+    { data: yearExpenseRows },
   ] = await Promise.all([
     supabase
       .from("profiles")
@@ -86,6 +89,20 @@ export default async function DashboardPage() {
       .eq("user_id", user.id)
       .gte("occurred_at", monthStart)
       .lt("occurred_at", nextMonthStart),
+    // Year-to-date totals — only for the reserve card's "accumulated this year"
+    // line. Same range/calc the sidebar uses.
+    supabase
+      .from("income_entries")
+      .select("amount_cents")
+      .eq("user_id", user.id)
+      .gte("occurred_at", yearStart)
+      .lt("occurred_at", nextYearStart),
+    supabase
+      .from("expense_entries")
+      .select("amount_cents")
+      .eq("user_id", user.id)
+      .gte("occurred_at", yearStart)
+      .lt("occurred_at", nextYearStart),
   ]);
 
   const incomes = incomeRows ?? [];
@@ -108,6 +125,17 @@ export default async function DashboardPage() {
     expenseCents,
   });
   const taxReserveCents = reserve.totalCents;
+  // Cumulative recommended reserve for the year so far — same calc as sidebar.
+  const yearlyReserveCents = calculateTaxReserve(taxProfile, {
+    incomeCents: (yearIncomeRows ?? []).reduce(
+      (a, r) => a + (r.amount_cents ?? 0),
+      0,
+    ),
+    expenseCents: (yearExpenseRows ?? []).reduce(
+      (a, r) => a + (r.amount_cents ?? 0),
+      0,
+    ),
+  }).totalCents;
   const spendableCents = incomeCents - expenseCents - taxReserveCents;
   const wentNegative = spendableCents < 0;
 
@@ -245,7 +273,10 @@ export default async function DashboardPage() {
         />
 
         {taxReserveCents > 0 ? (
-          <ReserveBreakdownCard reserve={reserve} />
+          <ReserveBreakdownCard
+            reserve={reserve}
+            yearlyReserveCents={yearlyReserveCents}
+          />
         ) : null}
 
         <MobileQuickActions services={serviceList} canWrite={canWrite} />

@@ -1,5 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { format, type Dictionary } from "@/i18n";
+import { monthRange } from "@/lib/format";
+import { monthAccusativePhrase } from "@/lib/insights";
+import { loadYearlyReserve } from "@/lib/reserve";
+import { calculateTaxReserve, type TaxProfile } from "@/lib/tax";
 
 export type NotificationLabels = Dictionary["notifications"]["generated"];
 
@@ -125,14 +129,25 @@ export async function loadNotifications(
    * navigation.
    */
   preFetchedProfile?: ProfileShape,
+  /**
+   * When provided (app layout passes it), enables the end-of-month tax-reserve
+   * reminder. Omitted by callers that don't have the tax profile to hand.
+   */
+  reserveCtx?: { taxProfile: TaxProfile; locale: "lt" | "en" },
 ): Promise<AppNotification[]> {
   const now = new Date();
   const fourDaysAgo = isoNDaysAgo(4);
   const week = isoWeekRange(now);
   const prevMonth = previousMonthRange(now);
+  const thisMonth = monthRange(now);
 
   const isSunday = now.getDay() === 0;
   const isEarlyMonth = now.getDate() <= 3;
+  // Last day of the month: tomorrow rolls into a different month.
+  const tomorrow = new Date(now);
+  tomorrow.setDate(now.getDate() + 1);
+  const isLastDayOfMonth = tomorrow.getMonth() !== now.getMonth();
+  const wantReserveReminder = isLastDayOfMonth && reserveCtx !== undefined;
 
   const profilePromise = preFetchedProfile !== undefined
     ? Promise.resolve({ data: preFetchedProfile })
@@ -142,6 +157,10 @@ export async function loadNotifications(
         .eq("id", userId)
         .maybeSingle();
 
+  const emptyRows = Promise.resolve({
+    data: [] as Array<{ amount_cents: number }>,
+  });
+
   const [
     { data: profile },
     recentCountResult,
@@ -149,6 +168,9 @@ export async function loadNotifications(
     weekIncomeResult,
     prevMonthIncomeResult,
     servicesCountResult,
+    monthIncomeResult,
+    monthExpenseResult,
+    yearReserve,
   ] = await Promise.all([
     profilePromise,
     supabase
@@ -183,6 +205,26 @@ export async function loadNotifications(
       .from("services")
       .select("id", { count: "exact", head: true })
       .eq("user_id", userId),
+    // Reserve reminder: only fetched on the last day of the month.
+    wantReserveReminder
+      ? supabase
+          .from("income_entries")
+          .select("amount_cents")
+          .eq("user_id", userId)
+          .gte("occurred_at", thisMonth.monthStart)
+          .lt("occurred_at", thisMonth.nextMonthStart)
+      : emptyRows,
+    wantReserveReminder
+      ? supabase
+          .from("expense_entries")
+          .select("amount_cents")
+          .eq("user_id", userId)
+          .gte("occurred_at", thisMonth.monthStart)
+          .lt("occurred_at", thisMonth.nextMonthStart)
+      : emptyRows,
+    wantReserveReminder
+      ? loadYearlyReserve(supabase, userId, reserveCtx.taxProfile, now)
+      : Promise.resolve(null),
   ]);
 
   const recentEntries = recentCountResult.count ?? 0;
@@ -221,6 +263,51 @@ export async function loadNotifications(
         body: format(labels.trialEnding.body, { days: daysLeft }),
         occurredAt: now.toISOString(),
         href: "/settings",
+      });
+    }
+  }
+
+  // --- monthly tax-reserve reminder (last day of month; needs activity) ---
+  if (wantReserveReminder && reserveCtx && yearReserve) {
+    const monthIncome = (monthIncomeResult.data ?? []) as Array<{
+      amount_cents: number;
+    }>;
+    const monthExpense = (monthExpenseResult.data ?? []) as Array<{
+      amount_cents: number;
+    }>;
+    // Only nudge users who actually recorded something this month.
+    if (monthIncome.length + monthExpense.length > 0) {
+      const monthIncomeCents = monthIncome.reduce(
+        (a, r) => a + (r.amount_cents ?? 0),
+        0,
+      );
+      const monthExpenseCents = monthExpense.reduce(
+        (a, r) => a + (r.amount_cents ?? 0),
+        0,
+      );
+      const monthReserve = calculateTaxReserve(reserveCtx.taxProfile, {
+        incomeCents: monthIncomeCents,
+        expenseCents: monthExpenseCents,
+      });
+      const monthCents = Math.round(monthReserve.totalCents / 100) * 100;
+      const yearCents = Math.round(yearReserve.totalCents / 100) * 100;
+      const phrase = monthAccusativePhrase(now, reserveCtx.locale);
+      const monthName =
+        reserveCtx.locale === "lt"
+          ? phrase.charAt(0).toUpperCase() + phrase.slice(1)
+          : phrase;
+      out.push({
+        id: `tax_reminder:${now.getFullYear()}-${pad2(now.getMonth() + 1)}`,
+        kind: "tax_reminder",
+        tone: "accent",
+        title: labels.taxReminder.title,
+        body: format(labels.taxReminder.body, {
+          month: monthName,
+          amount: EUR(monthCents),
+          yearAmount: EUR(yearCents),
+        }),
+        occurredAt: now.toISOString(),
+        href: "/dashboard",
       });
     }
   }
