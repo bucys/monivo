@@ -14,6 +14,75 @@ export const MARKETING_URL = stripTrail(
   process.env.NEXT_PUBLIC_MARKETING_URL ?? "",
 );
 
+const DEFAULT_MARKETING_BASE = "https://monivo.lt";
+const DEFAULT_APP_BASE = "https://app.monivo.lt";
+
+/**
+ * Produce a clean, absolute base URL (scheme + host[:port], no trailing slash)
+ * from a possibly messy env value.
+ *
+ * Hardened against protocol corruption: a value whose scheme is missing or
+ * mangled (e.g. `ttps://monivo.lt`, `//monivo.lt`, `monivo.lt`) is repaired to
+ * `https://` on the same host rather than emitted verbatim — which is what
+ * produced `ttps://monivo.lt` in the sitemap/robots output. A valid http(s)
+ * value (including dev `http://localhost`/LAN origins) is preserved as-is.
+ * Anything unparseable falls back to `fallback`.
+ */
+export function normalizeBaseUrl(
+  raw: string | undefined,
+  fallback: string,
+): string {
+  const trimmed = (raw ?? "").trim().replace(/\/+$/, "");
+  if (!trimmed) return fallback;
+
+  // Already a well-formed http(s) URL — keep the original scheme (preserves
+  // http:// for dev/LAN) and just normalize origin + path.
+  if (/^https?:\/\//i.test(trimmed)) {
+    try {
+      const u = new URL(trimmed);
+      return `${u.origin}${u.pathname.replace(/\/+$/, "")}`;
+    } catch {
+      return fallback;
+    }
+  }
+
+  // Missing or corrupted scheme: strip any scheme-ish prefix + leading slashes,
+  // then re-apply a guaranteed-correct https:// scheme.
+  const host = trimmed.replace(/^[^/]*\/\/+/, "").replace(/^\/+/, "");
+  try {
+    const u = new URL(`https://${host}`);
+    return `${u.origin}${u.pathname.replace(/\/+$/, "")}`;
+  } catch {
+    return fallback;
+  }
+}
+
+/**
+ * Canonical, always-absolute marketing base (e.g. `https://monivo.lt`) for SEO
+ * surfaces — sitemap, robots, canonical tags, metadataBase, structured data.
+ * Unlike `MARKETING_URL`, this never returns an empty string and never a
+ * corrupted protocol.
+ */
+export const MARKETING_BASE_URL = normalizeBaseUrl(
+  process.env.NEXT_PUBLIC_MARKETING_URL,
+  DEFAULT_MARKETING_BASE,
+);
+
+/** Canonical, always-absolute app base (e.g. `https://app.monivo.lt`). */
+export const APP_BASE_URL = normalizeBaseUrl(
+  process.env.NEXT_PUBLIC_SITE_URL,
+  DEFAULT_APP_BASE,
+);
+
+/** Hostname of the app surface, used to make robots/sitemap host-aware. */
+export const APP_HOST = (() => {
+  try {
+    return new URL(APP_BASE_URL).hostname;
+  } catch {
+    return "";
+  }
+})();
+
 /** Link target for app routes (login, register, dashboard…). */
 export function appHref(path: string): string {
   return APP_URL ? `${APP_URL}${path}` : path;

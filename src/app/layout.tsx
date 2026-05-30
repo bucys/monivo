@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { LocaleProvider } from "@/i18n/locale-provider";
 import { getServerLocale } from "@/i18n/server";
+import { MARKETING_BASE_URL } from "@/lib/urls";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
@@ -11,9 +12,7 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_MARKETING_URL?.replace(/\/$/, "") ??
-  "https://monivo.lt";
+const siteUrl = MARKETING_BASE_URL;
 const siteTitle = "Monivo — aišku, kiek lieka";
 const siteDescription =
   "Monivo padeda individualiai dirbantiems grožio specialistams sekti pajamas, išlaidas ir mokesčių rezervą — kad būtų aiškiau, kiek lieka.";

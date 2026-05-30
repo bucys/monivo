@@ -1,17 +1,9 @@
 import type { MetadataRoute } from "next";
 import { headers } from "next/headers";
+import { APP_HOST, MARKETING_BASE_URL } from "@/lib/urls";
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_MARKETING_URL?.replace(/\/$/, "") ??
-  "https://monivo.lt";
-
-const appHost = (() => {
-  try {
-    return new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "").hostname;
-  } catch {
-    return "";
-  }
-})();
+const siteUrl = MARKETING_BASE_URL;
+const appHost = APP_HOST;
 
 // The same Next app answers monivo.lt, www.monivo.lt and app.monivo.lt, so
 // robots.txt must differ per host. Reading the Host header opts this route into

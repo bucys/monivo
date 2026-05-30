@@ -10,10 +10,9 @@ import { LandingHowItWorks } from "@/components/landing/landing-how-it-works";
 import { LandingPricing } from "@/components/landing/landing-pricing";
 import { LandingProblem } from "@/components/landing/landing-problem";
 import { getT } from "@/i18n/server";
+import { MARKETING_BASE_URL } from "@/lib/urls";
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_MARKETING_URL?.replace(/\/$/, "") ??
-  "https://monivo.lt";
+const siteUrl = MARKETING_BASE_URL;
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
