@@ -50,6 +50,38 @@ export function weekBucket(isoDate: string) {
   return Math.min(3, Math.floor((dayOfMonth - 1) / 7));
 }
 
+// Accusative month forms for "Aptarnavimai balandį" / "…gegužę" style copy.
+// Differs from the genitive list in lib/activity (used for "5 balandžio").
+const LT_MONTH_ACCUSATIVE = [
+  "sausį",
+  "vasarį",
+  "kovą",
+  "balandį",
+  "gegužę",
+  "birželį",
+  "liepą",
+  "rugpjūtį",
+  "rugsėjį",
+  "spalį",
+  "lapkritį",
+  "gruodį",
+];
+
+const EN_MONTH_LONG = new Intl.DateTimeFormat("en-US", { month: "long" });
+
+/**
+ * Phrase substituted into month-aware Insights copy for a SPECIFIC (non-current)
+ * month — e.g. LT "balandį", EN "in April". Current-month copy uses the
+ * dictionary's `insights.thisMonth` ("šį mėnesį" / "this month") instead.
+ */
+export function monthAccusativePhrase(
+  monthStart: Date,
+  locale: "lt" | "en" = "lt",
+): string {
+  if (locale === "en") return `in ${EN_MONTH_LONG.format(monthStart)}`;
+  return LT_MONTH_ACCUSATIVE[monthStart.getMonth()] ?? "";
+}
+
 export const WEEKDAY_LONG_LT = [
   "Pirmadienis",
   "Antradienis",

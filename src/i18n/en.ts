@@ -725,6 +725,7 @@ export const en: Dictionary = {
     title: "Insights",
     moreToggle: "More insights",
     lessToggle: "Show less",
+    thisMonth: "this month",
     earnings: {
       eyebrow: "Earnings",
       emptyBody: "Weekly earnings appear once you add entries.",
@@ -733,15 +734,15 @@ export const en: Dictionary = {
     bestDay: {
       eyebrow: "Best day",
       emptyBody: "Your busiest weekday appears once you add a few entries.",
-      summary: "{amount} € · {count} {label} this month",
+      summary: "{amount} € · {count} {label} {month}",
       countOne: "entry",
       countFew: "entries",
       countMany: "entries",
     },
     clients: {
-      eyebrow: "Services this month",
+      eyebrow: "Services {month}",
       subtitle: "based on income entries",
-      emptyBody: "Appears once you add income this month.",
+      emptyBody: "Appears once you add income {month}.",
     },
     topServices: {
       eyebrow: "Top services",

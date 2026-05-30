@@ -535,6 +535,8 @@ export type Dictionary = {
     title: string;
     moreToggle: string;
     lessToggle: string;
+    /** Month phrase for current-month copy; substituted into {month} tokens. */
+    thisMonth: string;
     earnings: {
       eyebrow: string;
       emptyBody: string;
@@ -1366,6 +1368,7 @@ export const lt: Dictionary = {
     title: "Įžvalgos",
     moreToggle: "Daugiau įžvalgų",
     lessToggle: "Mažiau įžvalgų",
+    thisMonth: "šį mėnesį",
     earnings: {
       eyebrow: "Uždarbis",
       emptyBody: "Pajamos pagal savaites atsiras pridėjus įrašų.",
@@ -1374,15 +1377,15 @@ export const lt: Dictionary = {
     bestDay: {
       eyebrow: "Geriausia diena",
       emptyBody: "Geriausia savaitės diena atsiras pridėjus įrašų.",
-      summary: "{amount} € · {count} {label} šį mėnesį",
+      summary: "{amount} € · {count} {label} {month}",
       countOne: "įrašas",
       countFew: "įrašai",
       countMany: "įrašų",
     },
     clients: {
-      eyebrow: "Aptarnavimai šį mėnesį",
+      eyebrow: "Aptarnavimai {month}",
       subtitle: "pagal pajamų įrašus",
-      emptyBody: "Atsiras pridėjus pajamų šį mėnesį.",
+      emptyBody: "Atsiras pridėjus pajamų {month}.",
     },
     topServices: {
       eyebrow: "Populiariausios paslaugos",
