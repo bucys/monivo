@@ -45,11 +45,33 @@ const structuredData = {
 export default async function LandingPage() {
   const { t } = await getT();
   const fo = t.landing.footer;
+
+  // FAQPage structured data, built from the SAME dictionary array the
+  // LandingFaq component renders (t.landing.faq.items) — no duplicated copy.
+  // Locale is resolved by getT(), so the schema always matches the visible
+  // language. Covers every question/answer shown on the page.
+  const faqStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: t.landing.faq.items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
+      },
+    })),
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
       />
       <LandingHeader />
       <main>
