@@ -47,10 +47,34 @@ export default async function AppLayout({
     )
     .eq("id", user.id)
     .maybeSingle();
+  // A failed profile read is an ERROR state — never "not onboarded".
+  // Redirecting to /onboarding here would wrongly bounce a fully-onboarded
+  // user on a transient DB/RLS hiccup, and re-onboarding would reset their tax
+  // profile. Show a calm, recoverable screen instead and stop here.
   if (profileErr) {
-    console.warn("[app-layout] core profile read failed:", profileErr.message);
+    console.error("[app-layout] profile read failed:", profileErr.message);
+    return (
+      <main className="flex min-h-dvh flex-col items-center justify-center gap-5 bg-cream px-6 text-center">
+        <div className="flex flex-col items-center gap-2">
+          <h1 className="text-[20px] font-semibold tracking-tight text-ink-900">
+            Nepavyko įkelti duomenų
+          </h1>
+          <p className="max-w-[320px] text-[14px] leading-[1.55] text-ink-500">
+            Įvyko laikina klaida. Pabandyk dar kartą po akimirkos.
+          </p>
+        </div>
+        <a
+          href="/dashboard"
+          className="rounded-[14px] bg-accent px-5 py-3 text-[14px] font-semibold text-white shadow-fab transition-transform active:scale-[0.98]"
+        >
+          Bandyti dar kartą
+        </a>
+      </main>
+    );
   }
 
+  // Only reached when the read SUCCEEDED. A genuinely null flag (including the
+  // 0-row "no profile yet" case) means the user still needs onboarding.
   if (
     !(profile as { onboarding_completed_at?: string | null } | null)
       ?.onboarding_completed_at

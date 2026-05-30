@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const ALLOWED_PROFESSIONS = new Set([
@@ -130,14 +131,41 @@ export async function completeOnboarding(formData: FormData): Promise<void> {
     onboarding_completed_at: new Date().toISOString(),
   };
 
-  const { error } = await supabase
+  const { data: updatedRows, error } = await supabase
     .from("profiles")
     .update(patch)
-    .eq("id", user.id);
+    .eq("id", user.id)
+    .select("id");
 
   if (error) {
     console.error("[onboarding] profile update failed:", error.message);
     throw new Error(error.message);
+  }
+
+  // Self-healing: a normal user always has a profile row from the
+  // `handle_new_user` signup trigger, so the UPDATE above matches exactly one
+  // row and this branch is skipped — their existing data (display_name, etc.)
+  // is never touched. In the rare case the row is missing (e.g. deleted
+  // out-of-band while the auth user survived), the UPDATE matches 0 rows and
+  // the user would otherwise be trapped in an onboarding loop ((app) layout →
+  // /onboarding → complete → /dashboard → /onboarding …). Create the row so
+  // they can proceed. The service role is required because `profiles` exposes
+  // no client INSERT policy by design (rows are created only by the trigger /
+  // service role); RLS is unchanged.
+  if (!updatedRows || updatedRows.length === 0) {
+    const metaName = user.user_metadata?.display_name;
+    const displayName = typeof metaName === "string" ? metaName : "";
+    const admin = createSupabaseAdminClient();
+    const { error: insertErr } = await admin
+      .from("profiles")
+      .insert({ id: user.id, display_name: displayName, ...patch });
+    if (insertErr) {
+      console.error(
+        "[onboarding] profile self-heal insert failed:",
+        insertErr.message,
+      );
+      throw new Error(insertErr.message);
+    }
   }
 
   // Invalidate the router cache for every layout — the (app) layout's
