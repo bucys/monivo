@@ -145,7 +145,7 @@ export function AppSidebar({ sidebar }: { sidebar: SidebarData }) {
           <div className="mt-1.5 text-[18px] font-semibold tracking-tight text-ink-900/90 tabular-nums">
             {formatEur(sidebar.reserveCents)}{" "}
             <span className="text-[11px] font-medium text-ink-500">
-              {t.nav.taxReserveThisMonth}
+              {t.nav.taxReserveThisYear}
             </span>
           </div>
         </div>

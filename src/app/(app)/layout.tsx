@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { AppShell, type SidebarData } from "@/components/app/app-shell";
 import { SubscriptionBanner } from "@/components/app/subscription-banner";
 import { getT } from "@/i18n/server";
-import { monthRange } from "@/lib/format";
 import { loadNotifications } from "@/lib/notifications";
 import {
   TAX_PROFILE_COLUMNS,
@@ -85,10 +84,15 @@ export default async function AppLayout({
   const { t } = await getT();
   const canWrite = canWriteProfile(profile as ProfileWriteFields | null);
 
-  const { monthStart, nextMonthStart } = monthRange();
+  // Sidebar "Mokesčių rezervas" is the reserve for the WHOLE current tax year
+  // (Jan 1 → next Jan 1, exclusive), not the current month. Dashboard /
+  // insights / activity keep their own (monthly) ranges.
+  const currentYear = new Date().getFullYear();
+  const yearStart = `${currentYear}-01-01`;
+  const nextYearStart = `${currentYear + 1}-01-01`;
   const [
-    { data: monthIncome },
-    { data: monthExpenses },
+    { data: yearIncome },
+    { data: yearExpenses },
     { data: serviceRows },
     notifications,
   ] = await Promise.all([
@@ -96,14 +100,14 @@ export default async function AppLayout({
         .from("income_entries")
         .select("amount_cents")
         .eq("user_id", user.id)
-        .gte("occurred_at", monthStart)
-        .lt("occurred_at", nextMonthStart),
+        .gte("occurred_at", yearStart)
+        .lt("occurred_at", nextYearStart),
       supabase
         .from("expense_entries")
         .select("amount_cents")
         .eq("user_id", user.id)
-        .gte("occurred_at", monthStart)
-        .lt("occurred_at", nextMonthStart),
+        .gte("occurred_at", yearStart)
+        .lt("occurred_at", nextYearStart),
       // Shared with the always-mounted quick-add sheet (AddEntryMount) so it no
       // longer needs its own getUser + profile + services round-trips.
       supabase
@@ -122,11 +126,11 @@ export default async function AppLayout({
       }),
     ]);
 
-  const incomeCents = (monthIncome ?? []).reduce(
+  const incomeCents = (yearIncome ?? []).reduce(
     (a, r) => a + (r.amount_cents ?? 0),
     0,
   );
-  const expenseCents = (monthExpenses ?? []).reduce(
+  const expenseCents = (yearExpenses ?? []).reduce(
     (a, r) => a + (r.amount_cents ?? 0),
     0,
   );

@@ -39,8 +39,8 @@ export type Dictionary = {
     servicesSub: string;
     settingsSub: string;
     taxReserveMini: string;
+    taxReserveThisYear: string;
     taxReserveSubline: string;
-    taxReserveThisMonth: string;
     individualActivity: string;
     accountFallback: string;
     professions: {
@@ -678,8 +678,8 @@ export const lt: Dictionary = {
     servicesSub: "Greitos paslaugos",
     settingsSub: "Paskyra",
     taxReserveMini: "Mokesčių rezervas",
+    taxReserveThisYear: "šiemet",
     taxReserveSubline: "nuo pajamų",
-    taxReserveThisMonth: "šį mėnesį",
     individualActivity: "Individuali veikla",
     accountFallback: "Mano paskyra",
     professions: {

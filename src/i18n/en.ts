@@ -41,8 +41,8 @@ export const en: Dictionary = {
     servicesSub: "Quick services",
     settingsSub: "Account",
     taxReserveMini: "Tax reserve",
+    taxReserveThisYear: "this year",
     taxReserveSubline: "of income",
-    taxReserveThisMonth: "this month",
     individualActivity: "Individual activity",
     accountFallback: "My account",
     professions: {
