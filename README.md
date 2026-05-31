@@ -32,7 +32,7 @@ Day to day they struggle with the same things:
 
 ## Solution
 
-Monivo is a **clarity tool, not accounting software.** It answers one question better than any chart: **how much can I spend today?**
+Monivo is a **clarity tool, not accounting software.** It focuses on one practical question: **how much can I spend today?**
 
 - Log a sale or an expense in **under 10 seconds**, one-handed, on a phone between clients.
 - Monivo automatically **reserves money for taxes** based on the user's activity type.
@@ -52,7 +52,6 @@ Lithuanian-first, friendly, and designed to reduce financial anxiety rather than
 - **📱 Mobile-first, installable UI** — built at 375px first, responsive up to desktop, with light/dark themes and a web app manifest (installable as a PWA).
 - **🌍 Lithuanian-first, bilingual** — LT is the source language with a full EN translation.
 
-## Screenshots
 
 ## Screenshots
 
@@ -109,7 +108,7 @@ Monivo is multi-tenant: every user sees and edits **only their own data**. Isola
 
 ```bash
 # 1. Clone
-git clone https://github.com/<your-org>/monivo.git
+git clone https://github.com/bucys/monivo.git
 cd monivo
 
 # 2. Install dependencies
