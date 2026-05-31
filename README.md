@@ -54,15 +54,15 @@ Lithuanian-first, friendly, and designed to reduce financial anxiety rather than
 
 ## Screenshots
 
-> _Replace the placeholders below with real captures before publishing._
+## Screenshots
 
-|              Dashboard (spendable number)               |                  Quick add income                  |
-| :-----------------------------------------------------: | :------------------------------------------------: |
-| ![Dashboard placeholder](docs/screenshots/dashboard.png) | ![Quick add placeholder](docs/screenshots/quick-add.png) |
+| Dashboard | Activity |
+|-----------|----------|
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Activity](docs/screenshots/activity.png) |
 
-|                    Insights                     |                 Settings & tax profile                 |
-| :---------------------------------------------: | :----------------------------------------------------: |
-| ![Insights placeholder](docs/screenshots/insights.png) | ![Settings placeholder](docs/screenshots/settings.png) |
+| Insights | Tax Settings |
+|-----------|----------|
+| ![Insights](docs/screenshots/insights.png) | ![Tax Settings](docs/screenshots/settings.png) |
 
 ## Tech Stack
 
