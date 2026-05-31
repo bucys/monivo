@@ -164,8 +164,13 @@ function MobileTopPanel({
 
   if (typeof document === "undefined") return null;
 
+  // The panel drops from BELOW the mobile top bar (height = safe-area + h-14),
+  // so the bell↔X toggle in the top bar stays visible and tappable while the
+  // panel is open. The top bar can't simply be raised above the panel because
+  // ModalSheet (z-50) must still cover it. Anchor / width / surface are
+  // unchanged — only the top offset clears the header.
   return createPortal(
-    <div className="fixed inset-0 z-[60] lg:hidden">
+    <div className="fixed inset-x-0 bottom-0 top-[calc(env(safe-area-inset-top)+3.5rem)] z-[60] overflow-hidden lg:hidden">
       <button
         type="button"
         aria-label={closeLabel}
@@ -181,7 +186,7 @@ function MobileTopPanel({
         aria-label={ariaLabel}
         data-notif-panel
         className={cn(
-          "absolute inset-x-0 top-0 max-h-[80dvh] overflow-y-auto rounded-b-[24px] bg-surface pt-[env(safe-area-inset-top)] shadow-[0_18px_40px_-12px_rgba(23,33,29,0.25),_0_2px_6px_rgba(23,33,29,0.06)] transition-transform duration-200 ease-out",
+          "absolute inset-x-0 top-0 max-h-[80dvh] overflow-y-auto rounded-b-[24px] bg-surface shadow-[0_18px_40px_-12px_rgba(23,33,29,0.25),_0_2px_6px_rgba(23,33,29,0.06)] transition-transform duration-200 ease-out",
           entered ? "translate-y-0" : "-translate-y-full",
         )}
       >
